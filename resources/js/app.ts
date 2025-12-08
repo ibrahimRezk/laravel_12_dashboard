@@ -1,0 +1,48 @@
+import '../css/app.css';
+
+import { createInertiaApp } from '@inertiajs/vue3';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import type { DefineComponent } from 'vue';
+import { createApp, h } from 'vue';
+import { initializeTheme } from './composables/useAppearance';
+
+import { i18nVue } from "laravel-vue-i18n";
+import { PerfectScrollbarPlugin } from 'vue3-perfect-scrollbar';
+import 'vue3-perfect-scrollbar/style.css';
+import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+
+const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
+
+const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+createInertiaApp({
+    title: (title) => (title ? `${title} - ${appName}` : appName),
+    resolve: (name) =>
+        resolvePageComponent(
+            `./pages/${name}.vue`,
+            import.meta.glob<DefineComponent>('./pages/**/*.vue'),
+        ),
+    setup({ el, App, props, plugin }) {
+        createApp({ render: () => h(App, props) })
+            .use(plugin)
+
+             .use(pinia)
+            .use(i18nVue, {
+        resolve: async (lang: string) => {
+            const langs = import.meta.glob<{ default: Record<string, any> }>('../../lang/*.json');
+            return await langs[`../../lang/${lang}.json`]();
+        }
+    })
+            .use(PerfectScrollbarPlugin)
+            .mount(el);
+    },
+    progress: {
+        // color: '#4B5563', // black
+        color: '#ff0000', // red
+    },
+});
+
+// This will set light / dark mode on page load...
+initializeTheme();
