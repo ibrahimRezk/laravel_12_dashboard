@@ -8,6 +8,7 @@ withDefaults(
     defineProps<{
         breadcrumbs?: BreadcrumbItemType[];
         header?: string | number;
+        subHeader?: string | number | null;
     }>(),
     {
         breadcrumbs: () => [],
@@ -34,12 +35,13 @@ withDefaults(
         </div>
     </div>
 
-    <div class="shadow" v-if="header">
+    <div class="shadow mx-auto  from-zinc-950 via-zinc-950 to-zinc-950/20 px-2 py-2.5  leading-tight  text-white capitalize sm:px-6 lg:px-5 ltr:bg-linear-to-r rtl:bg-linear-to-l " v-if="header">
         <div
-            class="mx-auto flex justify-start from-zinc-950 via-zinc-950 to-zinc-950/20 px-2 py-2.5 text-3xl leading-tight font-bold text-white capitalize sm:px-6 lg:px-5 ltr:bg-linear-to-r rtl:bg-linear-to-l"
+            class=" flex justify-start font-bold  text-3xl"
         >
-           {{ header }}
+         {{ header }}
         </div>
+        <div class=" text-sm text-zinc-300 mt-1" >{{ subHeader }}</div>
     </div>
         </header>
 

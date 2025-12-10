@@ -8,11 +8,13 @@ import type { BreadcrumbItemType } from '@/types';
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
     header?: string;
+    subHeader?: string;
 }
 
 withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
-    header: ()=> ''
+    header: ()=> '',
+    subHeader: ()=> ''
 });
 </script>
 
@@ -20,7 +22,7 @@ withDefaults(defineProps<Props>(), {
     <AppShell variant="sidebar">
         <AppSidebar />
         <AppContent variant="sidebar" class="overflow-x-hidden">
-            <AppSidebarHeader :breadcrumbs="breadcrumbs" :header="header" />
+            <AppSidebarHeader :breadcrumbs="breadcrumbs" :header="header" :subHeader="subHeader" />
             <slot />
         </AppContent>
     </AppShell>

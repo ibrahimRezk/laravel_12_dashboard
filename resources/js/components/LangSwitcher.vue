@@ -1,58 +1,47 @@
-
 <script setup lang="ts">
 // import { loadLanguageAsync , getActiveLanguage} from "laravel-vue-i18n";
-import { lang } from '@/routes';
-import { Form, router } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import { loadLanguageAsync } from 'laravel-vue-i18n';
-import { onMounted, ref, computed, watch, nextTick } from "vue";
-import Dropdown from '@/Components/Dropdown.vue';
+import { ref } from 'vue';
+
+import { lang, logout } from '@/routes';
+import { LogOut } from 'lucide-vue-next';
 
 import { edit as profileLink } from '@/routes/profile';
-import { logout } from '@/routes';
-import { LogOut } from 'lucide-vue-next';
 
 import TextLink from '@/components/TextLink.vue';
 import { useInitials } from '@/composables/useInitials';
 
-
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
-
 const { getInitials } = useInitials();
 
-
-const direction = computed(() => {
-    if (document.getElementsByTagName("html")[0].getAttribute("lang") == "en")
-        return "left";
-    else return "right";
-});
+const handleLogout = () => {
+    router.flushAll();
+};
 
 const current_lang = document
-    .getElementsByTagName("html")[0]
-    .getAttribute("lang");
+    .getElementsByTagName('html')[0]
+    .getAttribute('lang');
 
+type appearance = 'dark' | 'light' | 'system';
 
-type Theme = 'dark' | 'light' | 'system';
+const mode = ref<appearance>('system');
 
-const mode = ref<Theme>('system') ; 
-
-const switchMode = (value: Theme) => {
+const switchMode = (value: appearance) => {
     if (value === 'dark') {
-        localStorage.setItem('theme', 'dark');
+        localStorage.setItem('appearance', 'dark');
         document.documentElement.classList.remove('light');
         document.documentElement.classList.add('dark');
         mode.value = 'dark';
-    } 
-    else if (value === 'light') {
-        localStorage.setItem('theme', 'light');
+    } else if (value === 'light') {
+        localStorage.setItem('appearance', 'light');
         document.documentElement.classList.remove('dark');
         document.documentElement.classList.add('light');
         mode.value = 'light';
-    } 
-    else {
+    } else {
         // Handle 'system' or any other value
-        localStorage.removeItem('theme');
+        localStorage.removeItem('appearance');
         mode.value = 'system';
-        
+
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.documentElement.classList.add('dark');
         } else {
@@ -69,44 +58,27 @@ const loadLanguage = async (selectedLang: string) => {
     // router.get(route("lang", [selectedLang]));
 };
 
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useHoverDropdown } from '@/composables/useHoverDropdown';
+import Button from './ui/button/Button.vue';
 
+const langMenu = useHoverDropdown();
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-// import { useGeneralStore } from "@/stores/general";
-// import { storeToRefs } from "pinia";
-// const useGeneral = useGeneralStore();
-// const { smallSideBar } = storeToRefs(useGeneral);
-// const { paginationNumber } = storeToRefs(useGeneral);
-
-const animate = ref<boolean>(false);
-
-onMounted(() => {
-    animate.value = true;
-});
-
-const startLeaveAnimation = () => {
-    // paginationNumber.value = usePage().props.paginationNumber; // very important   its prevent call the page twice if we switch to another page
-    animate.value = false;
-};
-
-//////////////////////////////////////////////////////////////////////////
-
-
-const handleLogout = () => {
-    router.flushAll();
-};
-
-
-
-
+const ProfileMenu = useHoverDropdown();
 </script>
 <template>
     <div
-    class="mt-2 flex grow items-center sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto"
+        class="mt-2 flex grow items-center sm:mt-0 sm:mr-6 md:mr-0 lg:flex lg:basis-auto"
     >
-
-        <ul
+        <div
             class="max:w-full mx-2 flex flex-row justify-between rounded-full border border-zinc-800 bg-linear-to-r from-zinc-900 to-zinc-900 dark:border-zinc-600"
         >
             <button
@@ -114,7 +86,7 @@ const handleLogout = () => {
                 v-show="mode == 'system'"
                 @click="switchMode('light')"
                 class="flex truncate rounded-full border border-zinc-700 bg-zinc-900 p-2 text-sm text-zinc-300 transition duration-400 ease-in-out hover:scale-110 dark:border-zinc-700"
-            > 
+            >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
@@ -150,7 +122,7 @@ const handleLogout = () => {
                 </svg>
             </button>
             <button
-                :title="`${$t('general.switch to system theme')}`"
+                :title="`${$t('general.switch to system appearance')}`"
                 v-show="mode == 'dark'"
                 @click="switchMode('system')"
                 class="flex truncate rounded-full border border-zinc-700 bg-zinc-900 p-2 text-sm text-zinc-300 transition duration-400 ease-in-out hover:scale-110 dark:border-zinc-700"
@@ -170,7 +142,7 @@ const handleLogout = () => {
                 </svg>
             </button>
 
-            <!-- <li
+            <!-- <div
                                 class="relative flex items-center dropdown-notifications show rtl:mr-1 ltr:mx-1"
                             >
                                 <div class="sm:flex sm:items-center">
@@ -307,181 +279,156 @@ const handleLogout = () => {
                                         </Dropdown>
                                     </div>
                                 </div>
-                            </li> -->
+                            </div> -->
 
-            <li class="relative flex items-center border rounded-full">
-                <div class="mx-1 sm:flex sm:items-center">
-                    <div class="relative">
-                        <Dropdown :align="direction">
-                            <template #trigger>
-                                <Button
-                                    color="gradient_black"
-                                    class="rounded-full border-zinc-700 font-normal text-yellow-300 transition hover:scale-105"
-                                    small
-                                >
-                                    <span class="inline-flex rounded-md">
-                                        <button
-                                            type="button"
-                                            class="inline-flex items-center border border-transparent bg-transparent px-3 py-2 text-sm leading-4 font-medium text-gray-500 transition hover:text-gray-700 focus:outline-none"
-                                        >
-                                            <svg
-                                                class="-mr-0.5 h-4 w-4 ltr:mr-2 rtl:ml-2"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 20 20"
-                                                fill="currentColor"
-                                            >
-                                                <path
-                                                    fill-rule="evenodd"
-                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                    clip-rule="evenodd"
-                                                />
-                                            </svg>
-                                            <span
-                                                class="flex justify-between"
-                                                v-if="current_lang == 'en'"
-                                            >
-                                                <img
-                                                    src="../../../public/assets/img/us-flag-icon.jpg"
-                                                    class="text-size-sm inline-flex h-4 w-full max-w-none items-center justify-center border border-white text-white ltr:mr-4 rtl:ml-4"
-                                                    alt="us-flag-icon"
-                                                />
-                                                <span class="text-yellow-300">
-                                                    English
-                                                </span>
-                                            </span>
-
-                                            <span
-                                                class="flex justify-between"
-                                                v-if="current_lang == 'ar'"
-                                            >
-                                                <img
-                                                    src="../../../public/assets/img/sa-flag-icon.jpg"
-                                                    class="text-size-sm inline-flex h-4 w-full max-w-none items-center justify-center border border-white text-white ltr:mr-4 rtl:ml-4"
-                                                    class1=" rounded-xl"
-                                                    alt="sa-flag-icon"
-                                                />
-                                                <span class="text-yellow-300"
-                                                    >العربية</span
-                                                >
-                                            </span>
-                                        </button>
-                                    </span>
-                                </Button>
-                            </template>
-
-                            <template #content>
-                                <div
-                                    class="block px-4 py-2 text-xs text-gray-400"
-                                >
-                                    {{ $t('general.languages') }}
-                                </div>
-                                <div
-                                    class="border-t border-gray-400 dark:border-gray-200/20"
-                                />
-                                <DropdownLink
-                                    as="button"
-                                    @click="loadLanguage('ar')"
-                                >
-                                    <div class="flex py-1">
-                                        <div class="my-auto">
-                                            <img
-                                                alt="image"
-                                                src="../../../public/assets/img/sa-flag-icon.jpg"
-                                                class="text-size-sm inline-flex h-5 w-9 items-center justify-center text-white ltr:mr-4 rtl:ml-4"
-                                            />
-                                        </div>
-                                        <div
-                                            class="flex flex-col justify-center"
-                                        >
-                                            <span
-                                                class="text-size-sm mb-1 leading-normal font-normal"
-                                                >العربية</span
-                                            >
-                                        </div>
-                                    </div>
-                                </DropdownLink>
-
-                                <DropdownLink
-                                    class="border-t border-gray-200 dark:border-gray-200/10"
-                                    as="button"
-                                    @click="loadLanguage('en')"
-                                >
-                                    <div class="flex py-1">
-                                        <div class="my-auto">
-                                            <img
-                                                alt="image"
-                                                src="../../../public/assets/img/us-flag-icon.jpg"
-                                                class="text-size-sm inline-flex h-5 w-9 max-w-none items-center justify-center text-white ltr:mr-4 rtl:ml-4"
-                                            />
-                                        </div>
-                                        <div
-                                            class="flex flex-col justify-center"
-                                        >
-                                            <span
-                                                class="text-size-sm mb-1 leading-normal font-normal"
-                                                >English</span
-                                            >
-                                        </div>
-                                    </div>
-                                </DropdownLink>
-                            </template>
-                        </Dropdown>
-                    </div>
-                </div>
-            </li>
-
-            <li class="relative flex items-center">
-                <div class="relative">
-                    <Dropdown :align="direction" width="48">
-                        <template #trigger>
-                            
-
-                            <span class="inline-flex rounded-full transition hover:scale-110">
-                                <button
-                                    type="button"
-                                    class="inline-flex items-center  border border-transparent bg-white px-3 hover: py-2 text-sm  font-medium text-gray-500 transition hover:text-gray-700 focus:outline-none rounded-full"
-                                >
-                                    {{ getInitials($page.props?.auth?.user?.name) }}
-
-                               
-                                </button>
-                            </span>
-                        </template>
-
-                        <template #content>
-                            <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ $t('general.manage account') }}
-                            </div>
-                            <div
-                                class="border-t border-gray-200 dark:border-gray-200/20"
-                            />
-
-                        
-
-
-                            
-                            <TextLink
-                            :href="profileLink()"
-                            as="button"
-                            class="mx-auto block text-sm"
+            <DropdownMenu v-model:open="langMenu.isOpen.value" :modal="false">
+                <div
+                    @mouseenter="langMenu.handleEnter"
+                    @mouseleave="langMenu.handleLeave"
+                >
+                    <DropdownMenuTrigger as-child>
+                        <Button
+                            variant="outline"
+                            class=" bg-zinc-900 hover:bg-zinc-800 border-sm mx-1 flex items-center justify-between rounded-full border px-3 py-2 text-sm ring-[1px] ring-ring/20 transition hover:scale-105 focus-visible:border-ring focus-visible:ring-[1px] focus-visible:ring-ring/20 "
+                        >
+                            <svg
+                                class="-mr-0.5 h-4 w-4 ltr:mr-2 rtl:ml-2 text-zinc-500"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
                             >
-                            profile
-                        </TextLink>
-                        <div
-                            class="border-t border-gray-100 dark:border-gray-200/10"
-                        />
-                            <TextLink
-                :href="logout()"
-                as="button"
-                class="mx-auto block text-sm"
-            >
-                Log out
-            </TextLink>
-                        </template>
-                    </Dropdown>
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                    clip-rule="evenodd"
+                                />
+                            </svg>
+                            <span
+                                class="flex items-center justify-between"
+                                v-if="current_lang == 'en'"
+                            >
+                                <img
+                                    src="../../../public/assets/img/us-flag-icon.jpg"
+                                    class="text-size-sm inline-flex h-4 w-full max-w-none items-center justify-center border border-white text-white ltr:mr-4 rtl:ml-4"
+                                    alt="us-flag-icon"
+                                />
+                                <span class="text-yellow-300"> English </span>
+                            </span>
+
+                            <span
+                                class="flex justify-between"
+                                v-if="current_lang == 'ar'"
+                            >
+                                <img
+                                    src="../../../public/assets/img/sa-flag-icon.jpg"
+                                    class="text-size-sm inline-flex h-4 w-full max-w-none items-center justify-center border border-white text-white ltr:mr-4 rtl:ml-4"
+                                    class1=" rounded-xl"
+                                    alt="sa-flag-icon"
+                                />
+                                <span class="text-yellow-300">العربية</span>
+                            </span>
+                        </Button>
+                    </DropdownMenuTrigger>
                 </div>
-            </li>
-            <!-- <li class="relative flex items-center">
+                <DropdownMenuContent
+                    class="w-36 "
+                    align="start"
+                    :side-offset="0"
+                >
+                    <div 
+                        @mouseenter="langMenu.handleEnter"
+                        @mouseleave="langMenu.handleLeave"
+                    >
+                        <DropdownMenuGroup >
+                            <DropdownMenuItem @click="loadLanguage('ar')" 
+                            class=" hover:cursor-pointer">
+                                العربية
+                                <DropdownMenuShortcut>
+                                    <img
+                                        alt="image"
+                                        src="../../../public/assets/img/sa-flag-icon.jpg"
+                                        class="text-size-sm inline-flex h-5 w-9 items-center justify-center text-white ltr:mr-4 rtl:ml-4"
+                                /></DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem @click="loadLanguage('en')"
+                            class=" hover:cursor-pointer">
+                                English
+                                <DropdownMenuShortcut>
+                                    <img
+                                        alt="image"
+                                        src="../../../public/assets/img/us-flag-icon.jpg"
+                                        class="text-size-sm inline-flex h-5 w-9 max-w-none items-center justify-center text-white ltr:mr-4 rtl:ml-4"
+                                /></DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                    </div>
+                </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu
+                v-model:open="ProfileMenu.isOpen.value"
+                :modal="false"
+            >
+                <div
+                    @mouseenter="ProfileMenu.handleEnter"
+                    @mouseleave="ProfileMenu.handleLeave"
+                >
+                    <DropdownMenuTrigger as-child>
+                        <span
+                            class="inline-flex rounded-full transition hover:scale-110"
+                        >
+                            <button
+                                type="button"
+                                class="hover: inline-flex items-center rounded-full border border-transparent bg-white px-3 py-2 text-sm font-medium text-gray-500 transition hover:text-gray-700 focus:outline-none"
+                            >
+                                {{ getInitials($page.props?.auth?.user?.name) }}
+                            </button>
+                        </span>
+                    </DropdownMenuTrigger>
+                </div>
+
+                <DropdownMenuContent
+                    class="w-36"
+                    align="start"
+                    :side-offset="0"
+                >
+                    <div
+                        @mouseenter="ProfileMenu.handleEnter"
+                        @mouseleave="ProfileMenu.handleLeave"
+                    >
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                                <Link
+                                    :href="profileLink()"
+                                    as="button"
+                                    class="mx-auto block text-sm  h-full w-full hover:cursor-pointer"
+                                >
+                                    profile
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>
+                                <div
+                                    class="border-t border-gray-100 dark:border-gray-200/10"
+                                />
+                                <Link
+                                    class="flex w-full items-center   h-full  hover:cursor-pointer"
+                                    :href="logout()"
+                                    @click="handleLogout"
+                                    as="button"
+                                    data-test="logout-button"
+                                >
+                                    <LogOut class="mr-2 h-4 w-4" />
+                                    <span> Log out</span>
+                                </Link>
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                    </div>
+                </DropdownMenuContent>
+            </DropdownMenu>
+
+            <!-- <div class="relative flex items-center">
                 <div class="relative">
                     <Dropdown :align="direction" width="48">
                         <template #trigger>
@@ -557,8 +504,7 @@ const handleLogout = () => {
                         </template>
                     </Dropdown>
                 </div>
-            </li> -->
-        </ul>
+            </div> -->
+        </div>
     </div>
 </template>
-

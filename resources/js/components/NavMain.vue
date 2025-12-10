@@ -77,6 +77,8 @@ const end = (el: HTMLElement): undefined => {
 </script>
 
 <template>
+                    <perfectScrollbar>
+
     <SidebarMenu v-if="menus">
         <SidebarMenuItem v-for="item in items" :key="item.title">
 
@@ -110,6 +112,7 @@ const end = (el: HTMLElement): undefined => {
             </div>
         </SidebarMenuItem>
     </SidebarMenu>
+    </perfectScrollbar>
 </template>
 <style scoped>
 

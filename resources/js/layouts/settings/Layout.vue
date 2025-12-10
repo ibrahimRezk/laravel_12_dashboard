@@ -10,6 +10,7 @@ import { edit as editPassword } from '@/routes/user-password';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { Card } from '@/components/ui/card';
+import Container from '@/components/Container.vue';
 
 
 const sidebarNavItems: NavItem[] = [
@@ -35,8 +36,9 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
 </script>
 
 <template>
-    <Card>
-
+    <!-- <Card> -->
+    <Container>
+        
     <div class="px-4 py-6">
         <Heading
             title="Settings"
@@ -73,6 +75,7 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
             </div>
         </div>
     </div>
-        </Card>
+   </Container>
+        <!-- </Card> -->
 
 </template>

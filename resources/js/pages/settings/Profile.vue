@@ -30,13 +30,139 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 const page = usePage();
 const user = page.props.auth.user;
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { ref } from 'vue';
+import AddNew from '@/components/AddNew.vue';
+
+const isOpen = ref(false);
+let closeTimeout: ReturnType<typeof setTimeout> | null = null;
+
+const handleEnter = () => {
+    // If we are about to close, cancel it! We are back "safe"
+    if (closeTimeout) {
+        clearTimeout(closeTimeout);
+        closeTimeout = null;
+    }
+    isOpen.value = true;
+};
+
+const handleLeave = () => {
+    // Give the user 200ms to cross the gap
+    closeTimeout = setTimeout(() => {
+        isOpen.value = false;
+    }, 200);
+};
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbItems" :header="'header'">
+    <AppLayout :breadcrumbs="breadcrumbItems" :header="'profile'">
         <Head title="Profile settings" />
-
         <SettingsLayout>
+
+
+
+ 
+
+
+
+            <DropdownMenu v-model:open="isOpen" :modal="false">
+                <DropdownMenuTrigger
+                    as-child
+                    @mouseenter="handleEnter"
+                    @mouseleave="handleLeave"
+                >
+                    <Button variant="outline"
+                        >Opennnnnnnnnnnnnnnnnnnnnnnnnn</Button
+                    >
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent
+                    class="w-56"
+                    align="start"
+                    :side-offset="0"
+                >
+                    <div @mouseenter="handleEnter" @mouseleave="handleLeave">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                                Profile
+                                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                Billing
+                                <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                Settings
+                                <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                Keyboard shortcuts
+                                <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem>Team</DropdownMenuItem>
+                            <DropdownMenuSub>
+                                <DropdownMenuSubTrigger
+                                    >Invite users</DropdownMenuSubTrigger
+                                >
+                                <DropdownMenuPortal>
+                                    <DropdownMenuSubContent>
+                                        <DropdownMenuItem
+                                            >Email</DropdownMenuItem
+                                        >
+                                        <DropdownMenuItem
+                                            >Message</DropdownMenuItem
+                                        >
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem
+                                            >More...</DropdownMenuItem
+                                        >
+                                    </DropdownMenuSubContent>
+                                </DropdownMenuPortal>
+                            </DropdownMenuSub>
+                            <DropdownMenuItem>
+                                New Team
+                                <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>GitHub</DropdownMenuItem>
+                        <DropdownMenuItem>Support</DropdownMenuItem>
+                        <DropdownMenuItem disabled> API </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                            Log out
+                            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    </div>
+                </DropdownMenuContent>
+            </DropdownMenu>
+
+
+
+
+
+
+
+
+
             <div class="flex flex-col space-y-6">
                 <HeadingSmall
                     title="Profile information"
