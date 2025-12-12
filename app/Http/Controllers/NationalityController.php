@@ -19,10 +19,10 @@ class NationalityController extends Controller
 
     public function __construct()
     {
-        $this->middleware('can:view nationalities')->only('index');
-        $this->middleware('can:create nationality')->only(['store']);
-        $this->middleware('can:edit nationality')->only(['update']);
-        $this->middleware('can:delete nationality')->only('destroy');
+        // $this->middleware('can:view nationalities')->only('index');
+        // $this->middleware('can:create nationality')->only(['store']);
+        // $this->middleware('can:edit nationality')->only(['update']);
+        // $this->middleware('can:delete nationality')->only('destroy');
     }
 
     public function index(Request $request)
@@ -66,7 +66,7 @@ class NationalityController extends Controller
 
 
 
-        return Inertia::render('Nationalities/Index', [
+        return Inertia::render('nationalities/index', [
             'title' => 'nationalities',
             'items' => NationalityResource::collection($nationalities),
             'headers' => [
@@ -94,8 +94,8 @@ class NationalityController extends Controller
                     'name' => 'updated by',
                 ],
                 [
-                    'label' => 'created_at',
-                    'name' => 'created_at',
+                    'label' => 'created at',
+                    'name' => 'created at',
                 ],
                 [
                     'label' => 'updated at',

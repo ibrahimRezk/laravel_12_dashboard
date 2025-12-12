@@ -60,6 +60,11 @@ class HandleInertiaRequests extends Middleware
             // 'itemIdToBeOpened' => $request->session()->get('itemIdToBeOpened'),
             // 'itemIdToBePrinted' => $request->session()->get('itemIdToBePrinted'),
             // 'locale' => App::getLocale(),
+
+
+            
+            'paginationNumber' => PAGINATION_COUNT,
+
             'menus' => [
                 [
                     'title' => 'Dashboard',

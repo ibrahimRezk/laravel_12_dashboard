@@ -32,7 +32,7 @@ const close = () => {
         :closeable="closeable"
         @close="close"
     >
-        <div class="rtl:bg-gradient-to-r  ltr:bg-gradient-to-l from-orange-200 to-red-900   
+        <div class="rtl:bg-linear-to-r  ltr:bg-linear-to-l from-orange-200 to-red-900   
         dark:from-gray-900 dark:via-gray-700 dark:to-gray-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <!-- <div class="sm:flex sm:items-start "> -->
             <div class="flex items-center text-center justify-center ">
@@ -53,7 +53,7 @@ const close = () => {
                 </div>
 
                 <div class="mt-3 mx-2 px-8  sm:mt-0 sm:ml-4 sm:text-center ">
-                    <div class="rtl:bg-gradient-to-r  ltr:bg-gradient-to-l from-orange-50 dark:to-orange-300  rounded shadow-md border border-gray-400/40 px-2 ">
+                    <div class="rtl:bg-linear-to-r  ltr:bg-linear-to-l from-orange-50 dark:to-orange-300  rounded shadow-md border border-gray-400/40 px-2 ">
                         <h3 class="text-lg text-sky-900  font-bold">
                         
 
@@ -69,7 +69,7 @@ const close = () => {
             </div>
         </div>
 
-        <div class="rtl:bg-gradient-to-r  ltr:bg-gradient-to-l from-orange-200 dark:from-zinc-700  dark:to-black to-gray-900
+        <div class="rtl:bg-linear-to-r  ltr:bg-linear-to-l from-orange-200 dark:from-zinc-700  dark:to-black to-gray-900
         flex flex-row justify-end px-6 py-2  text-right ">
             <slot name="footer" />
         </div>

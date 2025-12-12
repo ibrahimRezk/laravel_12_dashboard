@@ -134,8 +134,8 @@ class AdminController extends Controller
                     'name' => 'phone',
                 ],
                 [
-                    'label' => 'created_at',
-                    'name' => 'created_at',
+                    'label' => 'created at',
+                    'name' => 'created at',
                 ],
                 [
                     'label' => 'actions',
@@ -204,8 +204,8 @@ class AdminController extends Controller
                 //     'name' => 'role',
                 // ],
                 [
-                    'label' => 'created_at',
-                    'name' => 'created_at',
+                    'label' => 'created at',
+                    'name' => 'created at',
                 ],
                 [
                     'label' => 'actions',

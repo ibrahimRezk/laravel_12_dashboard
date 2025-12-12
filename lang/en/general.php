@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'welcome' => 'welcome' ,
+    'login' => 'login' ,
+    'register' => 'register' ,
+    '#' => '#' ,
+    'logout' => 'logout' ,
+    'home' => 'home' ,
+    'profile' => 'profile' ,
+    'settings' => 'settings' ,
+    'about' => 'about' ,
+    'contact' => 'contact' ,
+    'terms' => 'terms' ,
+    'privacy' => 'privacy' ,
+    'copyright' => 'copyright' ,
+    'copyright2' => 'copyright2' ,
+    'name' => 'name' ,
+    'active' => 'active' ,
+    'actions' => 'actions' ,
+    'filter' => 'filter' ,
+    'list_of' => 'list of' ,
+    'show headers' => 'show headers' ,
+    'added by' => 'added by' ,
+    'updated by' => 'updated by' ,
+    'created at' => 'created at' ,
+    'updated at' => 'updated at' ,
+    
+    'nationalities' => 'nationalities' ,
+];

@@ -23,7 +23,7 @@ defineProps<{
     <Breadcrumb>
         <BreadcrumbList>
             <template v-for="(item, index) in breadcrumbs" :key="index">
-                <BreadcrumbItem class=" bg-zinc-800  border border-gray-500 ltr:rounded-r-full rtl:rounded-l-full px-1 py-0.5">
+                <BreadcrumbItem class=" bg-zinc-800  border border-gray-500 ltr:rounded-r-full rtl:rounded-l-full px-2 py-0.5">
                     <template v-if="index === breadcrumbs.length - 1">
                         <BreadcrumbPage class=" text-sm text-gray-300" :class="{'text-yellow-400' : index != 0}">{{ item.title }}</BreadcrumbPage>
                     </template>

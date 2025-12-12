@@ -3,6 +3,8 @@ import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
 import { defineConfig } from 'vite';
+import i18n from 'laravel-vue-i18n/vite';
+
 
 export default defineConfig({
     plugins: [
@@ -13,8 +15,7 @@ export default defineConfig({
         }),
         tailwindcss(),
         // wayfinder({
-        //     // formVariants: true,
-        //         enabled: false, // Disable auto-generation during dev
+        //     formVariants: true,
         // }),
         vue({
             template: {
@@ -24,5 +25,7 @@ export default defineConfig({
                 },
             },
         }),
+                i18n(),
+
     ],
 });

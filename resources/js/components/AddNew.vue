@@ -81,7 +81,7 @@ const deleteAll = () => {
                 <Button
                     v-if="$slots.filters"
                     class="rtl:mr-3 ltr:ml-2 inline-flex items-center hover:cursor-pointer"
-                    color="gradient_black"
+                    color="linear_black"
                     @click="reset"
                 >
                     <FilterIcon class="mx-2" />
@@ -97,7 +97,7 @@ const deleteAll = () => {
                         v-if="props.showDeleteAll"
                         class="mx-3 hover:cursor-pointer px-5"
                         v-show="checkedItems > 0"
-                        color="gradient_red"
+                        color="linear_red"
                         @click="deleteAll"
                         >{{ $t("general.delete all selected") }}
                     </Button>

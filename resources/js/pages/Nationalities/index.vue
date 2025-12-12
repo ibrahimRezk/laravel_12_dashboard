@@ -196,7 +196,7 @@ const {
     handleSavingItem,
 } = useDialogModal({
     routeResourceName: routeResourceName,
-    form: form,
+    // form: form,
     opened,
     showScreenExeptSubmenu,
     method,
@@ -299,6 +299,7 @@ const startLeaveAnimation = () => {
                         button_title="filter"
                         color="linear_black"
                         width="60"
+                        size="xs"
                         iconType="filter"
                     >
                         <Filters
@@ -317,7 +318,7 @@ const startLeaveAnimation = () => {
                                 <Label
                                     class="mx-1 mt-2 mb-2 rtl:bg-linear-to-r ltr:bg-linear-to-l from-yellow-500 via-orange-600 to-red-900 px-2 py-1 rounded shadow-md border border-gray-300"
                                 >
-                                    <div class="flex justify-between">
+                                    <div class=" w-full flex justify-between">
                                         <div>
                                             <h1 class="text-gray-200">
                                                 {{

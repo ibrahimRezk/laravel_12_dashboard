@@ -4,8 +4,17 @@ import AppContent from '@/components/AppContent.vue';
 import AppShell from '@/components/AppShell.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import AppSidebarHeader from '@/components/AppSidebarHeader.vue';
-import type { BreadcrumbItemType } from '@/types';
-import type { messages } from '@/types';
+import type { BreadcrumbItemType, messages } from '@/types';
+
+import { useGeneralStore } from '@/stores/general';
+import { storeToRefs } from 'pinia';
+import { watch } from 'vue';
+const useGeneral = useGeneralStore();
+const { animate } = storeToRefs(useGeneral);
+
+console.log(animate.value);
+
+watch(()=>animate.value , ()=>console.log(animate.value) )
 
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
@@ -17,18 +26,49 @@ interface Props {
 withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
     messages: () => [],
-    header: ()=> '',
-    subHeader: ()=> ''
+    header: () => '',
+    subHeader: () => '',
 });
 </script>
 
 <template>
     <AppShell variant="sidebar">
-        <Alert :messages/>
+        <Alert :messages />
         <AppSidebar />
         <AppContent variant="sidebar" class="overflow-x-hidden">
-            <AppSidebarHeader :breadcrumbs="breadcrumbs" :header="header" :subHeader="subHeader" />
-            <slot />
+            <AppSidebarHeader
+                :breadcrumbs="breadcrumbs"
+                :header="header"
+                :subHeader="subHeader"
+            />
+            <transition name="page" mode="out-in" appear>
+                <div v-if="animate">
+                    <slot />
+                </div>
+            </transition>
         </AppContent>
     </AppShell>
 </template>
+
+
+<style scoped>
+
+/* durations and timing functions.*/
+.page-enter-active,
+.page-leave-active {
+    transition: all 0.8s;
+}
+
+.page-enter-from {
+    transform: translateY(40px);
+    opacity: 0;
+}
+
+.page-leave-to {
+    opacity: 0;
+    transform: translateY(-70px);
+}
+</style>
+
+
+

@@ -26,10 +26,27 @@ import { useGeneralStore } from '@/stores/general';
 import { storeToRefs } from 'pinia';
 const useGeneral = useGeneralStore();
 const { animate } = storeToRefs(useGeneral);
+const { paginationNumber } = storeToRefs(useGeneral);
 
 defineProps<{
     items: NavItem[];
 }>();
+
+
+
+
+onMounted(() => {
+    animate.value = true;
+});
+
+const startLeaveAnimation = () => {
+    paginationNumber.value = usePage().props.paginationNumber; // very important   its prevent call the page twice if we switch to another page  . check this part to move it to another place
+    animate.value = false;
+};
+
+
+
+
 
 const page = usePage();
 
@@ -104,7 +121,7 @@ const end = (el: HTMLElement): undefined => {
                                     <SidebarMenuSubButton
                                         as-child
                                         :is-active="subItem.isActive"
-                                        @click="animate = false"
+                                        @click="startLeaveAnimation"
                                     >
                                         <Link :href="subItem.href">{{
                                             subItem.title
@@ -118,7 +135,7 @@ const end = (el: HTMLElement): undefined => {
 
                 <div v-else>
                     <SidebarMenuButton as-child :is-active="item.isActive">
-                        <Link :href="item.href" @click="animate = false">
+                        <Link :href="item.href" @click="startLeaveAnimation">
                             <component :is="item.icon" />
                             <span>{{ item.title }}</span>
                         </Link>
@@ -143,4 +160,6 @@ const end = (el: HTMLElement): undefined => {
     height: 0px !important;
     opacity: 0px;
 }
+
+
 </style>

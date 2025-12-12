@@ -289,7 +289,7 @@ const itemIcon_heroicon3 = computed(() => {
 const colorClasses = computed(() => {
     if (props.active) {
         return "bg-transparent  ";
-        // return "bg-gradient-to-r  ";
+        // return "bg-linear-to-r  ";
     }
 });
 
@@ -302,11 +302,11 @@ const classes = `flex justify-center ltr:mr-1  rtl:ml-1 shadow-soft-2xl  flex  i
 
 ${
     props.small == true
-        ? "w-5 h-5 rtl:mr-2 ltr:ml-2 bg-gradient-to-l  hover:from-gray-900 hover:to-zinc-500 active:bg-yellow-900 from-black to-zinc-600 rounded-full border border-gray-500/80"
+        ? "w-5 h-5 rtl:mr-2 ltr:ml-2 bg-linear-to-l  hover:from-gray-900 hover:to-zinc-500 active:bg-yellow-900 from-black to-zinc-600 rounded-full border border-gray-500/80"
         : "w-8 h-8  rounded-md border border-white/10 bg-transparent"
 }  
 `;
-// const classes = `flex justify-center ltr:mr-1  rtl:ml-1 shadow-soft-2xl  flex  items-center justify-center   bg-center stroke-0 text-center p-0.5  ${ colorClasses.value } bg-gradient-to-l  hover:from-gray-900 hover:to-zinc-500 active:bg-yellow-900 focus:border-white/20 focus:shadow-outline-yellow text-white font-normal  shadow-md  text-shadow-none hover:scale-110
+// const classes = `flex justify-center ltr:mr-1  rtl:ml-1 shadow-soft-2xl  flex  items-center justify-center   bg-center stroke-0 text-center p-0.5  ${ colorClasses.value } bg-linear-to-l  hover:from-gray-900 hover:to-zinc-500 active:bg-yellow-900 focus:border-white/20 focus:shadow-outline-yellow text-white font-normal  shadow-md  text-shadow-none hover:scale-110
 
 // ${
 //     props.small == true

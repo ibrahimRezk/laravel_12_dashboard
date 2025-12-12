@@ -59,13 +59,14 @@ export const buttonVariants = cva(
         transparent_green: " align-middle  rounded-lg shadow-sm ring-1 transition duration-75  focus-within:ring-20 focus-within:ring-orange-300/20 ring-lime-500/30  border-none  text-base text-lime-400  placeholder:text-zinc-400 focus:ring-1   xs:text-xs sm:leading-6    bg-zinc-900/80 transpare    focus:border-lime-400  focus:ring-lime-200/40 focus:ring-opacity-60 ",
         transparent_blue: " align-middle  rounded-lg shadow-sm ring-1 transition duration-75  focus-within:ring-20 focus-within:ring-orange-300/20 ring-blue-500/30  border-none  text-base text-blue-400  placeholder:text-zinc-400 focus:ring-1   xs:text-xs sm:leading-6    bg-zinc-900/80 transpare    focus:border-blue-400  focus:ring-blue-200/40 focus:ring-opacity-60 ",
 
-        transparent_black: " align-middle  rounded-lg shadow-sm ring-1 transition duration-75  focus-within:ring-20 focus-within:ring-orange-300/20 ring-orange-500/30  border-none  text-base text-zinc-400  placeholder:text-zinc-400 focus:ring-1   xs:text-xs     bg-zinc-900/80 transpare    focus:border-orange-400  focus:ring-orange-200/40 focus:ring-opacity-60 ",
+        transparent_black: " align-middle  rounded-lg shadow-sm ring-1 transition duration-75  focus-within:ring-20 focus-within:ring-orange-300/20 ring-orange-500/30  border-none  text-base text-zinc-400  placeholder:text-zinc-400 focus:ring-1   xs:text-xs     bg-zinc-900/80 transpare     focus:border-orange-400  focus:ring-orange-200/40 focus:ring-opacity-60 ",
 
       },
       size: {
-        default: 'h-9 px-4 py-2 has-[>svg]:px-3',
-        sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
-        lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
+        default: 'h-9 px-4 py-2 capitalize has-[>svg]:px-3',
+        xs: 'h-6 rounded-sm capitalize text-xs  gap-1.5 px-2 has-[>svg]:px-2.5',
+        sm: 'h-8 rounded-md capitalize gap-1.5 px-3 has-[>svg]:px-2.5',
+        lg: 'h-10 rounded-md capitalize px-6 has-[>svg]:px-4',
         icon: 'size-9',
       },
     },

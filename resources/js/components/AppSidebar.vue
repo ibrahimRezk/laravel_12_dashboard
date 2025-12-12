@@ -35,18 +35,18 @@ const mainNavItems = usePage().props.menus;
 
 
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
-];
+// const footerNavItems: NavItem[] = [
+//     {
+//         title: 'Github Repo',
+//         href: 'https://github.com/laravel/vue-starter-kit',
+//         icon: Folder,
+//     },
+//     {
+//         title: 'Documentation',
+//         href: 'https://laravel.com/docs/starter-kits#vue',
+//         icon: BookOpen,
+//     },
+// ];
 
 
 
@@ -81,11 +81,12 @@ const direction = computed(() => {
 
         <SidebarContent>
             <NavMain :items="mainNavItems" />
+
         </SidebarContent>
 
         <SidebarFooter>
-            <NavFooter :items="footerNavItems" />
-            <NavUser />
+            <!-- <NavFooter :items="footerNavItems" /> -->
+            <!-- <NavUser /> -->
         </SidebarFooter>
     </Sidebar>
     <slot />

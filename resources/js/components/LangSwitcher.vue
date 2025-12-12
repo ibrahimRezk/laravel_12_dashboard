@@ -296,7 +296,7 @@ const direction = computed(() => {
                                         <Dropdown :align="direction" width="36">
                                             <template #trigger>
                                                 <Button
-                                                    variant="gradient_black"
+                                                    variant="linear_black"
                                                     class="text-yellow-300 font-normal border-zinc-500 hover:scale-105 rounded-full"
                                                     small
                                                 >
@@ -453,7 +453,7 @@ const direction = computed(() => {
                                     as="button"
                                     class="mx-auto block text-sm  h-full w-full hover:cursor-pointer"
                                 >
-                                    profile
+                                    settings
                                 </Link>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />

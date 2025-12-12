@@ -15,7 +15,11 @@ const props = defineProps({
     },
     color: {
         type: String,
-        default: 'gradient_orange',
+        default: 'linear_orange',
+    },
+    size: {
+        type: String,
+        default: 'xs',
     },
     title: {
         type: String,
@@ -27,7 +31,7 @@ const props = defineProps({
     },
     button_title: {
         type: String,
-        default: 'show_headers',
+        default: 'show headers',
     },
     showTitle: {
         type: Boolean,
@@ -39,7 +43,7 @@ const props = defineProps({
 
 
 const contentClasses = ref([
-    "py-2 rtl:bg-gradient-to-r ltr:bg-gradient-to-l from-orange-600 to-gray-900"
+    "py-2 rtl:bg-linear-to-r ltr:bg-linear-to-l from-orange-600 to-gray-900"
 ])
 
 const direction = computed(() => {
@@ -63,7 +67,7 @@ const direction = computed(() => {
         >
             <template #trigger>
                 <span class="inline-flex rounded-md " >
-                    <Button class="flex justify-center   " type="button" :color="props.color">
+                    <Button class="flex justify-center   " type="button" :size="props.size" :variant="props.color">
                         {{ $t("general." + props.button_title) }}
                         <FilterIcon v-if="props.iconType == 'filter'" class="rtl:mr-2 ltr:ml-2" />
                         </Button
@@ -83,9 +87,9 @@ const direction = computed(() => {
     
                 <slot/> 
                 <div
-                :class="props.color == 'gradient_orange' ?  'from-orange-400' : 'from-zinc-900' "
+                :class="props.color == 'linear_orange' ?  'from-orange-400' : 'from-zinc-900' "
                 
-                class="flex flex-col justify-between rtl:bg-gradient-to-r ltr:bg-gradient-to-l  to-gray-800"
+                class="flex flex-col justify-between rtl:bg-linear-to-r ltr:bg-linear-to-l  to-gray-800"
                 >
                     <slot name="checkedItemHeader"> </slot>
                 </div>
