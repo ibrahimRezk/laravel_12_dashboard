@@ -4,14 +4,26 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Permission\Traits\HasRoles;
+use Spatie\Translatable\HasTranslations;
 
-class User extends Authenticatable
+
+class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasRoles;
+    use SoftDeletes;  
+    use HasRoles;
+    use InteractsWithMedia;
+    use HasTranslations;
+
 
     /**
      * The attributes that are mass assignable.
@@ -23,6 +35,17 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+
+
+        public $translatable = ['name'];
+
+       
+        
+    public function profile()
+    {
+        return $this->morphTo();
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.

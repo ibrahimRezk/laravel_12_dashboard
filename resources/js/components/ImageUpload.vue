@@ -41,7 +41,7 @@ const maxFilesNumber = ref(props.maxFiles);
 
 onMounted(() => {
     Dropzone.autoDiscover = false;
-    let dropzone = new Dropzone("#image-upload", {
+    const dropzone = new Dropzone("#image-upload", {
         url: route("images.store"),
         headers: {
             // "X-CSRF-TOKEN": usePage().props.csrf_token
@@ -85,7 +85,7 @@ onMounted(() => {
         init: function () {
             props.item.images?.forEach(
                 (image) => {
-                    var mock = {
+                    const mock = {
                         name: image.img.name,
                         image_id: image.img.id,
                         size: image.img.size,
@@ -97,7 +97,7 @@ onMounted(() => {
                     this.options.thumbnail.call(this, mock, image.img.original_url);   // this will get the original image 
 
 
-                    let dzProgress =
+                    const dzProgress =
                         document.getElementsByClassName("dz-progress");
                     dzProgress[0].classList.remove("dz-progress");
                 },

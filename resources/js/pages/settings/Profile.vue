@@ -46,7 +46,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ref } from 'vue';
-import AddNew from '@/components/AddNew.vue';
+
 
 const isOpen = ref(false);
 let closeTimeout: ReturnType<typeof setTimeout> | null = null;

@@ -9,6 +9,11 @@ export interface BreadcrumbItem {
     title: string;
     href: string;
 }
+export interface messages {
+    success: string;
+    error: string;
+    vital_error: string;
+}
 
 export interface NavItem { // new
     title: string;

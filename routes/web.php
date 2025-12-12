@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NationalityController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -16,7 +17,7 @@ Route::get('/', function () {
 
 Route::middleware([
     'Lang',
-    // 'auth',
+    'auth',
     // 'verified',
 ])->group(function () {
 
@@ -43,6 +44,9 @@ Route::middleware([
     Route::get('dashboard6', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard6');
+
+
+        Route::resource('nationalities', NationalityController::class);
 
 
 

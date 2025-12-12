@@ -52,11 +52,11 @@ class HandleInertiaRequests extends Middleware
 
 
 
-            //  'flash' => [
-            //     'success' => $request->session()->get('success'),
-            //     'error' => $request->session()->get('error'),
-            //     'vital_error' => $request->session()->get('vital_error'),
-            // ],
+             'messages' => [
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
+                'vital_error' => $request->session()->get('vital_error'),
+            ],
             // 'itemIdToBeOpened' => $request->session()->get('itemIdToBeOpened'),
             // 'itemIdToBePrinted' => $request->session()->get('itemIdToBePrinted'),
             // 'locale' => App::getLocale(),
@@ -65,6 +65,12 @@ class HandleInertiaRequests extends Middleware
                     'title' => 'Dashboard',
                     'href' => route('dashboard'),
                     'isActive' => $request->routeIs('dashboard'),
+                    // 'isVisible' => $request->user()?->can('view dashboard'),
+                ],
+                [
+                    'title' => 'Nationalities',
+                    'href' => route('nationalities.index'),
+                    'isActive' => $request->routeIs('nationalities.index'),
                     // 'isVisible' => $request->user()?->can('view dashboard'),
                 ],
                 [

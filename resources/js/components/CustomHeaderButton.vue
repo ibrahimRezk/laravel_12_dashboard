@@ -1,7 +1,7 @@
 <script setup>
 import {  computed , ref } from "vue";
-import JetDropdown from "@/Components/Dropdown.vue";
-import Button from "@/Components/Button.vue";
+import Dropdown from "@/Components/Dropdown.vue";
+import Button from "./ui/button/Button.vue";
 import FilterIcon from "@/Components/Icons/Filter.vue";
 
 
@@ -53,7 +53,7 @@ const direction = computed(() => {
 
 <template>
 
-        <JetDropdown 
+        <Dropdown 
            
             :align="direction"
             :width="props.width"
@@ -92,5 +92,5 @@ const direction = computed(() => {
     
                 <div v-show="props.showTitle" class="border-t border-gray-100" />
             </template>
-        </JetDropdown>
+        </Dropdown>
 </template>
