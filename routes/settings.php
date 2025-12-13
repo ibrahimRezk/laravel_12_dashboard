@@ -13,6 +13,8 @@ Route::middleware(['auth', 'Lang' , 'verified'])->group(function () {
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('settings/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::delete('settings/profile/delete-profile-avatar', [ProfileController::class, 'deleteAvatar'])->name('current-user-avatar.delete'); // new
+
     Route::get('settings/password', [PasswordController::class, 'edit'])->name('user-password.edit');
 
     Route::put('settings/password', [PasswordController::class, 'update'])

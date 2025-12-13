@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -29,15 +30,31 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
 
+        if ($request->hasFile('avatar')) {
+            // Delete old avatar if it exists
+            if ($request->user()->avatar) {
+                Storage::disk('public')->delete($request->user()->avatar);
+            }
+
+            // Store new avatar
+            $path = $request->file('avatar')->store('avatars', 'public');
+
+            // $request->user()->avatar = $path;
+        }
+
+        $request->user()->fill($request->validated());
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
 
+        if ($request->hasFile('avatar')) {
+            $request->user()->avatar = $path;
+        }
+
         $request->user()->save();
 
-        return to_route('profile.edit');
+        return to_route('profile.edit')->with('success', 'profile updated successfully');
     }
 
     /**
@@ -51,6 +68,10 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        if ($user()->avatar) {
+            Storage::disk('public')->delete($request->user()->avatar);
+        }
+
         Auth::logout();
 
         $user->delete();
@@ -59,5 +80,19 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+
+    public function deleteAvatar(Request $request)
+    {
+        if ($request->user()->avatar) {
+            Storage::disk('public')->delete($request->user()->avatar);
+
+            $request->user()->avatar = null;
+            $request->user()->save();
+        }
+
+
+         return back()->with('success', 'profile updated successfully');
     }
 }

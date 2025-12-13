@@ -38,9 +38,13 @@ export type AppPageProps<
     sidebarOpen: boolean;
 };
 
+interface name {
+    ar: string,
+    en: string
+}
 export interface User {
     id: number;
-    name: string;
+    name: name;
     email: string;
     avatar?: string;
     email_verified_at: string | null;

@@ -1,5 +1,7 @@
 // 1. Rename to PascalCase
 export interface FullName {
+    // ar: string,
+    // en:string
     [key: string]: string; 
 }
 

@@ -25,6 +25,8 @@ return [
     'updated by' => 'تم التحديث بواسطة' ,
     'created at' => 'تاريخ الإضافة' ,
     'updated at' => 'تاريخ التعديل' ,
+    'Remove Photo' => 'حذف الصورة',
+    'Select A New Photo' => 'اختر صورة جديدة',
 
     'nationalities' => 'الجنسيات' ,
 ];

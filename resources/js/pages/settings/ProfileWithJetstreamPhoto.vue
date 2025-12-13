@@ -1,9 +1,8 @@
 <script setup lang="ts">
-    import { edit } from '@/routes/profile';
-    import { send } from '@/routes/verification';
-    import { Form, Head, Link, router, usePage } from '@inertiajs/vue3';
-    
-    import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
+import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
+import { edit } from '@/routes/profile';
+import { send } from '@/routes/verification';
+import { Form, Head, Link, usePage } from '@inertiajs/vue3';
 
 import DeleteUser from '@/components/DeleteUser.vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
@@ -14,14 +13,13 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { ref, watch } from 'vue';
 
 interface Props {
     mustVerifyEmail: boolean;
     status?: string;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -31,29 +29,44 @@ const breadcrumbItems: BreadcrumbItem[] = [
 ];
 
 const page = usePage();
-const user = ref(page.props.auth.user);
+const user = page.props.auth.user;
 
-watch(() => page.props.auth.user , ()=> user.value = page.props.auth.user)
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { ref } from 'vue';
 
 
-// const isOpen = ref(false);
-// let closeTimeout: ReturnType<typeof setTimeout> | null = null;
+const isOpen = ref(false);
+let closeTimeout: ReturnType<typeof setTimeout> | null = null;
 
-// const handleEnter = () => {
-//     // If we are about to close, cancel it! We are back "safe"
-//     if (closeTimeout) {
-//         clearTimeout(closeTimeout);
-//         closeTimeout = null;
-//     }
-//     isOpen.value = true;
-// };
+const handleEnter = () => {
+    // If we are about to close, cancel it! We are back "safe"
+    if (closeTimeout) {
+        clearTimeout(closeTimeout);
+        closeTimeout = null;
+    }
+    isOpen.value = true;
+};
 
-// const handleLeave = () => {
-//     // Give the user 200ms to cross the gap
-//     closeTimeout = setTimeout(() => {
-//         isOpen.value = false;
-//     }, 200);
-// };
+const handleLeave = () => {
+    // Give the user 200ms to cross the gap
+    closeTimeout = setTimeout(() => {
+        isOpen.value = false;
+    }, 200);
+};
+
 
 ///////////// avatar photo section ///////////////
 
@@ -67,7 +80,7 @@ const selectNewPhoto = () => {
 const updatePhotoPreview = () => {
     const photo = photoInput.value.files[0];
 
-    if (!photo) return;
+    if (! photo) return;
 
     const reader = new FileReader();
 
@@ -78,20 +91,19 @@ const updatePhotoPreview = () => {
     reader.readAsDataURL(photo);
 };
 
-const deleteCurrentUserAvatar = () => {
-   return router.delete(ProfileController.deleteAvatar() , {
-     preserveScroll: true,
+const deletePhoto = () => {
+    router.delete(route('current-user-photo.destroy'), {
+        preserveScroll: true,
         onSuccess: () => {
-            user.value =  page.props.auth.user;
             photoPreview.value = null;
             clearPhotoFileInput();
         },
-   });
+    });
 };
 
 const clearPhotoFileInput = () => {
-    if (photoInput.value) {
-        photoInput.value = null;
+    if (photoInput.value?.value) {
+        photoInput.value.value = null;
     }
 };
 </script>
@@ -100,7 +112,14 @@ const clearPhotoFileInput = () => {
     <AppLayout :breadcrumbs="breadcrumbItems" :header="'profile'">
         <Head title="Profile settings" />
         <SettingsLayout>
-            <!-- <DropdownMenu v-model:open="isOpen" :modal="false">
+
+
+
+ 
+
+
+
+            <DropdownMenu v-model:open="isOpen" :modal="false">
                 <DropdownMenuTrigger
                     as-child
                     @mouseenter="handleEnter"
@@ -174,7 +193,15 @@ const clearPhotoFileInput = () => {
                         </DropdownMenuItem>
                     </div>
                 </DropdownMenuContent>
-            </DropdownMenu> -->
+            </DropdownMenu>
+
+
+
+
+
+
+
+
 
             <div class="flex flex-col space-y-6">
                 <HeadingSmall
@@ -187,124 +214,89 @@ const clearPhotoFileInput = () => {
                     class="space-y-6"
                     v-slot="{ errors, processing, recentlySuccessful }"
                 >
-                    <!-- <div class="space-y-4">
-                <Label for="avatar">Profile Photo</Label>
-                
-                <div v-if="user.avatar" class="flex items-center mb-2">
-                    <img 
-                        :src="`/storage/${user.avatar}`" 
-                        :alt="user.name"
-                        class="w-20 h-20 rounded-full object-cover mr-4 border border-gray-200 shadow-sm"
+
+                <div v-if="user.avatar" class="mb-4">
+    <img 
+        :src="`/storage/${user.avatar}`" 
+        class="w-20 h-20 rounded-full object-cover" 
+    />
+</div>
+
+<!-- ////////////////////////////////////////////// -->
+
+<div class="mb-6">
+    <InputLabel for="avatar" value="Profile Photo" />
+    <input 
+    type="file" 
+        @input="form.avatar = $event.target.files[0]"
+        class="mt-1 block w-full text-sm text-gray-500
+               file:mr-4 file:py-2 file:px-4
+               file:rounded-full file:border-0
+               file:text-sm file:font-semibold
+               file:bg-violet-50 file:text-violet-700
+               hover:file:bg-violet-100"
+               />
+               <InputError class="mt-2" :message="form.errors.avatar" />
+            </div>
+            
+
+
+
+                        <!-- <div v-if="$page.props.jetstream.managesProfilePhotos" class="col-span-6 sm:col-span-4"> -->
+                        <div class="col-span-6 sm:col-span-4">
+                <!-- Profile Photo File Input -->
+                <input
+                    ref="photoInput"
+                    type="file"
+                    class="hidden"
+                    @change="updatePhotoPreview"
+                >
+
+                <!-- <InputLabel for="photo" value="Photo" /> -->
+
+                <!-- Current Profile Photo -->
+                <div v-show="! photoPreview" class="mt-2">
+                    <img alt="image"  :src="user.profile_photo_url" :alt="user.name" class="rounded-full h-20 w-20 object-cover">
+                </div>
+
+                <!-- New Profile Photo Preview -->
+                <div v-show="photoPreview" class="mt-2">
+                    <span
+                        class="block rounded-full w-20 h-20 bg-cover bg-no-repeat bg-center"
+                        :style="'background-image: url(\'' + photoPreview + '\');'"
                     />
                 </div>
-                <div class="flex items-center mb-2">
-                    <img 
-                        :src="`/storage/${user.avatar}`" 
-                        :alt="user.name"
-                        class="w-20 h-20 rounded-full object-cover mr-4 border border-gray-200 shadow-sm"
-                    />
-                </div>
-                
-                <input 
-                    id="avatar"
-                    type="file" 
-                    name="avatar" 
-                    class="block w-full text-sm text-gray-500
-                           file:mr-4 file:py-2 file:px-4
-                           file:rounded-lg file:border-0
-                           file:text-sm file:font-semibold
-                           file:bg-indigo-50 file:text-indigo-700
-                           hover:file:bg-indigo-100 cursor-pointer"
-                />
 
-                <InputError class="mt-2" :message="errors.avatar" />
-            </div> -->
+                <Button class="mt-2 mx-2" type="button" @click.prevent="selectNewPhoto">
+                    {{ $t('general.Select A New Photo') }}
+                </Button>
 
-                    <!-- ////////////////////////////////////////////////////////////////// -->
+                <Button
+                    v-if="user.profile_photo_path"
+                    type="button"
+                    class="mt-2"
+                    @click.prevent="deletePhoto"
+                >
+                {{ $t('general.Remove Photo') }}
+                </Button>
 
-                    <div class="col-span-6 sm:col-span-4">
-                        <!-- Profile Photo File Input -->
-                        <input
-                            ref="photoInput"
-                            type="file"
-                            name="avatar"
-                            class="hidden"
-                            @change="updatePhotoPreview"
-                        />
-
-                        <!-- <InputLabel for="photo" value="Photo" /> -->
-
-                        <!-- Current Profile Photo -->
-                        <div v-show="!photoPreview" class="mt-2">
-                            <img
-                            @click.prevent="selectNewPhoto"
-                                alt="image"
-                                :src=" user.avatar ? `/storage/${user.avatar}` : '' "
-                                :class=" user.avatar  ? 'h-20 w-20 rounded-full object-cover border border-gray-100/50  transition duration-400 ease-in-out hover:cursor-pointer hover:scale-110' : ' hidden' "
-                            />
-                        </div>
-
-                        <!-- New Profile Photo Preview -->
-                        <div v-show="photoPreview" class="mt-2">
-                            <span   @click.prevent="selectNewPhoto"
-                                class="block h-20 w-20 rounded-full bg-cover bg-center bg-no-repeat  transition duration-400 ease-in-out hover:cursor-pointer hover:scale-110"
-                                :style="
-                                    'background-image: url(\'' +
-                                    photoPreview +
-                                    '\');'
-                                "
-                            />
-                        </div>
-                        <Button
-                            class="mx-2 mt-2 hover:cursor-pointer"
-                            type="button"
-                            size="sm"
-                            @click.prevent="selectNewPhoto"
-                            >
-                            {{ $t('general.Select A New Photo') }}
-                        </Button>
-                        
-                        <Button
-                        v-if="user.avatar"
-                        type="button"
-                        size="sm"
-                            class="mt-2 hover:cursor-pointer"
-                            @click.prevent="deleteCurrentUserAvatar"
-                        >
-                            {{ $t('general.Remove Photo') }}
-                        </Button>
-
-                        <InputError class="mt-2" :message="errors.avatar" />
-                    </div>
-
-                    <!-- ////////////////////////////////////////////////////////////////// -->
-
+                <InputError :message="form.errors.photo" class="mt-2" />
+            </div>
+            
+            
+            <!-- ////////////////////////////////////////////// -->
                     <div class="grid gap-2">
-                        <Label for="name.ar">Name In Arabic</Label>
+                        <Label for="name">Name</Label>
                         <Input
                             id="name"
                             class="mt-1 block w-full"
-                            name="name[ar]"
-                            :default-value="user.name.ar"
+                            name="name"
+                            :default-value="user.name"
                             required
-                            autocomplete="name ar "
-                            placeholder="Full name in arabic"
+                            autocomplete="name"
+                            placeholder="Full name"
                         />
-                        <InputError class="mt-2" :message="errors['name.ar']" />
-                    </div>
-
-                    <div class="grid gap-2">
-                        <Label for="name">Name In English</Label>
-                        <Input
-                            id="name"
-                            class="mt-1 block w-full"
-                            name="name[en]"
-                            :default-value="user.name.en"
-                            required
-                            autocomplete="name en"
-                            placeholder="Full name in english"
-                        />
-                        <InputError class="mt-2" :message="errors['name.en']" />
+                        <InputError class="mt-2" :message="errors.name" />
                     </div>
 
                     <div class="grid gap-2">

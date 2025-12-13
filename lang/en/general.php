@@ -25,6 +25,8 @@ return [
     'updated by' => 'updated by' ,
     'created at' => 'created at' ,
     'updated at' => 'updated at' ,
+    'Remove Photo' => ' remove photo',
+    'Select A New Photo' => 'select a new photo  ',
     
     'nationalities' => 'nationalities' ,
 ];

@@ -1,17 +1,25 @@
 <script setup lang="ts">
 // import { loadLanguageAsync , getActiveLanguage} from "laravel-vue-i18n";
-import { Link, router } from '@inertiajs/vue3';
+import { Link, router , usePage } from '@inertiajs/vue3';
 import { loadLanguageAsync } from 'laravel-vue-i18n';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 import { lang, logout } from '@/routes';
-import { LogOut } from 'lucide-vue-next';
+import { LogOut, User } from 'lucide-vue-next';
 
 import { edit as profileLink } from '@/routes/profile';
 
 import { useInitials } from '@/composables/useInitials';
 
 const { getInitials } = useInitials();
+
+
+
+const page = usePage();
+const user = ref(page.props.auth.user);
+
+watch(() => page.props.auth.user , ()=> user.value = page.props.auth.user)
+
 
 const handleLogout = () => {
     router.flushAll();
@@ -140,7 +148,7 @@ const direction = computed(() => {
                     viewBox="0 0 15 15"
                     width="1.2em"
                     height="1.2em"
-                    class="h-5 w-[20px] text-foreground"
+                    class="h-5 w-5 text-foreground"
                 >
                     <path
                         fill="currentColor"
@@ -419,19 +427,28 @@ const direction = computed(() => {
                 v-model:open="profileOpen"
                 :modal="false"
             >
-                <div
+                <div class="  flex "
                     @mouseenter="ProfileMenu.handleEnter"
                     @mouseleave="ProfileMenu.handleLeave"
                 >
                     <DropdownMenuTrigger as-child>
                         <span
-                            class="inline-flex rounded-full transition hover:scale-110"
+                            class="inline-flex rounded-full justify-center align-middle transition hover:scale-110"
                         >
                             <button
                                 type="button"
-                                class="hover: inline-flex items-center rounded-full border border-transparent bg-white px-3 py-2 text-sm font-medium text-gray-500 transition hover:text-gray-700 focus:outline-none"
+                               
                             >
-                                {{ getInitials($page.props?.auth?.user?.name) }}
+                            <div v-if="user.avatar">
+                            <img
+                                alt="image"
+                                :src=" user.avatar ? `/storage/${user.avatar}` : '' "
+                                class="h-9 w-9 rounded-full  border border-gray-100/50 object-cover"
+                            />
+                            </div>
+                            <div v-else  class="hover:inline-flex items-center rounded-full border border-transparent bg-white px-3 py-2 text-sm font-medium text-gray-500 transition hover:text-gray-700 focus:outline-none">
+                                {{ getInitials(user.name) }}
+                            </div>
                             </button>
                         </span>
                     </DropdownMenuTrigger>
