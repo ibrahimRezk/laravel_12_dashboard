@@ -38,7 +38,7 @@ const props = defineProps({
         default: "", 
     },
 
-    printMode: {
+    printMode: { 
         type: Boolean,
         default: false,
     },

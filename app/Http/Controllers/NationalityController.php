@@ -109,8 +109,10 @@ class NationalityController extends Controller
             'filters' => (object) $request->all(),
             'routeResourceName' => $this->routeResourceName,
             'can' => [
-                'create' => $request->user()->can('create nationality'),
-                'delete' => $request->user()->can('delete nationality'),
+                'create' => true,
+                'delete' => true,
+                // 'create' => $request->user()->can('create nationality'),
+                // 'delete' => $request->user()->can('delete nationality'),
             ],
 
             'method' => 'index', // used in composable filters

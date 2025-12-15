@@ -1,35 +1,30 @@
 <script setup lang="ts">
-import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import  NationalityController  from '@/actions/App/Http/Controllers/NationalityController';
+import NationalityController from '@/actions/App/Http/Controllers/NationalityController';
 
-import { send } from '@/routes/verification';
-import { Form, Head, Link, usePage } from '@inertiajs/vue3';
-import { ref } from 'vue';
-import HeadingSmall from '@/components/HeadingSmall.vue';
-import InputError from '@/components/InputError.vue';
+import AddNew from '@/components/AddNew.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
-import Filters from "./Filters.vue";
 import { type BreadcrumbItem } from '@/types';
-import AddNew from '@/components/AddNew.vue';
+import { Head } from '@inertiajs/vue3';
+import { ref } from 'vue';
+import Filters from './Filters.vue';
 // import CustomHeaderButton from "@/Components/CustomHeaderButton.vue";
+import Modal from '@/Components/ConfirmationModal.vue';
 import Container from '@/components/Container.vue';
-import Table from "@/Components/Table/Table.vue";
-import Td from "@/Components/Table/Td.vue";
-import Actions from "@/Components/Table/Actions.vue";
-import Modal from "@/Components/ConfirmationModal.vue";
-import DialogModal from "@/Components/DialogModal.vue";
+import DialogModal from '@/Components/DialogModal.vue';
+import Actions from '@/Components/Table/Actions.vue';
+import Table from '@/Components/Table/Table.vue';
+import Td from '@/Components/Table/Td.vue';
 import { Label } from '@/components/ui/label';
 // import Label from "@/Components/Label.vue";
-import CheckboxGroup from '@/Components/CheckboxGroup.vue';
 
 import Checkbox from '@/Components/Checkbox.vue';
-import useHeaders from "@/Composables/useHeaders.js";
-import useFilters from "@/Composables/useFilters.js";
-import useDeleteItem from "@/Composables/useDeleteItem.js";
-import useDialogModal from "@/Composables/useDialogModal.js";
 import CustomHeaderButton from '@/Components/CustomHeaderButton.vue';
+import useDeleteItem from '@/Composables/useDeleteItem.js';
+import useDialogModal from '@/Composables/useDialogModal.js';
+import useFilters from '@/Composables/useFilters.js';
+import useHeaders from '@/Composables/useHeaders.js';
 
 import { watch } from 'vue';
 
@@ -37,7 +32,6 @@ interface header {
     name: string;
     title: string;
 }
-
 
 interface meta {
     current_page: number;
@@ -56,7 +50,7 @@ interface links {
 }
 
 interface itemsData {
-    data: object[] ;
+    data: object[];
     links: links;
     meta: meta;
 }
@@ -78,21 +72,19 @@ interface Props {
     can?: permissions;
 }
 
-
 const props = withDefaults(defineProps<Props>(), {
     edit: false,
     title: '',
     routeResourceName: '',
-    headers: () => [], 
-    items:  () => ({
+    headers: () => [],
+    items: () => ({
         data: [],
         links: {
             first: '',
             last: '',
             prev: null,
             next: null,
-        }
-        ,
+        },
         meta: {
             current_page: 1,
             from: 1,
@@ -112,8 +104,6 @@ const props = withDefaults(defineProps<Props>(), {
     method: '',
 });
 
-
-
 const breadcrumb: BreadcrumbItem[] = [
     {
         title: props.title,
@@ -121,26 +111,32 @@ const breadcrumb: BreadcrumbItem[] = [
     },
 ];
 
-
-
-
-
-
 const opened = ref(0);
-const method = ref("");
-const showScreenExeptSubmenu = ref(false);
+const method = ref('');
+// const showScreenExeptSubmenu = ref(false);
 const routeResourceName = ref(props.routeResourceName);
 const editMode = ref(false);
 
-
 const emptyErrors = () => {
-    Object.keys(props.errors).forEach((error) => (props.errors[error] = ""));
+    Object.keys(props.errors).forEach((error) => (props.errors[error] = ''));
 };
 
+////////////////////////////////
 
+import { useModal } from '@/composables/useModal';
+import InputGroup from '@/components/InputGroup.vue';
+// import EditProfileForm from './EditProfileForm.vue'
 
+const { open } = useModal();
 
-const fireshowDialogModal = () => {
+function fireshowDialogModal() {
+    // function handleEdit() {
+    open();
+}
+
+//////////////////////////////////////////
+
+const fireshowDialogModal2 = () => {
     editMode.value = false;
     emptyErrors();
     showDialogModal();
@@ -164,13 +160,12 @@ const currentItem = ref<NationalityForm>({
 const fireShowEditModal = (item: object) => {
     // form.reset();
     editMode.value = true;
-    method.value = "update";
+    method.value = 'update';
     emptyErrors();
     currentItem.value = item as NationalityForm;
     // fillForm(item);
     showEditModal(item);
 };
-
 
 const { filterHeadersMethod, showColumnItems, finalHeaders, filteredHeaders } =
     useHeaders({
@@ -181,10 +176,8 @@ const { filterHeadersMethod, showColumnItems, finalHeaders, filteredHeaders } =
 
 watch(
     () => filteredHeaders.value,
-    () => filterHeadersMethod()
+    () => filterHeadersMethod(),
 );
-
-
 
 const {
     closeDialogModal,
@@ -198,11 +191,10 @@ const {
     routeResourceName: routeResourceName,
     // form: form,
     opened,
-    showScreenExeptSubmenu,
+    // showScreenExeptSubmenu,
     method,
     editMode,
 });
-
 
 const { filters, isLoading, isFilled, resetFilter } = useFilters({
     filters: props.filters,
@@ -221,8 +213,6 @@ const {
 } = useDeleteItem({
     routeResourceName: props.routeResourceName,
 });
-
-
 
 const checkedItems = ref([]);
 const checkAllItems = () => {
@@ -243,14 +233,13 @@ watch(
     () =>
         checkedItems.value.length > 0
             ? (checkedAllButton.value = true)
-            : (checkedAllButton.value = false)
+            : (checkedAllButton.value = false),
 );
 
 const deleteAll = () => {
     deleteMultipleItems.value = true;
     showDeleteModal(checkedItems.value);
 };
-
 
 interface filtersValuesDataType {
     [key: string]: {
@@ -260,7 +249,7 @@ interface filtersValuesDataType {
 }
 
 const filtersValuesData = ref({} as filtersValuesDataType);
-const filtersValuesDataMethod = (data :filtersValuesDataType  ) => {
+const filtersValuesDataMethod = (data: filtersValuesDataType) => {
     filtersValuesData.value = data;
 };
 
@@ -268,16 +257,14 @@ const animate = ref(true);
 const startLeaveAnimation = () => {
     animate.value = false;
 };
-
 </script>
 
 <template>
     <AppLayout :breadcrumbs="breadcrumb" :header="'profile'">
         <Head :title="props.title" />
 
-            <Container>
-
-                           <AddNew
+        <Container>
+            <AddNew
                 :show="isFilled"
                 @reset="resetFilter"
                 @deleteAll="deleteAll"
@@ -289,7 +276,7 @@ const startLeaveAnimation = () => {
                     v-if="can.create"
                     @click="fireshowDialogModal"
                 >
-                    {{ $t("general.add new nationality") }}
+                    {{ $t('general.add new nationality') }}
                 </Button>
 
                 <!-- /////////////////////////////////////////custum headers /////////////////////////////////////////////////// -->
@@ -316,19 +303,19 @@ const startLeaveAnimation = () => {
                                 :key="index"
                             >
                                 <Label
-                                    class="mx-1 mt-2 mb-2 rtl:bg-linear-to-r ltr:bg-linear-to-l from-yellow-500 via-orange-600 to-red-900 px-2 py-1 rounded shadow-md border border-gray-300"
+                                    class="rtl:bg-linear-to-r ltr:bg-linear-to-l mx-1 mb-2 mt-2 rounded border border-gray-300 from-yellow-500 via-orange-600 to-red-900 px-2 py-1 shadow-md"
                                 >
-                                    <div class=" w-full flex justify-between">
+                                    <div class="flex w-full justify-between">
                                         <div>
                                             <h1 class="text-gray-200">
                                                 {{
-                                                    $t("general." + header.name)
+                                                    $t('general.' + header.name)
                                                 }}
                                             </h1>
                                         </div>
                                         <div>
                                             <input
-                                                class="rounded mx-1 border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                                class="mx-1 rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                                 type="checkbox"
                                                 :id="header.name"
                                                 :value="header"
@@ -344,10 +331,7 @@ const startLeaveAnimation = () => {
                 <!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
             </AddNew>
 
-
-
-
-                   <Table
+            <Table
                 @startLeaveAnimation="startLeaveAnimation"
                 :headers="finalHeaders"
                 :items="items"
@@ -372,27 +356,26 @@ const startLeaveAnimation = () => {
                                         'paginationNumber'))
                         "
                     >
-                        {{ $t("general.list_of") }}
-                        {{ $t("general." + props.title) }}
+                        {{ $t('general.list_of') }}
+                        {{ $t('general.' + props.title) }}
                     </span>
 
                     <span v-else class=" ">
-                        <span class="text-yellow-100 px-2 text-sm">
-                            {{ $t("general.active filters") }} :
+                        <span class="px-2 text-sm text-yellow-100">
+                            {{ $t('general.active filters') }} :
                         </span>
-
 
                         <span class="flex flex-wrap">
                             <span v-for="(f, i) in filtersValuesData" :key="i">
                                 <Button
                                     v-if="f.data"
-                                    class="mx-1 flex justify-between mt-2 items-center"
+                                    class="mx-1 mt-2 flex items-center justify-between"
                                     small
                                     color="transparent_yellow"
                                 >
-                                    {{ $t("general." + i) }} :
+                                    {{ $t('general.' + i) }} :
                                     <Button
-                                        class="rtl:mr-1 ltr:ml-1 my-1 flex"
+                                        class="my-1 flex ltr:ml-1 rtl:mr-1"
                                         small
                                         color="transparent_yellow"
                                     >
@@ -400,7 +383,7 @@ const startLeaveAnimation = () => {
                                             {{ f.data }}
                                         </span>
                                         <span
-                                            class="rtl:mr-2 ltr:ml-2 text-xs my-1"
+                                            class="my-1 text-xs ltr:ml-2 rtl:mr-2"
                                             @click="filters[f.id] = ''"
                                         >
                                             x
@@ -409,12 +392,12 @@ const startLeaveAnimation = () => {
                                 </Button>
                             </span>
                             <Button
-                                class="w-40 mx-1 mt-2"
+                                class="mx-1 mt-2 w-40"
                                 small
                                 color="transparent_red"
                             >
                                 <span @click="resetFilter">{{
-                                    $t("general.reset filter")
+                                    $t('general.reset filter')
                                 }}</span>
                             </Button>
                         </span>
@@ -426,7 +409,7 @@ const startLeaveAnimation = () => {
                         <Checkbox
                             v-if="item.can.delete"
                             :value="item"
-                            class="rtl:mr-1 ltr:ml-1"
+                            class="ltr:ml-1 rtl:mr-1"
                             v-model:checked="checkedItems"
                         />
                     </Td>
@@ -453,8 +436,8 @@ const startLeaveAnimation = () => {
                         >
                             {{
                                 item.active == true
-                                    ? $t("general.yes")
-                                    : $t("general.no")
+                                    ? $t('general.yes')
+                                    : $t('general.no')
                             }}
                         </Button>
                     </Td>
@@ -507,25 +490,20 @@ const startLeaveAnimation = () => {
                     </Td>
                 </template>
             </Table>
-                
-            </Container>
-
-
+        </Container>
     </AppLayout>
-
-
 
     <Modal :show="deleteModal" @close="close">
         <template #title>
-            <span class="text-red-800">{{ $t("general.delete") }} : </span>
+            <span class="text-red-800">{{ $t('general.delete') }} : </span>
             {{
                 deleteMultipleItems
-                    ? $t("general.all_selected")
+                    ? $t('general.all_selected')
                     : itemToDelete[0].name
             }}
         </template>
         <template #content>
-            {{ $t("general.delete confirmation") }}
+            {{ $t('general.delete confirmation') }}
         </template>
         <template #footer>
             <Button
@@ -533,15 +511,30 @@ const startLeaveAnimation = () => {
                 :disabled="isDeleting"
                 color="red"
             >
-                <span v-if="isDeleting">{{ $t("general.deleting") }}</span>
-                <span v-else>{{ $t("general.delete") }}</span>
+                <span v-if="isDeleting">{{ $t('general.deleting') }}</span>
+                <span v-else>{{ $t('general.delete') }}</span>
             </Button>
         </template>
     </Modal>
 
-    <!-- //////////////////////////Dialog Modal/////////////////////////////////////// -->
+    <DialogModal>
 
-    <DialogModal
+        <InputGroup
+        type="date"
+        class="w-52"
+        />
+
+
+        <Label for="username-1" class="dialog-label">User name</Label>
+        <Input
+            class="dialog-input"
+            id="username-1"
+            name="username"
+            default-value="@peduarte"
+        />
+    </DialogModal>
+
+    <!-- <DialogModal
         :show="dialogModal"
         @close="closeDialogModal"
     >
@@ -616,7 +609,7 @@ const startLeaveAnimation = () => {
                 </div>
             </Form>
         </template>
-    </DialogModal>
+    </DialogModal> -->
 
     <!-- <DialogModal
         :show="dialogModal"

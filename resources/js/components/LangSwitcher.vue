@@ -2,7 +2,7 @@
 // import { loadLanguageAsync , getActiveLanguage} from "laravel-vue-i18n";
 import { Link, router , usePage } from '@inertiajs/vue3';
 import { loadLanguageAsync } from 'laravel-vue-i18n';
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 import { lang, logout } from '@/routes';
 import { LogOut, User } from 'lucide-vue-next';
@@ -32,6 +32,33 @@ const current_lang = document
 type appearance = 'dark' | 'light' | 'system';
 
 const mode = ref<appearance>('system');
+
+onMounted(() => {
+    // On page load or when changing appearances, best to add inline in `head` to avoid FOUC
+    if (
+        !("appearance" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+        document.documentElement.classList.add("dark");
+        mode.value = "system";
+    } else if (
+        !("appearance" in localStorage) &&
+        !window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+        document.documentElement.classList.remove("dark");
+        mode.value = "system";
+    } else if (
+        localStorage.appearance === "dark" ||
+        (!("appearance" in localStorage) &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+        document.documentElement.classList.add("dark");
+        mode.value = "dark";
+    } else {
+        document.documentElement.classList.remove("dark");
+        mode.value = "light";
+    }
+});
 
 const switchMode = (value: appearance) => {
     if (value === 'dark') {
