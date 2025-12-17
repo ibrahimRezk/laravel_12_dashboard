@@ -3,19 +3,27 @@ import { router } from "@inertiajs/vue3";
 import { trans } from "laravel-vue-i18n";
 import { usePage } from "@inertiajs/vue3";
 
+
+
+const itemToDelete = ref([]);
+const deleteModal = ref(false);
+const deleteMultipleItems = ref(false);
+const isDeleting = ref(false);
+const ids = ref([]);
+const destroyRoute = ref();
+const method = ref();
+
 export default function (params) {
-    const { routeResourceName: theRouteResourceName, method: calledMethod } =
-        params;
 
-    const method = ref(calledMethod ?? "destroy");
-    const routeResourceName = ref(theRouteResourceName);
+    const { destroyRoute: thedestroyRoute, method: calledMethod } =
+    params;
+    
+    destroyRoute.value = thedestroyRoute
+    method.value = calledMethod ?? "destroy"
+    
 
-    // const itemToDelete = ref({});
-    const itemToDelete = ref([]);
-    const deleteModal = ref(false);
-    const deleteMultipleItems = ref(false);
-    const isDeleting = ref(false);
-    const ids = ref([]);
+
+    // console.log(destroy.url)
 
     const current_lang = document
         .getElementsByTagName("html")[0]
@@ -29,12 +37,14 @@ export default function (params) {
         // itemToDelete.value = {};
     }
 
+
     function showDeleteModal(item) {
         deleteModal.value = true;
-
+        itemToDelete.value = []
+        ids.value = []
         if (deleteMultipleItems.value == true) {
             itemToDelete.value = item;
-            itemToDelete.value.forEach((i) => ids.value.push(i.id));
+            itemToDelete.value.forEach((id) => ids.value.push(id));
         } else {
             itemToDelete.value.push(item);
             ids.value.push(item.id);
@@ -42,11 +52,18 @@ export default function (params) {
     }
 
     function handleDeleteItem() {
-        // console.log(ids.value)
-        router.delete(
-            route(`${routeResourceName.value}.${method.value}`, {
-                id: ids.value,
-            }),
+
+// console.log('llll')
+// console.log(ids.value)
+
+        router.delete(destroyRoute.value.url(`${ids.value}`) ,
+        // router.delete(
+
+            // route(`${destroyRoute.value}.${method.value}`, {
+            //     id: ids.value,
+            // }),
+
+
             {
                 preserveScroll: true,
                 preserveState: true,
@@ -54,6 +71,7 @@ export default function (params) {
                     isDeleting.value = true;
                 },
                 onSuccess: () => {
+                    console.log('success')
                     deleteModal.value = false;
                     itemToDelete.value = [];
                     ids.value = [];

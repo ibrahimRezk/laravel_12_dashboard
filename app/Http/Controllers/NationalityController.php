@@ -126,20 +126,17 @@ class NationalityController extends Controller
 
     public function store(NationalityRequest $request)
     {
-        // dd($request);
         DB::beginTransaction();
-
         try {
-            $data = $request->safe()->only(['active']);
-
+            // $data = $request->safe()->only(['active']);
+            
             $data["name"]["ar"] = $request->name['ar'];
             $data["name"]["en"] = $request->name['en'];
+            $data['active'] = $request->boolean('active');
             $data["date"] = date('Y-m-d');
             $data["added_by"] = auth()->user()->id;
             // $data["updated_by"] = auth()->user()->id;
-            // dd($data);
             Nationality::create($data);
-
             DB::commit();
 
             return back()->with('success', 'item created successfully');
@@ -159,6 +156,7 @@ class NationalityController extends Controller
 
             $data["name"]["ar"] = $request->name['ar'];
             $data["name"]["en"] = $request->name['en'];
+            $data['active'] = $request->boolean('active');
             $data["date"] = date('Y-m-d');
             // $data["added_by"] = auth()->user()->id;
             $data["updated_by"] = auth()->user()->id;
@@ -179,7 +177,7 @@ class NationalityController extends Controller
     public function destroy($ids)
     {
         $all_ids = explode(',', $ids);
-
+        
         foreach ($all_ids as $id) {
             $nationality = Nationality::find($id);
 

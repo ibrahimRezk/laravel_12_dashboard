@@ -20,7 +20,7 @@ withDefaults(
     <header>
 
     <div
-        class="flex h-12 shrink-0 items-center gap-2 border-b border-sidebar-border/70 px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4"
+        class="flex h-12 shrink-0 items-center gap-2  px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4"
     >
         <div class="flex w-full justify-between gap-2">
             <div class="flex items-center gap-2">
@@ -35,7 +35,7 @@ withDefaults(
         </div>
     </div>
 
-    <div class="shadow mx-auto  from-zinc-950 via-zinc-950 to-zinc-950/20 px-2 py-2.5  leading-tight  text-white capitalize sm:px-6 lg:px-5 ltr:bg-linear-to-r rtl:bg-linear-to-l " v-if="header">
+    <div class="shadow  from-zinc-950 via-zinc-950 to-zinc-950/20 px-2 py-2.5  leading-tight  text-white capitalize sm:px-6 lg:px-5 ltr:bg-linear-to-r rtl:bg-linear-to-l " v-if="header">
         <div
             class=" flex justify-start font-bold  text-3xl"
         >

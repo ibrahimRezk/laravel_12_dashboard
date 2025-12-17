@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import NationalityController from '@/actions/App/Http/Controllers/NationalityController';
-
+import { store , update , destroy } from '@/routes/nationalities'
 import AddNew from '@/components/AddNew.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Form, Head, useForm } from '@inertiajs/vue3';
+import { computed, onMounted, ref } from 'vue';
 import Filters from './Filters.vue';
 // import CustomHeaderButton from "@/Components/CustomHeaderButton.vue";
 import Modal from '@/Components/ConfirmationModal.vue';
@@ -21,10 +21,10 @@ import { Label } from '@/components/ui/label';
 
 import Checkbox from '@/Components/Checkbox.vue';
 import CustomHeaderButton from '@/Components/CustomHeaderButton.vue';
-import useDeleteItem from '@/Composables/useDeleteItem.js';
 import useDialogModal from '@/Composables/useDialogModal.js';
 import useFilters from '@/Composables/useFilters.js';
 import useHeaders from '@/Composables/useHeaders.js';
+
 
 import { watch } from 'vue';
 
@@ -123,48 +123,73 @@ const emptyErrors = () => {
 
 ////////////////////////////////
 
+import InputError from '@/Components/InputError.vue';
+// import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
+import DialogFooter from '@/components/ui/dialog/DialogFooter.vue';
+import Spinner from '@/components/ui/spinner/Spinner.vue';
 import { useModal } from '@/composables/useModal';
-import InputGroup from '@/components/InputGroup.vue';
+import { Alert } from '@/components/ui/alert';
+import AlertDialog from '@/components/AlertDialog.vue';
+import useDeleteItem from '@/composables/useDeleteItem';
 // import EditProfileForm from './EditProfileForm.vue'
 
-const { open } = useModal();
+const { open , isOpen , openAlert ,  alertIsOpen } = useModal();
 
 function fireshowDialogModal() {
     // function handleEdit() {
+    editMode.value = false;
     open();
 }
 
 //////////////////////////////////////////
 
-const fireshowDialogModal2 = () => {
-    editMode.value = false;
-    emptyErrors();
-    showDialogModal();
-};
+// const fireshowDialogModal2 = () => {
+//     editMode.value = false;
+//     emptyErrors();
+//     showDialogModal();
+// };
 
 interface NationalityForm {
+    id: number;
     name: {
         ar: string;
         en: string;
     };
     active: boolean;
 }
-const currentItem = ref<NationalityForm>({
+const currentItem = useForm<NationalityForm>({
+    id : 0 ,
     name: {
         ar: '',
         en: '',
     },
-    active: false,
+    active: true,
 });
 
+
+const fillForm = (item) => {
+    Object.keys(currentItem).forEach((key) =>
+        item[key] !== undefined && key !== "name" ? (currentItem[key] = item[key]) : ""
+    );
+    currentItem.name.ar = item["name.ar"];
+    currentItem.name.en = item["name.en"];
+};
+
+
+watch(()=> isOpen.value , ()=> isOpen.value == false ? 
+  currentItem.reset() : ''
+)
+
+// watch(()=> isOpen.value , ()=> console.log(isOpen.value))
+
 const fireShowEditModal = (item: object) => {
-    // form.reset();
+    currentItem.reset();
+    isOpen.value = true
+    fillForm(item)
     editMode.value = true;
-    method.value = 'update';
     emptyErrors();
-    currentItem.value = item as NationalityForm;
-    // fillForm(item);
-    showEditModal(item);
+
+    // method.value = 'update';
 };
 
 const { filterHeadersMethod, showColumnItems, finalHeaders, filteredHeaders } =
@@ -196,11 +221,7 @@ const {
     editMode,
 });
 
-const { filters, isLoading, isFilled, resetFilter } = useFilters({
-    filters: props.filters,
-    routeResourceName: props.routeResourceName,
-    method: props.method,
-});
+
 
 const {
     close,
@@ -214,27 +235,61 @@ const {
     routeResourceName: props.routeResourceName,
 });
 
+const { filters, isLoading, isFilled, resetFilter } = useFilters({
+    filters: props.filters,
+    routeResourceName: props.routeResourceName,
+    method: props.method,
+});
+
+
+
+const checkedAllButton = ref(false);
 const checkedItems = ref([]);
+
+
 const checkAllItems = () => {
     if (!checkedItems.value.length) {
         props.items.data.forEach((item) => {
             if (item.can.delete == true) {
-                checkedItems.value.push(item);
+                checkedItems.value.push(item.id);
             }
         });
     } else {
         checkedItems.value = [];
     }
 };
-const checkedAllButton = ref(false);
+
+
 
 watch(
     () => checkedItems.value,
     () =>
         checkedItems.value.length > 0
             ? (checkedAllButton.value = true)
-            : (checkedAllButton.value = false),
+            : (checkedAllButton.value = false)
 );
+
+watch(
+    () => checkedItems.value.length,
+    () =>
+        checkedItems.value.length > 0
+            ? (checkedAllButton.value = true)
+            : (checkedAllButton.value = false)
+);
+
+watch(
+    () => deleteMultipleItems.value,
+    () =>
+        deleteMultipleItems.value == false
+            ? (checkedItems.value = [] , checkedAllButton.value = false)
+            : ''
+);
+
+
+const showDeleteItem = (item) => {
+    deleteMultipleItems.value = false;
+    showDeleteModal(item);
+};
 
 const deleteAll = () => {
     deleteMultipleItems.value = true;
@@ -272,19 +327,22 @@ const startLeaveAnimation = () => {
                 :showDeleteAll="can.delete"
             >
                 <Button
-                    color="linear_blue"
+                    variant="linear_blue"
+                    size="sm"
                     v-if="can.create"
                     @click="fireshowDialogModal"
                 >
                     {{ $t('general.add new nationality') }}
                 </Button>
 
+                <!-- <template #filters></template> -->
+
                 <!-- /////////////////////////////////////////custum headers /////////////////////////////////////////////////// -->
                 <template #customHeaderButton>
                     <CustomHeaderButton
                         :showTitle="false"
                         button_title="filter"
-                        color="linear_black"
+                        variant="linear_black"
                         width="60"
                         size="xs"
                         iconType="filter"
@@ -303,7 +361,7 @@ const startLeaveAnimation = () => {
                                 :key="index"
                             >
                                 <Label
-                                    class="rtl:bg-linear-to-r ltr:bg-linear-to-l mx-1 mb-2 mt-2 rounded border border-gray-300 from-yellow-500 via-orange-600 to-red-900 px-2 py-1 shadow-md"
+                                    class="mx-1 mt-2 mb-2 rounded border border-gray-300 from-yellow-500 via-orange-600 to-red-900 px-2 py-1 shadow-md ltr:bg-linear-to-l rtl:bg-linear-to-r"
                                 >
                                     <div class="flex w-full justify-between">
                                         <div>
@@ -315,7 +373,7 @@ const startLeaveAnimation = () => {
                                         </div>
                                         <div>
                                             <input
-                                                class="mx-1 rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                                class="focus:ring-opacity-50 mx-1 rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200"
                                                 type="checkbox"
                                                 :id="header.name"
                                                 :value="header"
@@ -335,8 +393,8 @@ const startLeaveAnimation = () => {
                 @startLeaveAnimation="startLeaveAnimation"
                 :headers="finalHeaders"
                 :items="items"
+                :checked-all-button="checkedAllButton"
                 @checkedAll="checkAllItems()"
-                :checkedAllButton="checkedAllButton"
                 noNamePadding
                 class="mt-2"
             >
@@ -370,14 +428,14 @@ const startLeaveAnimation = () => {
                                 <Button
                                     v-if="f.data"
                                     class="mx-1 mt-2 flex items-center justify-between"
-                                    small
-                                    color="transparent_yellow"
+                                    size="sm"
+                                    variant="transparent_yellow"
                                 >
                                     {{ $t('general.' + i) }} :
                                     <Button
                                         class="my-1 flex ltr:ml-1 rtl:mr-1"
-                                        small
-                                        color="transparent_yellow"
+                                        size="sm"
+                                        variant="transparent_yellow"
                                     >
                                         <span>
                                             {{ f.data }}
@@ -393,8 +451,8 @@ const startLeaveAnimation = () => {
                             </span>
                             <Button
                                 class="mx-1 mt-2 w-40"
-                                small
-                                color="transparent_red"
+                                size="sm"
+                                variant="transparent_red"
                             >
                                 <span @click="resetFilter">{{
                                     $t('general.reset filter')
@@ -408,10 +466,13 @@ const startLeaveAnimation = () => {
                     <Td light>
                         <Checkbox
                             v-if="item.can.delete"
-                            :value="item"
-                            class="ltr:ml-1 rtl:mr-1"
+                            :value="item.id"
+                            class="rtl:mr-1 ltr:ml-2"
                             v-model:checked="checkedItems"
                         />
+
+                    
+        
                     </Td>
                     <!-- ///////////////////////////////////////////////////// -->
                     <Td light v-show="showColumnItems('#')">
@@ -419,19 +480,19 @@ const startLeaveAnimation = () => {
                     </Td>
 
                     <Td light v-show="showColumnItems('name')">
-                        <Button color="linear_orange" small class="">
+                        <Button variant="linear_orange" size="sm">
                             {{ item.name }}
                         </Button>
                     </Td>
 
                     <Td bold v-show="showColumnItems('active')">
                         <Button
-                            :color="
+                            :variant="
                                 item.active == true
                                     ? 'linear_green'
                                     : 'linear_red'
                             "
-                            small
+                            size="sm"
                             class=""
                         >
                             {{
@@ -443,25 +504,25 @@ const startLeaveAnimation = () => {
                     </Td>
 
                     <Td bold v-show="showColumnItems('added by')">
-                        <Button color="linear_blue" small class="">
+                        <Button variant="linear_blue" size="sm" class="">
                             {{ item.added_by_user?.name }}
                         </Button>
                     </Td>
                     <Td bold v-show="showColumnItems('updated by')">
-                        <Button color="linear_green" small class="">
+                        <Button variant="linear_green" size="sm" class="">
                             {{ item.updated_by_user?.name }}
                         </Button>
                     </Td>
 
-                    <Td bold v-show="showColumnItems('created_at')">
-                        <Button color="linear_yellow" small>
+                    <Td bold v-show="showColumnItems('created at')">
+                        <Button variant="linear_yellow" size="sm">
                             {{ item.created_at_formatted }}
                         </Button>
 
                         <!-- {{  new Date(item.created_at).toLocaleString() }} -->
                     </Td>
                     <Td bold v-show="showColumnItems('updated at')">
-                        <Button color="linear_orange" small>
+                        <Button variant="linear_orange" size="sm">
                             {{ item.updated_at_formatted }}
                         </Button>
 
@@ -484,7 +545,7 @@ const startLeaveAnimation = () => {
                             :show-edit="item.can.edit"
                             :show-delete="item.can.delete"
                             @editClicked="fireShowEditModal(item)"
-                            @deleteClicked="showDeleteModal(item)"
+                            @deleteClicked="showDeleteItem(item)"
                         >
                         </Actions>
                     </Td>
@@ -493,8 +554,51 @@ const startLeaveAnimation = () => {
         </Container>
     </AppLayout>
 
-    <Modal :show="deleteModal" @close="close">
-        <template #title>
+    <AlertDialog :destroyRoute="destroy"/>
+
+<!-- 
+          <AlertDialog  v-model:open="alertIsOpen">
+
+    <AlertDialogTrigger as-child>
+      <Button variant="outline">
+        Show Dialog
+      </Button>
+    </AlertDialogTrigger>
+    
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>
+
+            <span class="text-red-800">{{ $t('general.delete') }} : </span>
+            {{
+                deleteMultipleItems
+                    ? $t('general.all_selected')
+                    : itemToDelete[0].name
+            }}Are you absolutely sure?
+
+        </AlertDialogTitle>
+        <AlertDialogDescription>
+
+          {{ $t('general.delete confirmation') }}
+
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction
+        @click="handleDeleteItem"
+                :disabled="isDeleting"
+                variant="red"
+                >
+            <span v-if="isDeleting">{{ $t('general.deleting') }}</span>
+                <span v-else>{{ $t('general.delete') }}</span>
+        </AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog> -->
+
+
+        <!-- <template #title>
             <span class="text-red-800">{{ $t('general.delete') }} : </span>
             {{
                 deleteMultipleItems
@@ -509,29 +613,105 @@ const startLeaveAnimation = () => {
             <Button
                 @click="handleDeleteItem"
                 :disabled="isDeleting"
-                color="red"
+                variant="red"
             >
                 <span v-if="isDeleting">{{ $t('general.deleting') }}</span>
                 <span v-else>{{ $t('general.delete') }}</span>
             </Button>
-        </template>
-    </Modal>
+        </template> -->
 
     <DialogModal>
+        <Form
+            v-bind=" editMode ? update.form(currentItem.id) :  store.form()"
+            :reset-on-success="['name.ar', 'name.en', 'active']"
+            disable-while-processing
+            :show-progress="false"
+            @success="isOpen = false"
+            :options="{
+                preserveScroll: true,
+                preserveState: true,
+                preserveUrl: true,
+                replace: true,
+            }"
+            v-slot="{ errors, processing }"
+            >
+            <!-- :action=" editMode ? update(currentItem.id) : store()"
+            :method="editMode == true ? 'put' : 'post'" -->
 
-        <InputGroup
-        type="date"
-        class="w-52"
-        />
+            <div class="grid grid-cols-2 gap-2 align-middle">
+                <div>
+                    <Label for="name.ar" class="dialog-label"
+                        >name in arabic</Label
+                    >
+                    
+                    <Input
+                        class="dialog-input mt-2"
+                        id="name.ar"
+                        name="name.ar"
+                        v-model="currentItem.name.ar"
+                    />
+                    <!-- <Input
+                        class="dialog-input mt-2"
+                        id="name.ar"
+                        name="name.ar"
+                        :default-value="currentItem['name']"
+                    /> -->
+                    <InputError :message="errors['name.ar']" />
+                </div>
+                <div>
+                    <Label for="name.en" class="dialog-label"
+                        >name in english</Label
+                    >
+                    <Input
+                        class="dialog-input mt-2"
+                        id="name.en"
+                        name="name.en"
+                        v-model="currentItem.name.en"
 
+                    />
+                    <InputError :message="errors['name.en']" />
+                </div>
 
-        <Label for="username-1" class="dialog-label">User name</Label>
-        <Input
-            class="dialog-input"
-            id="username-1"
-            name="username"
-            default-value="@peduarte"
-        />
+                <div>
+                    <Label class="dialog-label">active</Label>
+                    <Label
+                        for="is_active"
+                        class="mt-2 rounded-md border border-gray-400/50 p-2 ltr:bg-linear-to-r rtl:bg-linear-to-l"
+                        :class="
+                            currentItem.active == true
+                                ? 'from-green-500/30 to-green-500/10'
+                                : 'from-red-500/30 to-red-500/10'
+                        "
+                        >active
+                        <Checkbox
+                            class="dialog-input"
+                            id="is_active"
+                            name="active"
+                            v-model:checked="currentItem.active"
+                        />
+                    </Label>
+                    <InputError :message="errors.active" />
+                </div>
+            </div>
+
+            <div class="mt-5 flex items-center justify-center">
+                <DialogFooter>
+                    <!-- <DialogClose as-child>
+                                    <Button variant="outline"> Cancel </Button>
+                                </DialogClose> -->
+                    <Button
+                        class="rounded-full hover:scale-110 hover:cursor-pointer"
+                        variant="linear_orange"
+                        size="md"
+                        type="submit"
+                        :disabled="processing"
+                    >
+                        <Spinner v-if="processing" />
+                        Save changes
+                    </Button>
+                </DialogFooter>
+            </div>
+        </Form>
     </DialogModal>
 
     <!-- <DialogModal

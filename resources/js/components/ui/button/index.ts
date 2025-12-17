@@ -38,7 +38,7 @@ export const buttonVariants = cva(
         red: "font-normal bg-red-600 hover:bg-red-700 active:bg-red-700 focus:border-white/50 focus:shadow-outline-white text-white border border-red-100 ",
         linear_red: "font-normal bg-linear-to-l from-red-700 to-red-800 hover:from-red-800 hover:to-red-900 active:bg-red-700/20 focus:border-red-400 focus:shadow-outline-white text-white border border-red-500  ",
         orange: "font-normal  bg-orange-600 hover:bg-orange-900 active:bg-orange-900 focus:border-white/50 focus:shadow-outline-orange text-white  shadow-md border border-orange-300 text-shadow-none ",
-        linear_orange: `font-normal bg-linear-to-l from-orange-800  to-orange-400 hover:from-zinc-900 hover:to-orange-500 active:bg-orange-900 focus:border-white/50 focus:shadow-outline-orange text-white  shadow-md border border-orange-400 text-shadow-none   `,
+        linear_orange: `font-normal bg-linear-to-l from-orange-900  to-orange-400 hover:from-zinc-900 hover:to-orange-500 active:bg-orange-900 focus:border-white/50 focus:shadow-outline-orange text-white  shadow-md border border-orange-400 text-shadow-none   `,
         linear_orange_normal: `font-normal bg-linear-to-l from-orange-800  to-orange-400 hover:from-zinc-900 hover:to-orange-500 active:bg-orange-900 focus:border-white/50 focus:shadow-outline-orange text-white  shadow-md border border-orange-300 text-shadow-none   $ `,
         green: "font-normal bg-lime-600 hover:bg-lime-700 active:bg-lime-700 focus:border-lime-700 focus:shadow-outline-lime text-white shadow-md border border-lime-300 ",
         linear_green: "font-normal bg-linear-to-l from-lime-900 to-lime-600 hover:from-lime-600 hover:to-lime-400 active:bg-lime-700 focus:border-lime-700 focus:shadow-outline-lime text-white shadow-md border border-lime-600   ",
@@ -59,14 +59,14 @@ export const buttonVariants = cva(
         transparent_green: " align-middle  rounded-lg shadow-sm ring-1 transition duration-75  focus-within:ring-20 focus-within:ring-orange-300/20 ring-lime-500/30  border-none  text-base text-lime-400  placeholder:text-zinc-400 focus:ring-1   xs:text-xs sm:leading-6    bg-zinc-900/80 transpare    focus:border-lime-400  focus:ring-lime-200/40 focus:ring-opacity-60 ",
         transparent_blue: " align-middle  rounded-lg shadow-sm ring-1 transition duration-75  focus-within:ring-20 focus-within:ring-orange-300/20 ring-blue-500/30  border-none  text-base text-blue-400  placeholder:text-zinc-400 focus:ring-1   xs:text-xs sm:leading-6    bg-zinc-900/80 transpare    focus:border-blue-400  focus:ring-blue-200/40 focus:ring-opacity-60 ",
 
-        transparent_black: " align-middle  rounded-lg shadow-sm ring-1 transition duration-75  focus-within:ring-20 focus-within:ring-orange-300/20 ring-orange-500/30  border-none  text-base text-zinc-400  placeholder:text-zinc-400 focus:ring-1   xs:text-xs     bg-zinc-900/80 transpare     focus:border-orange-400  focus:ring-orange-200/40 focus:ring-opacity-60 ",
+        transparent_black: "flex items-center align-middle  rounded-lg shadow-sm ring-1 transition duration-75  focus-within:ring-20 focus-within:ring-orange-300/20 ring-orange-500/30  border-none  text-base text-zinc-400  placeholder:text-zinc-400 focus:ring-1   xs:text-xs     bg-zinc-900/80 transpare     focus:border-orange-400  focus:ring-orange-200/40 focus:ring-opacity-60 ",
 
       },
       size: {
         default: 'h-9 px-4 py-2 capitalize has-[>svg]:px-3',
-        xs: 'h-6 rounded-sm capitalize text-xs  gap-1.5 px-2 has-[>svg]:px-2.5',
-        sm: 'h-6 rounded-md capitalize gap-1.5 px-3 has-[>svg]:px-2.5',
-        md: 'h-7 rounded-md capitalize gap-1.5 px-3 has-[>svg]:px-3',
+        xs: 'h-5 rounded-sm capitalize text-xs  gap-1.5 px-2 has-[>svg]:px-2.5',
+        sm: 'h-5 rounded-md  capitalize gap-1.5 text-[12px] px-3 has-[>svg]:px-2.5',
+        md: 'h-7 rounded-md  capitalize gap-1.5 px-3 has-[>svg]:px-3',
         lg: 'h-10 rounded-md capitalize px-6 has-[>svg]:px-4',
         icon: 'size-9',
       },

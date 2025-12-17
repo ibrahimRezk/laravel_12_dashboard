@@ -11,6 +11,13 @@ import { edit as profileLink } from '@/routes/profile';
 
 import { useInitials } from '@/composables/useInitials';
 
+
+import { useGeneralStore } from '@/stores/general';
+import { storeToRefs } from 'pinia';
+const useGeneral = useGeneralStore();
+const { animate } = storeToRefs(useGeneral);
+
+
 const { getInitials } = useInitials();
 
 
@@ -493,6 +500,7 @@ const direction = computed(() => {
                         <DropdownMenuGroup>
                             <DropdownMenuItem>
                                 <Link
+                                @click="animate = false"
                                     :href="profileLink()"
                                     as="button"
                                     class="mx-auto block text-sm  h-full w-full hover:cursor-pointer"

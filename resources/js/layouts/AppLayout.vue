@@ -20,3 +20,24 @@ withDefaults(defineProps<Props>(), {
         <slot />
     </AppLayout>
 </template>
+
+<style scoped>
+
+/* durations and timing functions.*/
+.page-enter-active,
+.page-leave-active {
+    transition: all 0.8s;
+}
+
+.page-enter-from {
+    transform: translateY(40px);
+    opacity: 0;
+}
+
+.page-leave-to {
+    opacity: 0;
+    transform: translateY(-70px);
+}
+</style>
+
+

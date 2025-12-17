@@ -12,6 +12,11 @@ import { Link } from '@inertiajs/vue3';
 import { Card } from '@/components/ui/card';
 import Container from '@/components/Container.vue';
 
+import { useGeneralStore } from '@/stores/general';
+import { storeToRefs } from 'pinia';
+const useGeneral = useGeneralStore();
+const { animate } = storeToRefs(useGeneral);
+
 
 const sidebarNavItems: NavItem[] = [
     {
@@ -37,6 +42,8 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
 
 <template>
     <!-- <Card> -->
+         <transition name="page" mode="out-in" appear>
+                <div v-if="animate">
     <Container>
         
     <div class="px-4 py-6">
@@ -58,7 +65,7 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
                         ]"
                         as-child
                     >
-                        <Link :href="item.href">
+                        <Link :href="item.href" @click="animate = false">
                             <component :is="item.icon" class="h-4 w-4" />
                             {{ item.title }}
                         </Link>
@@ -70,12 +77,35 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
 
             <div class="flex-1 md:max-w-2xl">
                 <section class="max-w-xl space-y-12">
+                               
                     <slot />
                 </section>
             </div>
         </div>
     </div>
-   </Container>
+</Container>
+</div>
+</transition>
         <!-- </Card> -->
 
 </template>
+
+
+<style scoped>
+
+/* durations and timing functions.*/
+.page-enter-active,
+.page-leave-active {
+    transition: all 0.8s;
+}
+
+.page-enter-from {
+    transform: translateY(40px);
+    opacity: 0;
+}
+
+.page-leave-to {
+    opacity: 0;
+    transform: translateY(-70px);
+}
+</style>

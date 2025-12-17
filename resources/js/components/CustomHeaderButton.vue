@@ -13,7 +13,7 @@ const props = defineProps({
         type: String,
         default: '36',
     },
-    color: {
+    variant: {
         type: String,
         default: 'linear_orange',
     },
@@ -67,7 +67,7 @@ const direction = computed(() => {
         >
             <template #trigger>
                 <span class="inline-flex rounded-md " >
-                    <Button class="flex justify-center   " type="button" :size="props.size" :variant="props.color">
+                    <Button class="flex justify-center   " type="button" :size="props.size" :variant="props.variant">
                         {{ $t("general." + props.button_title) }}
                         <FilterIcon v-if="props.iconType == 'filter'" class="rtl:mr-2 ltr:ml-2" />
                         </Button

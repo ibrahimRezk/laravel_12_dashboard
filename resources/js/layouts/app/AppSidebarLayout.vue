@@ -8,13 +8,9 @@ import type { BreadcrumbItemType, messages } from '@/types';
 
 import { useGeneralStore } from '@/stores/general';
 import { storeToRefs } from 'pinia';
-import { watch } from 'vue';
 const useGeneral = useGeneralStore();
 const { animate } = storeToRefs(useGeneral);
 
-console.log(animate.value);
-
-watch(()=>animate.value , ()=>console.log(animate.value) )
 
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];

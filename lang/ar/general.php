@@ -27,6 +27,9 @@ return [
     'updated at' => 'تاريخ التعديل' ,
     'Remove Photo' => 'حذف الصورة',
     'Select A New Photo' => 'اختر صورة جديدة',
+    
+        '&laquo; Previous' => 'السابق',
+        'Next &raquo;' => 'التالي',
 
     'nationalities' => 'الجنسيات' ,
 ];

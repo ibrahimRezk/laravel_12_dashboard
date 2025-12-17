@@ -9,7 +9,6 @@ export function useModal() {
 
   function close() {
     isOpen.value = false
-
   }
 
   return { isOpen , open, close }

@@ -27,12 +27,12 @@ defineProps({
     <div class="flex items-center space-x-">
         <slot name="button" />
         <slot name="icon" />
-        <button v-if="showEdit" class="text-yellow-600 mx-2">
+        <button v-if="showEdit" class="text-yellow-600 mx-2 hover:cursor-pointer">
             <div v-if="showEditModal" @click="$emit('editClicked', $event)">
                 <Edit class="w-4 h-4" />
             </div>
             <div v-else>
-                <Link :href="editLink">
+                <Link :href="editLink" >
                     <Edit class="w-4 h-4" />
                 </Link>
             </div>
@@ -44,7 +44,7 @@ defineProps({
 
         <button
             v-if="showDelete"
-            class="text-red-700"
+            class="text-red-700 hover:cursor-pointer"
             @click="$emit('deleteClicked', $event)"
         >
             <Trash class="w-4 h-4" />

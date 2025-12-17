@@ -27,6 +27,8 @@ return [
     'updated at' => 'updated at' ,
     'Remove Photo' => ' remove photo',
     'Select A New Photo' => 'select a new photo  ',
+    '&laquo; Previous' => '&laquo; Previous' ,
+    'Next &raquo;' => 'Next &raquo;' ,
     
     'nationalities' => 'nationalities' ,
 ];

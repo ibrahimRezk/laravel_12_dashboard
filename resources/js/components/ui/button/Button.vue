@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <Primitive
+  <Primitive 
     data-slot="button"
     :as="as"
     :as-child="asChild"
