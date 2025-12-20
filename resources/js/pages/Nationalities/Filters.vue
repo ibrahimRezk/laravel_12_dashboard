@@ -124,7 +124,7 @@ import Label from '@/components/ui/label/Label.vue';
 
             <Listbox v-model="filters.active">
                 <ListboxButton
-                    class="relative flex justify-between w-full cursor-default rounded-lg bg-white py-2 pr-10 pl-3 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm dark:bg-zinc-700 my-2"
+                    class="relative flex justify-between w-full cursor-default rounded-lg bg-white/30 py-2 pr-10 pl-3 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm dark:bg-zinc-700 my-2"
                     >
                     
                 <span > {{
