@@ -8,6 +8,7 @@ import {
 import { useModal } from '@/composables/useModal';
 
 const { isOpen } = useModal();
+
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import NationalityController from '@/actions/App/Http/Controllers/NationalityController';
-import { store , update , destroy } from '@/routes/nationalities'
+import {index ,  store , update , destroy } from '@/routes/nationalities'
 import AddNew from '@/components/AddNew.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -232,13 +232,15 @@ const {
     handleDeleteItem,
     deleteMultipleItems,
 } = useDeleteItem({
-    routeResourceName: props.routeResourceName,
+    routeResourceName: routeResourceName,
 });
+
 
 const { filters, isLoading, isFilled, resetFilter } = useFilters({
     filters: props.filters,
     routeResourceName: props.routeResourceName,
     method: props.method,
+    route : index
 });
 
 
@@ -284,6 +286,13 @@ watch(
             ? (checkedItems.value = [] , checkedAllButton.value = false)
             : ''
 );
+watch(
+    () => itemToDelete.value,
+    () =>
+        itemToDelete.value.length == 1
+            ? (checkedItems.value = [] , checkedAllButton.value = false)
+            : ''
+);
 
 
 const showDeleteItem = (item) => {
@@ -312,11 +321,22 @@ const animate = ref(true);
 const startLeaveAnimation = () => {
     animate.value = false;
 };
+
+
+
+
+
+
 </script>
 
 <template>
     <AppLayout :breadcrumbs="breadcrumb" :header="'profile'">
         <Head :title="props.title" />
+
+      
+
+
+
 
         <Container>
             <AddNew
@@ -328,7 +348,8 @@ const startLeaveAnimation = () => {
             >
                 <Button
                     variant="linear_blue"
-                    size="sm"
+                    size="md"
+                    class="hover:cursor-pointer"
                     v-if="can.create"
                     @click="fireshowDialogModal"
                 >
@@ -338,30 +359,35 @@ const startLeaveAnimation = () => {
                 <!-- <template #filters></template> -->
 
                 <!-- /////////////////////////////////////////custum headers /////////////////////////////////////////////////// -->
+
                 <template #customHeaderButton>
+                    
                     <CustomHeaderButton
-                        :showTitle="false"
-                        button_title="filter"
-                        variant="linear_black"
-                        width="60"
-                        size="xs"
-                        iconType="filter"
+                    :showTitle="false"
+                    button_title="filter"
+                    variant="linear_black"
+                    width="60"
+                    size="md"
+                    iconType="filter"
                     >
-                        <Filters
-                            v-model="filters"
-                            @filtersValuesData="filtersValuesDataMethod"
-                            :is-loading="isLoading"
-                            no-padding
-                        />
+                    <Filters
+                        v-model="filters"
+                        @filtersValuesData="filtersValuesDataMethod"
+                        :is-loading="isLoading"
+                        no-padding
+                    />
+                
                     </CustomHeaderButton>
-                    <CustomHeaderButton>
+                    <CustomHeaderButton  size="md"
+>
                         <template #checkedItemHeader>
                             <div
                                 v-for="(header, index) in props.headers"
                                 :key="index"
+                                class="from-orange-400 flex flex-col justify-between rtl:bg-linear-to-r ltr:bg-linear-to-l to-gray-800"
                             >
                                 <Label
-                                    class="mx-1 mt-2 mb-2 rounded border border-gray-300 from-yellow-500 via-orange-600 to-red-900 px-2 py-1 shadow-md ltr:bg-linear-to-l rtl:bg-linear-to-r"
+                                    class="mx-1 mt-2 mb-2 rounded border border-gray-300  ltr:bg-linear-to-l rtl:bg-linear-to-r from-yellow-500 via-orange-600 to-red-900 px-2 py-1 shadow-md "
                                 >
                                     <div class="flex w-full justify-between">
                                         <div>
@@ -428,20 +454,20 @@ const startLeaveAnimation = () => {
                                 <Button
                                     v-if="f.data"
                                     class="mx-1 mt-2 flex items-center justify-between"
-                                    size="sm"
+                                    size="md"
                                     variant="transparent_yellow"
                                 >
                                     {{ $t('general.' + i) }} :
                                     <Button
                                         class="my-1 flex ltr:ml-1 rtl:mr-1"
-                                        size="sm"
+                                        size="md"
                                         variant="transparent_yellow"
                                     >
                                         <span>
                                             {{ f.data }}
                                         </span>
                                         <span
-                                            class="my-1 text-xs ltr:ml-2 rtl:mr-2"
+                                            class="my-1 text-xs ltr:ml-2 rtl:mr-2 hover:cursor-pointer"
                                             @click="filters[f.id] = ''"
                                         >
                                             x
@@ -450,8 +476,8 @@ const startLeaveAnimation = () => {
                                 </Button>
                             </span>
                             <Button
-                                class="mx-1 mt-2 w-40"
-                                size="sm"
+                                class="mx-1 mt-2 w-40 hover:cursor-pointer"
+                                size="md"
                                 variant="transparent_red"
                             >
                                 <span @click="resetFilter">{{
@@ -509,8 +535,8 @@ const startLeaveAnimation = () => {
                         </Button>
                     </Td>
                     <Td bold v-show="showColumnItems('updated by')">
-                        <Button variant="linear_green" size="sm" class="">
-                            {{ item.updated_by_user?.name }}
+                        <Button v-if="item.updated_by_user" variant="linear_green" size="sm" class="">
+                            {{ item.updated_by_user?.name  }}
                         </Button>
                     </Td>
 
@@ -522,7 +548,7 @@ const startLeaveAnimation = () => {
                         <!-- {{  new Date(item.created_at).toLocaleString() }} -->
                     </Td>
                     <Td bold v-show="showColumnItems('updated at')">
-                        <Button variant="linear_orange" size="sm">
+                        <Button v-if="item.created_at_formatted != item.updated_at_formatted" variant="linear_orange" size="sm">
                             {{ item.updated_at_formatted }}
                         </Button>
 

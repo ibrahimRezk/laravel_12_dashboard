@@ -17,6 +17,7 @@ return [
     'copyright2' => 'جميع الحقوق محفوظة © 2023',
     'name' => 'الاسم' ,
     'active' => 'نشط' ,
+    'inactive' => 'غير نشط' ,
     'actions' => 'العمليات' ,
     'filter' => 'تصفية النتائج' ,
     'list_of' => 'قائمة ' ,
@@ -27,6 +28,9 @@ return [
     'updated at' => 'تاريخ التعديل' ,
     'Remove Photo' => 'حذف الصورة',
     'Select A New Photo' => 'اختر صورة جديدة',
+    'select' => 'اختر',
+    'status' => 'الحالة',
+    'reset filter' => 'إعادة ضبط',
     
         '&laquo; Previous' => 'السابق',
         'Next &raquo;' => 'التالي',

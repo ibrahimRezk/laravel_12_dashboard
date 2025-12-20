@@ -116,5 +116,6 @@ export default function (params) {
         deleteMultipleItems,
         handleDeleteItem,
         close,
+
     };
 }

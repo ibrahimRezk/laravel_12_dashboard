@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const props = defineProps({
+    opened : {
+        type : Boolean, 
+        default : false
+    } ,
     align: {
         type: String,
         default: 'right',
@@ -22,6 +26,7 @@ const props = defineProps({
 });
 
 const open = ref(false);
+const screenEffect = ref(false); // to allow clicking outside dropdown menu to close it
 
 const closeOnEscape = (e: any) => {
     if (open.value && e.key === 'Escape') {
@@ -85,13 +90,16 @@ const alignmentClasses = computed(() => {
 // });
 // })
 
-
-
+const closeDropdownAndScreenEffect = ()=>{
+    open.value =  props.keepOpened
+    screenEffect.value = false
+}
 
 </script>
 
 <template>
-    <div class="relative" @mouseleave="open = false "  
+    <div class="relative" 
+    @mouseleave="closeDropdownAndScreenEffect"  
     @mouseenter="open = true" >
 
        
@@ -119,13 +127,19 @@ const alignmentClasses = computed(() => {
                     class="absolute z-50 pt-2 rounded-md shadow-lg  py-"
                     :class="[widthClass, alignmentClasses]"
                     style="display: none;"
-                    @click="open = props.keepOpened"
+                    @click="open = true"
                 >
-                    <div  class="rounded-md ring-1 min-w-36 ring-black/20 ring-opacity-5" :class="contentClasses">
+                    <div  @mouseenter="screenEffect = true"   class="rounded-md ring-1 min-w-36 ring-black/20 ring-opacity-5" :class="contentClasses">
                         <slot name="content" />
                     </div>
                 </div>
             </transition>
         </div>
+
+                <div  v-show="screenEffect == true" class="fixed inset-0" @click="closeDropdownAndScreenEffect"/>
+
+        <!-- <div v-show="show" class="fixed inset-0 transform transition-all" @click="close">
+                    <div class="absolute inset-0 bg-gray-500 opacity-75 " />
+                </div> -->
 
 </template>

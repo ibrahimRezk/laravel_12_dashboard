@@ -7,13 +7,25 @@ import { storeToRefs } from 'pinia';
 // const useGeneral = useGeneralStore()
 // const { paginationNumber } = storeToRefs(useGeneral)
 
+const filters = ref()
+const routeResourceName = ref()
+const method = ref()
+const route = ref()
+const id = ref()
+
+
 
 
 export default function (params) {
-    const { filters: defaultFilters, routeResourceName, method , id } = params;
+    const { filters: defaultFilters,  routeResourceName : theRouteResourceName,  method :theMethod,  route : theRoute ,  id : theId } = params;
     // we have to convert filters to ref becase it is calling a v-model
-    const filters = ref(defaultFilters );
+    // const filters = ref(defaultFilters );
 
+    filters.value = defaultFilters
+    routeResourceName.value = theRouteResourceName
+    method.value = theMethod
+    route.value = theRoute
+    id.value = theId
     ///// we can use it like below but after refresh the page we lose the input
     // const {  routeResourceName } = params;
     // const filters = ref({});
@@ -29,7 +41,8 @@ export default function (params) {
     }
 
     const isFilled = computed(() => {
-        let { page, paginationNumber , ...rest } = filters.value; /// page is the first parameter in addressbar after ? "[http://127.0.0.1:8000/admin/products?page=1&name=]" it will be alwayes there and have value because of pagination so we want to look at the second or third parameter or whatever  witch is ...rest  and apply filters.value to it and if it is there it will return true otherwise it will return false //// we did that to return false after we remove search input and refresh
+        let { page, paginationNumber , ...rest } = filters.value; 
+        /// page is the first parameter in addressbar after ? "[http://127.0.0.1:8000/admin/products?page=1&name=]" it will be alwayes there and have value because of pagination so we want to look at the second or third parameter or whatever  witch is ...rest  and apply filters.value to it and if it is there it will return true otherwise it will return false //// we did that to return false after we remove search input and refresh
         return Object.values(rest).some(
             (v) => !["", null, undefined].includes(v) 
         );
@@ -39,11 +52,13 @@ export default function (params) {
     const fetchItemsHandler = ref(null);
 
     function fetchItems() {
-        Object.values(filters.value).length == 1 && Object.keys(filters.value)[0] == 'page' ? filters.value = {} : ''
+        if(Object.values(filters.value).length == 1 && Object.keys(filters.value)[0] == 'page'){
+            filters.value = {}
+        }
+
         let filtersWithPage = ref(Object.values(filters.value).length > 0 ?  {...filters.value , page:1} : '')
 
-        router.get(
-            route(`${routeResourceName}.${method}` , {id : id}),
+            router.get(route.value.url(),     
             {
                 ...filtersWithPage.value,
             },
@@ -59,7 +74,7 @@ export default function (params) {
                         // menu.label.toLowerCase() == routeResourceName
                         //     ? (menu.open = true)
                         //     : (menu.open = false);
-                        menu.isActive ? menu.open = true : menu.open = false
+                       return menu.isActive ? menu.open = true : menu.open = false
                     }),
                 ],
             }

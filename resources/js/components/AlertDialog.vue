@@ -10,7 +10,7 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
-import useDeleteItem from '@/composables/useDeleteItem';
+import useDeleteItem from '@/composables/useDeleteItem'; 
 import { watch } from 'vue';
 
 const props = defineProps({

@@ -4,7 +4,7 @@ import Label from "@/Components/Label.vue";
 import InputError from "@/Components/InputError.vue";
 import Select from "@/Components/Select.vue";
 import { trans } from "laravel-vue-i18n";
-import { computed  } from "vue";
+import { computed  } from "@vue/runtime-core";
 
 const props = defineProps({  
     items: Array,

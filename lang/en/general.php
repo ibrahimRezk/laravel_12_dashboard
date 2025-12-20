@@ -17,7 +17,8 @@ return [
     'copyright2' => 'copyright2' ,
     'name' => 'name' ,
     'active' => 'active' ,
-    'actions' => 'actions' ,
+    'inactive' => 'inactive' ,
+    'inactions' => 'inactions' ,
     'filter' => 'filter' ,
     'list_of' => 'list of' ,
     'show headers' => 'show headers' ,
@@ -27,8 +28,11 @@ return [
     'updated at' => 'updated at' ,
     'Remove Photo' => ' remove photo',
     'Select A New Photo' => 'select a new photo  ',
-    '&laquo; Previous' => '&laquo; Previous' ,
-    'Next &raquo;' => 'Next &raquo;' ,
+    'select' => 'select  ',
+    'status' => 'status  ',
+    'reset filter' => 'reset filter  ',
+    '&laquo; Previous' => 'Previous' ,
+    'Next &raquo;' => 'Next' ,
     
     'nationalities' => 'nationalities' ,
 ];

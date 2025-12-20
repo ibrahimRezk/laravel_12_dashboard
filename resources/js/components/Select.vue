@@ -86,7 +86,7 @@ const disabled = (item)=> {
 </script>
 
 <template>
-    
+   
     <!-- class="      [&_option]:bg-zinc-700  [&_option]:text-zinc-200    -->
     <select v-model="modelValue"
     :autofocus = "props.focus"
@@ -94,7 +94,7 @@ const disabled = (item)=> {
     ref="select"
     class="          
 
-    block w-full   rounded-lg shadow-sm ring-1 transition duration-75  focus-within:ring-20 focus-within:ring-primary-600 ring-white/30  border-none py-1.5 text-base   placeholder:text-zinc-400 focus:ring-1   sm:text-sm sm:leading-6    bg-white/10    text-slate-100 focus:border-yellow-500  focus:ring-yellow-100 focus:ring-opacity-60
+    block w-full px-2  rounded-lg shadow-sm ring-1 transition duration-75  focus-within:ring-20 focus-within:ring-primary-600 ring-white/30  border-none py-1.5 text-base   placeholder:text-zinc-400 focus:ring-1   sm:text-sm sm:leading-6    bg-white/10    text-slate-100 focus:border-yellow-500  focus:ring-yellow-100 focus:ring-opacity-60
     
     "
     >
@@ -106,6 +106,7 @@ const disabled = (item)=> {
            <!-- // down here we use JSON.parse to pass object as string then reconvert it to string because we can not pass object from here -->
 
         <option v-for="item in options"  
+        class="mt-2"
                 :disabled="disabled(item)"
                 :key="item[itemValue]"
                 :value="props.passIdWithName == true  &&  item.id > 0  ? JSON.stringify(item) :  item[itemValue]"

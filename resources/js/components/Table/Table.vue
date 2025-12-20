@@ -97,11 +97,7 @@ watch(
     () => (checkedAllButton.value = props.checkedAllButton),
     { deep: true }
 );
-watch(
-    () => props.checkedAllButton,
-    () => console.log('heeeeeeeeeeeeee'),
-    { deep: true }
-);
+
 
 const emit = defineEmits(["callAxiosUrl", "checkedAll", "startLeaveAnimation"]);
 
@@ -238,7 +234,7 @@ const theHoverClasses = computed(() => {
                                     v-for="(header, index) in headers"
                                     :key="header.label"
                                     :class="`${header.classes}  `"
-                                    class="border-b border-gray-300/50"
+                                    class="border-b align-middle text-sm border-gray-300/50"
                                 >
                                     <span
                                         v-if="

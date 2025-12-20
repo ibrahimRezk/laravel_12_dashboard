@@ -94,6 +94,7 @@ const clearPhotoFileInput = () => {
         photoInput.value = null;
     }
 };
+
 </script>
 
 <template>
