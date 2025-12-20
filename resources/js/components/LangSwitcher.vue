@@ -481,7 +481,7 @@ const direction = computed(() => {
                                 class="h-9 w-9 rounded-full  border border-gray-100/50 object-cover"
                             />
                             </div>
-                            <div v-else  class="hover:inline-flex items-center rounded-full border border-transparent bg-white px-3 py-2 text-sm font-medium text-gray-500 transition hover:text-gray-700 focus:outline-none">
+                            <div v-else  class="hover:inline-flex items-center flex justify-center rounded-full align-middle border border-transparent bg-white  h-9 w-9 text-sm font-medium text-gray-500 transition hover:text-gray-700 focus:outline-none">
                                 {{ getInitials(user.name) }}
                             </div>
                             </button>
