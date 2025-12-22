@@ -43,20 +43,22 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'name' => config('app.name'),
+            
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
-
-
-
-
-             'messages' => [
+            
+            'messages' => [
                 'success' => $request->session()->get('success'),
                 'error' => $request->session()->get('error'),
                 'vital_error' => $request->session()->get('vital_error'),
             ],
+       
+
+
+        
             // 'itemIdToBeOpened' => $request->session()->get('itemIdToBeOpened'),
             // 'itemIdToBePrinted' => $request->session()->get('itemIdToBePrinted'),
             // 'locale' => App::getLocale(),

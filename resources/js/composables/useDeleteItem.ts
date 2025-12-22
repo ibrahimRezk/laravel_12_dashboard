@@ -71,7 +71,6 @@ export default function (params) {
                     isDeleting.value = true;
                 },
                 onSuccess: () => {
-                    console.log('success')
                     deleteModal.value = false;
                     itemToDelete.value = [];
                     ids.value = [];

@@ -1,6 +1,15 @@
-import { ref } from "vue";
+import { ref } from 'vue';
 
-export default function (params) {
+interface header {
+    name: string;
+    label: string;
+}
+interface params {
+    dbHeaders: header[];
+    headers: header[];
+    prepairFilteredHeaders: header[];
+}
+export default function (params: params) {
     const {
         dbHeaders: theDbHeaders,
         headers: theFinalHeaders,
@@ -13,16 +22,18 @@ export default function (params) {
 
     const filterHeadersMethod = () => {
         finalHeaders.value = [];
-        dbHeaders.value.forEach((header) => {
-            let head = filteredHeaders.value.find((h) => h.name == header.name);
+        dbHeaders.value.forEach((header: header) => {
+            const head = filteredHeaders.value.find(
+                (h: header) => h.name == header.name,
+            );
             if (head !== undefined) {
                 finalHeaders.value.push(head);
             }
         });
     };
 
-    const showColumnItems = (name) => {
-        let head = finalHeaders.value.find((h) => h.name == name);
+    const showColumnItems = (name: string) => {
+        const head = finalHeaders.value.find((h: header) => h.name == name);
         return head?.label === name;
     };
 

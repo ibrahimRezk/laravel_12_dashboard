@@ -1,4 +1,6 @@
 <script setup lang="ts">
+    import AppLogoIcon from '@/components/AppLogoIcon.vue';
+
 // import {
 //     SidebarGroup,
 //     SidebarGroupLabel,
@@ -32,9 +34,6 @@ defineProps<{
     items: NavItem[];
 }>();
 
-
-
-
 onMounted(() => {
     animate.value = true;
 });
@@ -44,9 +43,9 @@ const startLeaveAnimation = () => {
     animate.value = false;
 };
 
-
-
-
+const current_lang = document
+    .getElementsByTagName('html')[0]
+    .getAttribute('lang');
 
 const page = usePage();
 
@@ -99,10 +98,43 @@ const end = (el: HTMLElement): undefined => {
                         as-child
                         :is-active="item.isActive"
                         @click="openCloseSubMenu(item)"
-                        class="hover:cursor-pointer"
+                        class="border hover:cursor-pointer ltr:bg-linear-to-r rtl:bg-linear-to-l"
+                        :class="
+                            item.isActive
+                                ? 'to-black/80 hover:to-black/50 dark:from-white/20 dark:hover:from-white/30'
+                                : 'from-black/20 to-black/20'
+                        "
                     >
                         <component :is="item.icon" />
-                        <span>{{ item.title }}</span>
+                        <span class="flex justify-between">
+
+                            <span class="flex gap-3">
+
+                                <AppLogoIcon class="size-5 fill-current text-black/70 dark:text-white" />
+
+                        <span> {{ item.title }} </span>
+                            </span>
+
+                            <svg
+                                v-if="current_lang == 'ar'"
+                                :class="{
+                                    '-rotate-90 transition duration-300 ease-in-out':
+                                        item.open,
+                                    'rotate-0 transition duration-300 ease-in-out':
+                                        !item.open,
+                                }"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                class="h-4 w-4"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M7.72 12.53a.75.75 0 010-1.06l7.5-7.5a.75.75 0 111.06 1.06L9.31 12l6.97 6.97a.75.75 0 11-1.06 1.06l-7.5-7.5z"
+                                    clip-rule="evenodd"
+                                />
+                            </svg>
+                        </span>
                     </SidebarMenuButton>
 
                     <transition
@@ -122,10 +154,16 @@ const end = (el: HTMLElement): undefined => {
                                         as-child
                                         :is-active="subItem.isActive"
                                         @click="startLeaveAnimation"
+                                        class="border hover:cursor-pointer ltr:bg-linear-to-r rtl:bg-linear-to-l"
+                                        :class="
+                                            subItem.isActive
+                                                ? 'to-black/80 font-bold hover:to-black/50 dark:from-white/20 dark:hover:from-white/30'
+                                                : 'from-black/20 to-black/20'
+                                        "
                                     >
-                                        <Link :href="subItem.href">{{
-                                            subItem.title
-                                        }}</Link>
+                                        <Link :href="subItem.href"
+                                            >{{ subItem.title }}
+                                        </Link>
                                     </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>
                             </SidebarMenuSub>
@@ -134,10 +172,25 @@ const end = (el: HTMLElement): undefined => {
                 </div>
 
                 <div v-else>
-                    <SidebarMenuButton as-child :is-active="item.isActive">
+                    <SidebarMenuButton
+                        as-child
+                        :is-active="item.isActive"
+                        class="fontbol border hover:cursor-pointer ltr:bg-linear-to-r rtl:bg-linear-to-l"
+                        :class="
+                            item.isActive
+                                ? 'to-black/80 hover:to-black/50 dark:from-white/20 dark:hover:from-white/30'
+                                : 'from-black/20 to-black/20'
+                        "
+                    >
                         <Link :href="item.href" @click="startLeaveAnimation">
                             <component :is="item.icon" />
-                            <span>{{ item.title }}</span>
+
+                            <span class="flex gap-3">
+
+                                <AppLogoIcon class="size-5 fill-current text-black/70 dark:text-white" />
+
+                        <span> {{ item.title }} </span>
+                            </span>
                         </Link>
                     </SidebarMenuButton>
                 </div>
@@ -160,6 +213,4 @@ const end = (el: HTMLElement): undefined => {
     height: 0px !important;
     opacity: 0px;
 }
-
-
 </style>

@@ -23,9 +23,12 @@ const props = withDefaults(
 );
 
 
+const page = usePage()
+const messages = <FlashMessages>page.props.messages
+
 
 watch(
-    () => usePage().props.messages?.success,
+    () => messages?.success,
     (successMessage) => {
         if (successMessage !== null && successMessage !== '') {
             toast(trans(`general.${successMessage}`), {
@@ -73,7 +76,7 @@ watch(
         }
 
         // setTimeout(() => {
-        //     usePage().props.messages.success = '';
+        //     upage.props.messages.success = '';
         // }, 100);
     },
     {
@@ -82,7 +85,7 @@ watch(
 );
 
 watch(
-    () => usePage().props.messages?.error,
+    () => messages?.error,
     (errorMessage) => {
         if (errorMessage !== null && errorMessage !== '') {
             toast(trans(`general.${errorMessage}`), {
@@ -102,7 +105,7 @@ watch(
         }
 
         // setTimeout(() => {
-        //     usePage().props.messages.error = '';
+        //     upage.props.messages.error = '';
         // }, 100);
     },
     {
@@ -131,7 +134,7 @@ watch(
         }
 
         // setTimeout(() => {
-        //     usePage().props.messages.error = '';
+        //     upage.props.messages.error = '';
         // }, 100);
     },
     {

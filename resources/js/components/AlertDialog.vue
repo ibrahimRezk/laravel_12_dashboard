@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/alert-dialog';
 
 import useDeleteItem from '@/composables/useDeleteItem'; 
-import { watch } from 'vue';
 
 const props = defineProps({
     destroyRoute: '',
@@ -32,6 +31,7 @@ const {
     destroyRoute: props.destroyRoute,
 });
 
+console.log('itemToDelete')
 //
 </script>
 
@@ -84,7 +84,9 @@ const {
                                         {{
                                             deleteMultipleItems
                                                 ? $t('general.all_selected')
-                                                : itemToDelete[0].name
+                                                : itemToDelete.length > 0
+                                                ? itemToDelete[0].name
+                                                : ''
                                         }}
 
                                         <!-- Are you absolutely sure? -->

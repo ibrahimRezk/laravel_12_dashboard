@@ -4,7 +4,7 @@ import AppContent from '@/components/AppContent.vue';
 import AppShell from '@/components/AppShell.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import AppSidebarHeader from '@/components/AppSidebarHeader.vue';
-import type { BreadcrumbItemType, messages } from '@/types';
+import type { BreadcrumbItemType,  FlashMessagesType } from '@/types';
 
 import { useGeneralStore } from '@/stores/general';
 import { storeToRefs } from 'pinia';
@@ -14,14 +14,16 @@ const { animate } = storeToRefs(useGeneral);
 
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
-    flash?: messages;
+    success?: FlashMessagesType['success'];
+    error?: FlashMessagesType['error'];
     header?: string;
     subHeader?: string;
 }
 
 withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
-    messages: () => [],
+    success: '',
+    error: '',
     header: () => '',
     subHeader: () => '',
 });
@@ -29,7 +31,7 @@ withDefaults(defineProps<Props>(), {
 
 <template>
     <AppShell variant="sidebar">
-        <Alert :messages />
+        <Alert :success :error />
         <AppSidebar />
         <AppContent variant="sidebar" class="overflow-x-hidden">
             <AppSidebarHeader

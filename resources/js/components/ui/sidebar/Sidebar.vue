@@ -102,12 +102,26 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
       <div
   class="w-full h-full absolute top-0 left-0 bg-[url('/assets/img/noise.jpg')] bg-contain bg-center opacity-10 dark:opacity-[.1] dark:invert -z-20 "
 />
-<!-- <div
+<div
   class="w-full h-full  absolute top-0 left-0 bg-[url('/assets/img/grid.svg')] bg-contain bg-center opacity-30   dark:blur-[0px] dark:invert-0 dark:opacity-[.1]  -z-20 "
-/> -->
+/>
+
+
+
+
+
+<!-- //////////////////////////////////////////////////////// -->
+<div
+  class="w-full h-full  absolute top-0 left-0 bg-black/30  bg-contain bg-center rounded-lg border-0  -z-20 "
+/>
 <div
   class=" bg-no-repeat  h-full w-full bg-cover bg-center  rounded-lg absolute top-0 left-0 bg-[url('/assets/img/flowers.jpg')]  opacity-30  dark:opacity-10  -z-20 "
 />
+<!-- //////////////////////////////////////////////////////// -->
+
+
+
+
         <slot />
       </div>
     </div>

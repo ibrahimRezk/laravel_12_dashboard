@@ -9,10 +9,10 @@ export interface BreadcrumbItem {
     title: string;
     href: string;
 }
-export interface messages {
+
+export interface FlashMessages {
     success: string;
     error: string;
-    vital_error: string;
 }
 
 export interface NavItem { // new
@@ -53,3 +53,4 @@ export interface User {
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;
+export type FlashMessagesType = FlashMessages;

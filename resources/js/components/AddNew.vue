@@ -73,9 +73,9 @@ const deleteAll = () => {
 
 <template>
     <div>
-        <div class="flex flex-col md:flex-row md:items-center justify-between">
+        <div class="flex  flex-col  sm:flex-row md:items-center justify-between ">
             <div class="flex flex-col lg:flex-row gap-2 ">
-                <div >
+                <div class="flex justify-center sm:justify-between">
                     <slot />
                 </div>
                 <!-- <Button
@@ -105,7 +105,7 @@ const deleteAll = () => {
                 </div>
             </div>
             
-            <div class="flex flex-col lg:flex-row gap-2">
+            <div class="flex flex-col justify-center sm:justify-between lg:flex-row gap-2">
                 <slot name="button" />
             </div>
             
@@ -115,7 +115,7 @@ const deleteAll = () => {
                 </div>
             </Transition>
             
-            <div class="flex gap-2">
+            <div class="flex justify-center sm:justify-between gap-2">
                 <slot name="customHeaderButton" />
             </div>
         </div>

@@ -74,3 +74,7 @@ Route::middleware([
 
 
 require __DIR__.'/settings.php';
+
+
+
+// there is a separator in sidebarmenuitem.vue

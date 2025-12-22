@@ -100,7 +100,7 @@ const closeDropdownAndScreenEffect = ()=>{
 <template>
     <div class="relative" 
     @mouseleave="closeDropdownAndScreenEffect"  
-    @mouseenter="open = true" >
+    @mouseenter="open = true" @click="open = !open" >
 
        
             <div 

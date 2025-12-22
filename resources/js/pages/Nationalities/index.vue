@@ -22,8 +22,8 @@ import { Label } from '@/components/ui/label';
 import Checkbox from '@/Components/Checkbox.vue';
 import CustomHeaderButton from '@/Components/CustomHeaderButton.vue';
 import useDialogModal from '@/Composables/useDialogModal.js';
-import useFilters from '@/Composables/useFilters.js';
-import useHeaders from '@/Composables/useHeaders.js';
+import useFilters from '@/composables/useFilters.js';
+import useHeaders from '@/composables/useHeaders.js';
 
 
 import { watch } from 'vue';
@@ -133,7 +133,7 @@ import AlertDialog from '@/components/AlertDialog.vue';
 import useDeleteItem from '@/composables/useDeleteItem';
 // import EditProfileForm from './EditProfileForm.vue'
 
-const { open , isOpen , openAlert ,  alertIsOpen } = useModal();
+const { open , isOpen  } = useModal();
 
 function fireshowDialogModal() {
     // function handleEdit() {
@@ -378,8 +378,7 @@ const startLeaveAnimation = () => {
                     />
                 
                     </CustomHeaderButton>
-                    <CustomHeaderButton  size="md"
->
+                    <CustomHeaderButton  size="md">
                         <template #checkedItemHeader>
                             <div
                                 v-for="(header, index) in props.headers"
