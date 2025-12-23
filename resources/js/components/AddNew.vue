@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, toRefs } from "vue";
+import { toRefs } from "vue";
 
 // Assuming these are standard Vue components that don't need complex typing here
 import Button from "@/components/ui/button/Button.vue";
-import FilterIcon from "@/components/Icons/Filter.vue";
+// import FilterIcon from "@/components/Icons/Filter.vue";
 
 // 1. Define an interface for the component props
 interface Props {
@@ -31,18 +31,18 @@ const emit = defineEmits<Emits>();
 
 // Use a ref to control the local filter visibility state, initialized with the prop value
 // The type is inferred as boolean | undefined, but since we use withDefaults, it's boolean
-const showFilters = ref(props.show);
+// const showFilters = ref(props.show);
 
 // Toggle the filter visibility and emit "reset" if filters are now hidden
-const reset = () => {
-    // Toggle the local state
-    showFilters.value = !showFilters.value; 
+// const reset = () => {
+//     // Toggle the local state
+//     showFilters.value = !showFilters.value; 
 
-    // Emit 'reset' when the filters are closed (showFilters.value is false)
-    if (showFilters.value === false) {
-        emit("reset");
-    }
-};
+//     // Emit 'reset' when the filters are closed (showFilters.value is false)
+//     if (showFilters.value === false) {
+//         emit("reset");
+//     }
+// };
 
 // Emit 'deleteAll' event
 const deleteAll = () => {

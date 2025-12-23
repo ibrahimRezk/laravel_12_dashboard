@@ -29,6 +29,7 @@ import { storeToRefs } from 'pinia';
 const useGeneral = useGeneralStore();
 const { animate } = storeToRefs(useGeneral);
 const { paginationNumber } = storeToRefs(useGeneral);
+const page = usePage();
 
 defineProps<{
     items: NavItem[];
@@ -39,7 +40,8 @@ onMounted(() => {
 });
 
 const startLeaveAnimation = () => {
-    paginationNumber.value = usePage().props.paginationNumber; // very important   its prevent call the page twice if we switch to another page  . check this part to move it to another place
+    paginationNumber.value = page.props.paginationNumber;
+    // paginationNumber.value = usePage().props.paginationNumber; // very important   its prevent call the page twice if we switch to another page  . check this part to move it to another place
     animate.value = false;
 };
 
@@ -47,7 +49,6 @@ const current_lang = document
     .getElementsByTagName('html')[0]
     .getAttribute('lang');
 
-const page = usePage();
 
 const menus = ref<NavItem[]>(page.props.menus);
 

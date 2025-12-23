@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import NavFooter from '@/components/NavFooter.vue';
+// import NavFooter from '@/components/NavFooter.vue';
+// import NavUser from '@/components/NavUser.vue';
 import NavMain from '@/components/NavMain.vue';
-import NavUser from '@/components/NavUser.vue';
 import {
     Sidebar,
     SidebarContent,
@@ -13,8 +13,8 @@ import {
     SidebarProps,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { type NavItem } from '@/types';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
+// import { type NavItem } from '@/types';
+// import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';

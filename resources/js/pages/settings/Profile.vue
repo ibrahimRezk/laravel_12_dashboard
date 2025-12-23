@@ -22,7 +22,7 @@ interface Props {
     status?: string;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -60,22 +60,22 @@ watch(
 
 ///////////// avatar photo section ///////////////
 
-const photoPreview = ref(null);
-const photoInput = ref(null);
+const photoPreview = ref<string | ArrayBuffer | null>(null);
+const photoInput = ref<HTMLInputElement | null>(null);
 
 const selectNewPhoto = () => {
-    photoInput.value.click();
+    photoInput.value?.click();
 };
 
 const updatePhotoPreview = () => {
-    const photo = photoInput.value.files[0];
+    const photo = photoInput.value?.files?.[0];
 
     if (!photo) return;
 
     const reader = new FileReader();
 
     reader.onload = (e) => {
-        photoPreview.value = e.target.result;
+        photoPreview.value = e.target?.result ?? null;
     };
 
     reader.readAsDataURL(photo);

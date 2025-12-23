@@ -1,79 +1,97 @@
-<script setup>
+<script setup lang="ts">
 import Checkbox from '@/components/Checkbox.vue';
 import Pagination from '@/components/Table/Pagination.vue';
 import Td from '@/components/Table/Td.vue';
 import Th from '@/components/Table/Th.vue';
 import { computed, onMounted, ref, watch } from 'vue';
-
 // import { emit } from "process";
+import { TableProps } from '@/types';
 
 import { useGeneralStore } from '@/stores';
 import { storeToRefs } from 'pinia';
 const useGeneral = useGeneralStore();
 const { animate } = storeToRefs(useGeneral);
 
-const props = defineProps({
-    headers: {
-        type: Array,
-        default: () => [],
-    },
-    items: {
-        type: Object,
-        default: () => ({}),
-    },
-    headersClasses: {
-        type: String,
-        default: () => '',
-    },
+// const props = defineProps({
+//     headers: {
+//         type: Array,
+//         default: () => [],
+//     },
+//     items: {
+//         type: Object,
+//         default: () => ({}),
+//     },
+//     headersClasses: {
+//         type: String,
+//         default: () => '',
+//     },
 
-    headerFooterClasses: {
-        type: String,
-        default: () => '',
-    },
-    trClasses: {
-        type: String,
-        default: () => '',
-    },
-    bodyClasses: {
-        type: String,
-        default: () => '',
-    },
-    hoverClasses: {
-        type: String,
-        default: () => '',
-    },
-    noCheckAll: {
-        type: Boolean,
-        default: false,
-    },
-    checkedAllButton: {
-        type: Boolean,
-        default: false,
-    },
-    noNamePadding: {
-        type: Boolean,
-        default: false,
-    },
-    withAxios: {
-        type: Boolean,
-        default: false,
-    },
-    noPagination: {
-        type: Boolean,
-        default: false,
-    },
-    has_extra_final_row: {
-        type: Boolean,
-        default: false,
-    },
-    showPaginationNumber: {
-        type: Boolean,
-        default: true,
-    },
-    tableHeight: {
-        type: String,
-        default: '',
-    },
+//     headerFooterClasses: {
+//         type: String,
+//         default: () => '',
+//     },
+//     trClasses: {
+//         type: String,
+//         default: () => '',
+//     },
+//     bodyClasses: {
+//         type: String,
+//         default: () => '',
+//     },
+//     hoverClasses: {
+//         type: String,
+//         default: () => '',
+//     },
+//     noCheckAll: {
+//         type: Boolean,
+//         default: false,
+//     },
+//     checkedAllButton: {
+//         type: Boolean,
+//         default: false,
+//     },
+//     noNamePadding: {
+//         type: Boolean,
+//         default: false,
+//     },
+//     withAxios: {
+//         type: Boolean,
+//         default: false,
+//     },
+//     noPagination: {
+//         type: Boolean,
+//         default: false,
+//     },
+//     has_extra_final_row: {
+//         type: Boolean,
+//         default: false,
+//     },
+//     showPaginationNumber: {
+//         type: Boolean,
+//         default: true,
+//     },
+//     tableHeight: {
+//         type: String,
+//         default: '',
+//     },
+// });
+
+const props = withDefaults(defineProps<TableProps>(), {
+  headers: () => [],
+  items: () => ({}),
+  headersClasses: '',
+  headerFooterClasses: '',
+  trClasses: '',
+  bodyClasses: '',
+  hoverClasses: '',
+  noCheckAll: false,
+  checkedAllButton: false,
+  noNamePadding: false,
+  withAxios: false,
+  noPagination: false,
+  has_extra_final_row: false,
+  showPaginationNumber: true,
+  tableHeight: '',
 });
 
 onMounted(() => {
@@ -85,17 +103,17 @@ const startLeaveAnimation = () => {
     emit('startLeaveAnimation', false);
 };
 
-const checkedAllButton = ref();
+const checkedAllButtonIsTrue = ref();
 
 watch(
     () => props.checkedAllButton,
-    () => (checkedAllButton.value = props.checkedAllButton),
+    () => (checkedAllButtonIsTrue.value = props.checkedAllButton),
     { deep: true },
 );
 
 const emit = defineEmits(['callAxiosUrl', 'checkedAll', 'startLeaveAnimation']);
 
-const callAxiosUrl = (payload) => {
+const callAxiosUrl = (payload: any) => {
     emit('callAxiosUrl', payload);
     emit('startLeaveAnimation', false);
 };
@@ -123,7 +141,7 @@ const theheaderFooterClasses = computed(() => {
 //     }`;
 // };
 
-const theTrClasses = (index) => {
+const theTrClasses = (index: number) => {
     return ` ${
         index % 2 === 0
             ? ' rtl:bg-linear-to-r ltr:bg-linear-to-l from-orange-300 to-black dark:from-zinc-900 dark:via-gray-800 dark:to-zinc-900 rtl:hover:bg-linear-to-r ltr:hover:bg-linear-to-l    rounded-none hover:dark:from-zinc-800 hover:dark:to-gray-600 hover:from-orange-300/90 hover:to-black/80' +
@@ -135,7 +153,7 @@ const theTrClasses = (index) => {
     }`;
 };
 
-const headerTextColor = (index) => {
+const headerTextColor = (index: number) => {
     return index == 0
         ? 'text-green-300'
         : index == 1
@@ -174,9 +192,9 @@ const headerTextColor = (index) => {
 // const theTrClasses = computed(() => {
 //     return `rtl:bg-linear-to-r  ltr:bg-linear-to-l    rounded-none from-orange-200 dark:from-zinc-800 dark:via-gray-700 dark:to-zinc-800 to-black  ${props.trClasses}`;
 // });
-const theHoverClasses = computed(() => {
-    return `rtl:hover:bg-linear-to-r ltr:hover:bg-linear-to-l    rounded-none hover:dark:from-zinc-600 hover:dark:to-gray-600 hover:from-amber-50 hover:to-gray-800  ${props.hoverClasses}`;
-});
+// const theHoverClasses = computed(() => {
+//     return `rtl:hover:bg-linear-to-r ltr:hover:bg-linear-to-l    rounded-none hover:dark:from-zinc-600 hover:dark:to-gray-600 hover:from-amber-50 hover:to-gray-800  ${props.hoverClasses}`;
+// });
 </script>
 
 <template>
@@ -185,7 +203,7 @@ const theHoverClasses = computed(() => {
             <div class="flex flex-wrap">
                 <div class="w-full max-w-full flex-none">
                     <div
-                        class="flex min-w-0 flex-col border border-solid border-zinc-400/20 bg-clip-border break-words shadow-md shadow-black"
+                        class="flex min-w-0 flex-col border border-solid border-zinc-400/20 bg-clip-border wrap-break-word shadow-md shadow-black"
                         :class="theheaderFooterClasses"
                     >
                         <div
@@ -200,7 +218,7 @@ const theHoverClasses = computed(() => {
 
                         <div class="flex-auto">
                             <div
-                                class="tableheight flex-grow overflow-auto"
+                                class="tableheight grow overflow-auto"
                                 :class="props.tableHeight"
                             >
                                 <!-- <div class=" overflow-scroll h-screen  p-0 overflow-x-auto "> -->
@@ -220,7 +238,7 @@ const theHoverClasses = computed(() => {
                                             <Checkbox
                                                 class="ltr:ml-1.5 rtl:mr-1.5"
                                                 v-model:checked="
-                                                    checkedAllButton
+                                                    checkedAllButtonIsTrue
                                                 "
                                                 @change="$emit('checkedAll')"
                                             />
@@ -229,7 +247,6 @@ const theHoverClasses = computed(() => {
                                         <Th
                                             v-for="(header, index) in headers"
                                             :key="header.label"
-                                            :class="`${header.classes} `"
                                             class="border-b border-gray-300/50 align-middle text-sm"
                                         >
                                             <span
@@ -238,9 +255,7 @@ const theHoverClasses = computed(() => {
                                                     !noNamePadding
                                                 "
                                                 class="mx-12 text-wrap"
-                                                :class="`${props.headersClasses} ${
-                                                    header?.color
-                                                } ${headerTextColor(index)}`"
+                                                :class="`${props.headersClasses}  ${headerTextColor(index)}`"
                                             >
                                                 {{
                                                     $t(
@@ -252,9 +267,7 @@ const theHoverClasses = computed(() => {
                                             </span>
                                             <span
                                                 v-else
-                                                :class="`${props.headersClasses} ${
-                                                    header?.color
-                                                } ${headerTextColor(index)}`"
+                                                :class="`${props.headersClasses} ${headerTextColor(index)}`"
                                                 class="text-md text-wrap"
                                             >
                                                 {{

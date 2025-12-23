@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAppearance } from '@/composables/useAppearance';
 import { Monitor, Moon, Sun } from 'lucide-vue-next';
-import { loadLanguageAsync , getActiveLanguage} from "laravel-vue-i18n";
+import { loadLanguageAsync} from "laravel-vue-i18n";
 import { router } from '@inertiajs/vue3';
 import { lang } from '@/routes';
 

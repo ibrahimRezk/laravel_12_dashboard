@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Mode from './mode.vue';
+import Mode from './Mode.vue';
 import LangSwitcher from './LangSwitcher.vue';
 import Profile from './Profile.vue';
 

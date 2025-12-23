@@ -1,4 +1,4 @@
-<script setup>
+<script setup >
 import { computed, onMounted, ref } from "vue";
 import { trans } from "laravel-vue-i18n";
 

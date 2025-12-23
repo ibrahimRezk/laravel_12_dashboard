@@ -2,7 +2,7 @@
 export interface FullName {
     // ar: string,
     // en:string
-    [key: string]: string; 
+    [key: string]: string;  
 }
 
 export function getInitials(fullName?: FullName): string {

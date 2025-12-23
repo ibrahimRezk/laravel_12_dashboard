@@ -35,11 +35,13 @@ import { dashboard } from '@/routes';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { InertiaLinkProps, Link, usePage } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
 }
+
+
 
 const props = withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
@@ -47,6 +49,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const page = usePage();
 const auth = computed(() => page.props.auth);
+const user = ref(page.props.auth.user);
+
 
 const isCurrentRoute = computed(
     () => (url: NonNullable<InertiaLinkProps['href']>) =>
@@ -255,7 +259,7 @@ const rightNavItems: NavItem[] = [
                                     <AvatarFallback
                                         class="rounded-lg bg-neutral-200 font-semibold text-black dark:bg-neutral-700 dark:text-white"
                                     >
-                                        {{ getInitials(auth.user?.name) }}
+                                        {{ getInitials(user.name) }}
                                     </AvatarFallback>
                                 </Avatar>
                             </Button>

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import Dropdown from '@/components/Dropdown.vue';
 import FilterIcon from '@/components/Icons/Filter.vue';
 import { computed, ref } from 'vue';
