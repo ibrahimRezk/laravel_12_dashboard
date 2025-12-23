@@ -4,13 +4,12 @@ import AppContent from '@/components/AppContent.vue';
 import AppShell from '@/components/AppShell.vue';
 import AppSidebar from '@/components/AppSidebar.vue';
 import AppSidebarHeader from '@/components/AppSidebarHeader.vue';
-import type { BreadcrumbItemType,  FlashMessagesType } from '@/types';
+import type { BreadcrumbItemType, FlashMessagesType } from '@/types';
 
-import { useGeneralStore } from '@/stores/general';
+import { useGeneralStore } from '@/stores';
 import { storeToRefs } from 'pinia';
 const useGeneral = useGeneralStore();
 const { animate } = storeToRefs(useGeneral);
-
 
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
@@ -48,9 +47,7 @@ withDefaults(defineProps<Props>(), {
     </AppShell>
 </template>
 
-
 <style scoped>
-
 /* durations and timing functions.*/
 .page-enter-active,
 .page-leave-active {
@@ -67,6 +64,3 @@ withDefaults(defineProps<Props>(), {
     transform: translateY(-70px);
 }
 </style>
-
-
-

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import AppLogoIcon from '@/components/AppLogoIcon.vue';
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
 
 // import {
 //     SidebarGroup,
@@ -24,7 +24,7 @@ import { Link, usePage } from '@inertiajs/vue3';
 
 import { onMounted, ref } from 'vue';
 
-import { useGeneralStore } from '@/stores/general';
+import { useGeneralStore } from '@/stores';
 import { storeToRefs } from 'pinia';
 const useGeneral = useGeneralStore();
 const { animate } = storeToRefs(useGeneral);
@@ -107,12 +107,12 @@ const end = (el: HTMLElement): undefined => {
                     >
                         <component :is="item.icon" />
                         <span class="flex justify-between">
-
                             <span class="flex gap-3">
+                                <AppLogoIcon
+                                    class="size-5 fill-current text-black/70 dark:text-white"
+                                />
 
-                                <AppLogoIcon class="size-5 fill-current text-black/70 dark:text-white" />
-
-                        <span> {{ item.title }} </span>
+                                <span> {{ item.title }} </span>
                             </span>
 
                             <svg
@@ -131,6 +131,25 @@ const end = (el: HTMLElement): undefined => {
                                 <path
                                     fill-rule="evenodd"
                                     d="M7.72 12.53a.75.75 0 010-1.06l7.5-7.5a.75.75 0 111.06 1.06L9.31 12l6.97 6.97a.75.75 0 11-1.06 1.06l-7.5-7.5z"
+                                    clip-rule="evenodd"
+                                />
+                            </svg>
+                            <svg
+                                v-else
+                                :class="{
+                                    'rotate-90 transition duration-300 ease-in-out':
+                                        item.open,
+                                    'rotate-0 transition duration-300 ease-in-out':
+                                        !item.open,
+                                }"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                class="h-4 w-4"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M16.28 11.47a.75.75 0 010 1.06l-7.5 7.5a.75.75 0 01-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 011.06-1.06l7.5 7.5z"
                                     clip-rule="evenodd"
                                 />
                             </svg>
@@ -175,7 +194,7 @@ const end = (el: HTMLElement): undefined => {
                     <SidebarMenuButton
                         as-child
                         :is-active="item.isActive"
-                        class="fontbol border hover:cursor-pointer ltr:bg-linear-to-r rtl:bg-linear-to-l"
+                        class="border hover:cursor-pointer ltr:bg-linear-to-r rtl:bg-linear-to-l"
                         :class="
                             item.isActive
                                 ? 'to-black/80 hover:to-black/50 dark:from-white/20 dark:hover:from-white/30'
@@ -186,10 +205,11 @@ const end = (el: HTMLElement): undefined => {
                             <component :is="item.icon" />
 
                             <span class="flex gap-3">
+                                <AppLogoIcon
+                                    class="size-5 fill-current text-black/70 dark:text-white"
+                                />
 
-                                <AppLogoIcon class="size-5 fill-current text-black/70 dark:text-white" />
-
-                        <span> {{ item.title }} </span>
+                                <span> {{ item.title }} </span>
                             </span>
                         </Link>
                     </SidebarMenuButton>

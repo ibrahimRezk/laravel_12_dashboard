@@ -13,7 +13,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { useGeneralStore } from '@/stores/general';
+import { useGeneralStore } from '@/stores';
 import { storeToRefs } from 'pinia';
 const useGeneral = useGeneralStore();
 const { paginationNumber } = storeToRefs(useGeneral);

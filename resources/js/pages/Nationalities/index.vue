@@ -7,26 +7,41 @@ import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Form, Head, useForm } from '@inertiajs/vue3';
-import { computed, onMounted, ref } from 'vue';
+import {ref , watch} from 'vue';
 import Filters from './Filters.vue';
-// import CustomHeaderButton from "@/Components/CustomHeaderButton.vue";
-import Modal from '@/Components/ConfirmationModal.vue';
+// import CustomHeaderButton from "@/components/CustomHeaderButton.vue";
 import Container from '@/components/Container.vue';
-import DialogModal from '@/Components/DialogModal.vue';
-import Actions from '@/Components/Table/Actions.vue';
-import Table from '@/Components/Table/Table.vue';
-import Td from '@/Components/Table/Td.vue';
+import DialogModal from '@/components/DialogModal.vue';
+import Actions from '@/components/Table/Actions.vue';
+import Table from '@/components/Table/Table.vue';
+import Td from '@/components/Table/Td.vue';
 import { Label } from '@/components/ui/label';
-// import Label from "@/Components/Label.vue";
-
-import Checkbox from '@/Components/Checkbox.vue';
-import CustomHeaderButton from '@/Components/CustomHeaderButton.vue';
-import useDialogModal from '@/Composables/useDialogModal.js';
+// import Label from "@/components/Label.vue";
+import Checkbox from '@/components/Checkbox.vue';
+import CustomHeaderButton from '@/components/CustomHeaderButton.vue';
 import useFilters from '@/composables/useFilters.js';
 import useHeaders from '@/composables/useHeaders.js';
 
+////////////////////////////////
+import InputError from '@/components/InputError.vue';
+// import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
+import DialogFooter from '@/components/ui/dialog/DialogFooter.vue';
+import Spinner from '@/components/ui/spinner/Spinner.vue';
+import AlertDialog from '@/components/AlertDialog.vue';
+import useDeleteItem from '@/composables/useDeleteItem';
+// import EditProfileForm from './EditProfileForm.vue'
+import { useModal } from '@/composables/useModal';
 
-import { watch } from 'vue';
+const { open , isOpen  } = useModal();
+
+function fireshowDialogModal() {
+    // function handleEdit() {
+    editMode.value = false;
+    open();
+}
+
+//////////////////////////////////////////
+
 
 interface header {
     name: string;
@@ -49,11 +64,32 @@ interface links {
     next: string | null;
 }
 
+interface item {
+    id: number;
+    name: {
+        ar: string;
+        en: string;
+    };
+    active: boolean;
+    can?: {
+        delete:boolean,
+        update:boolean
+    };
+}
+
+
+
 interface itemsData {
-    data: object[];
+    data: item[];
     links: links;
     meta: meta;
 }
+
+interface fillFormType {
+            [key: string]: any;
+
+}
+
 interface permissions {
     create: boolean;
     update: boolean;
@@ -63,7 +99,7 @@ interface permissions {
 interface Props {
     edit?: boolean;
     title?: string;
-    routeResourceName?: string;
+    // routeResourceName?: string;
     items?: itemsData; // Assuming 'items' is an array of objects
     headers?: header[];
     filters?: Record<string, any>;
@@ -72,10 +108,23 @@ interface Props {
     can?: permissions;
 }
 
+interface filtersValuesDataType {
+    [key: string]: {
+        id: string;
+        data: string | number;
+    };
+}
+
+interface header {
+    name: string;
+    label: string;
+}
+
+
 const props = withDefaults(defineProps<Props>(), {
     edit: false,
     title: '',
-    routeResourceName: '',
+    // routeResourceName: '',
     headers: () => [],
     items: () => ({
         data: [],
@@ -111,37 +160,16 @@ const breadcrumb: BreadcrumbItem[] = [
     },
 ];
 
-const opened = ref(0);
-const method = ref('');
+// const opened = ref(0);
+// const method = ref('');
 // const showScreenExeptSubmenu = ref(false);
-const routeResourceName = ref(props.routeResourceName);
+// const routeResourceName = ref(props.routeResourceName);
 const editMode = ref(false);
 
-const emptyErrors = () => {
-    Object.keys(props.errors).forEach((error) => (props.errors[error] = ''));
-};
+// const emptyErrors = () => {
+//     Object.keys(props.errors).forEach((error) => (props.errors[error] = ''));
+// };
 
-////////////////////////////////
-
-import InputError from '@/Components/InputError.vue';
-// import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
-import DialogFooter from '@/components/ui/dialog/DialogFooter.vue';
-import Spinner from '@/components/ui/spinner/Spinner.vue';
-import { useModal } from '@/composables/useModal';
-import { Alert } from '@/components/ui/alert';
-import AlertDialog from '@/components/AlertDialog.vue';
-import useDeleteItem from '@/composables/useDeleteItem';
-// import EditProfileForm from './EditProfileForm.vue'
-
-const { open , isOpen  } = useModal();
-
-function fireshowDialogModal() {
-    // function handleEdit() {
-    editMode.value = false;
-    open();
-}
-
-//////////////////////////////////////////
 
 // const fireshowDialogModal2 = () => {
 //     editMode.value = false;
@@ -149,15 +177,8 @@ function fireshowDialogModal() {
 //     showDialogModal();
 // };
 
-interface NationalityForm {
-    id: number;
-    name: {
-        ar: string;
-        en: string;
-    };
-    active: boolean;
-}
-const currentItem = useForm<NationalityForm>({
+
+const currentItem:fillFormType = useForm({
     id : 0 ,
     name: {
         ar: '',
@@ -167,7 +188,7 @@ const currentItem = useForm<NationalityForm>({
 });
 
 
-const fillForm = (item) => {
+const fillForm = (item:fillFormType) => {
     Object.keys(currentItem).forEach((key) =>
         item[key] !== undefined && key !== "name" ? (currentItem[key] = item[key]) : ""
     );
@@ -182,15 +203,18 @@ watch(()=> isOpen.value , ()=> isOpen.value == false ?
 
 // watch(()=> isOpen.value , ()=> console.log(isOpen.value))
 
-const fireShowEditModal = (item: object) => {
+const fireShowEditModal = (item: item) => {
     currentItem.reset();
     isOpen.value = true
     fillForm(item)
     editMode.value = true;
-    emptyErrors();
+    // emptyErrors();
 
     // method.value = 'update';
 };
+
+
+
 
 const { filterHeadersMethod, showColumnItems, finalHeaders, filteredHeaders } =
     useHeaders({
@@ -204,41 +228,39 @@ watch(
     () => filterHeadersMethod(),
 );
 
-const {
-    closeDialogModal,
-    dialogModal,
-    itemToSave,
-    isSaving,
-    showDialogModal,
-    showEditModal,
-    handleSavingItem,
-} = useDialogModal({
-    routeResourceName: routeResourceName,
-    // form: form,
-    opened,
-    // showScreenExeptSubmenu,
-    method,
-    editMode,
-});
+// const {
+//     closeDialogModal,
+//     dialogModal,
+//     itemToSave,
+//     isSaving,
+//     showDialogModal,
+//     showEditModal,
+//     handleSavingItem,
+// } = useDialogModal({
+//     routeResourceName: routeResourceName,
+//     // form: form,
+//     opened,
+//     // showScreenExeptSubmenu,
+//     method,
+//     editMode,
+// });
 
 
 
 const {
-    close,
-    deleteModal,
     itemToDelete,
-    isDeleting,
     showDeleteModal,
-    handleDeleteItem,
     deleteMultipleItems,
 } = useDeleteItem({
-    routeResourceName: routeResourceName,
+    // routeResourceName: routeResourceName,
 });
+
+
 
 
 const { filters, isLoading, isFilled, resetFilter } = useFilters({
     filters: props.filters,
-    routeResourceName: props.routeResourceName,
+    // routeResourceName: props.routeResourceName,
     method: props.method,
     route : index
 });
@@ -246,13 +268,12 @@ const { filters, isLoading, isFilled, resetFilter } = useFilters({
 
 
 const checkedAllButton = ref(false);
-const checkedItems = ref([]);
-
+const checkedItems = ref<number[]>([]);
 
 const checkAllItems = () => {
     if (!checkedItems.value.length) {
         props.items.data.forEach((item) => {
-            if (item.can.delete == true) {
+            if (item.can?.delete == true) {
                 checkedItems.value.push(item.id);
             }
         });
@@ -295,7 +316,7 @@ watch(
 );
 
 
-const showDeleteItem = (item) => {
+const showDeleteItem = (item:item) => {
     deleteMultipleItems.value = false;
     showDeleteModal(item);
 };
@@ -305,12 +326,6 @@ const deleteAll = () => {
     showDeleteModal(checkedItems.value);
 };
 
-interface filtersValuesDataType {
-    [key: string]: {
-        id: string;
-        data: string | number;
-    };
-}
 
 const filtersValuesData = ref({} as filtersValuesDataType);
 const filtersValuesDataMethod = (data: filtersValuesDataType) => {
@@ -330,7 +345,7 @@ const startLeaveAnimation = () => {
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumb" :header="'profile'">
+    <AppLayout :breadcrumbs="breadcrumb" :header="'Nationalities'">
         <Head :title="props.title" />
 
       

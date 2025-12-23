@@ -2,11 +2,11 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { wTrans } from "laravel-vue-i18n";
 
-import Card from '@/Components/Card/Card.vue';
+import Card from '@/components/Card/Card.vue';
 // import Card from "@/components/ui/card/Card.vue";
 
-import InputGroup from "@/Components/InputGroup.vue";
-// import SelectGroup from "@/Components/SelectGroup.vue";
+import InputGroup from "@/components/InputGroup.vue";
+// import SelectGroup from "@/components/SelectGroup.vue";
 
 const props = defineProps({
     modelValue: {

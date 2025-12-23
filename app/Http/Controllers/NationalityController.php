@@ -15,7 +15,7 @@ use App\Http\Resources\NationalityResource;
 class NationalityController extends Controller
 {
 
-    private string $routeResourceName = 'nationalities';
+    // private string $routeResourceName = 'nationalities';
 
     public function __construct()
     {
@@ -107,7 +107,7 @@ class NationalityController extends Controller
                 ],
             ],
             'filters' => (object) $request->all(),
-            'routeResourceName' => $this->routeResourceName,
+            // 'routeResourceName' => $this->routeResourceName,
             'can' => [
                 'create' => true,
                 'delete' => true,

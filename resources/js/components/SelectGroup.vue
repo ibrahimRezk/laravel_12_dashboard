@@ -1,87 +1,89 @@
 <script setup>
-import Input from "@/Components/Input.vue";
-import Label from "@/Components/Label.vue";
-import InputError from "@/Components/InputError.vue";
-import Select from "@/Components/Select.vue";
-import { trans } from "laravel-vue-i18n";
-import { computed  } from "@vue/runtime-core";
+import InputError from '@/components/InputError.vue';
+import Label from '@/components/Label.vue';
+import Select from '@/components/Select.vue';
+import { computed } from '@vue/runtime-core';
+import { trans } from 'laravel-vue-i18n';
 
-const props = defineProps({  
+const props = defineProps({
     items: Array,
     itemText: {
         type: String,
-        default: "name",
+        default: 'name',
     },
-    itemValue: { 
+    itemValue: {
         type: String,
-        default: "id",
+        default: 'id',
     },
     customLabel: {
         type: String,
-        default: "",
+        default: '',
     },
-    extra_text: { 
+    extra_text: {
         type: String,
-        default: "",
+        default: '',
     },
-    extra_item_data: { 
+    extra_item_data: {
         type: String,
-        default: "",
+        default: '',
     },
     withoutSelect: {
         type: Boolean,
-        default: false, 
+        default: false,
     },
     flex: {
         type: Boolean,
-        default: false, 
+        default: false,
     },
     label: {
         type: String,
-        default: "",
+        default: '',
     },
     translationFolder: {
         type: String,
-        default: "",
+        default: '',
     },
-
 
     errorMessage: {
         type: String,
-        default: "",
+        default: '',
     },
-    passIdWithName: { 
+    passIdWithName: {
         type: Boolean,
         default: false,
     },
-    disabled_id: { 
+    disabled_id: {
         type: String,
-        default: null ,
+        default: null,
     },
-    disabledCheckKey: { 
+    disabledCheckKey: {
         type: String,
         default: '',
     },
 });
 
-const flex = props.flex ? 'flex' : ''
+const flex = props.flex ? 'flex' : '';
 
-const tanslatedLabel = computed(()=>{
-    return trans(props.translationFolder+props.label)
-})
+const tanslatedLabel = computed(() => {
+    return trans(props.translationFolder + props.label);
+});
 
-const modelValue = defineModel()
-
+const modelValue = defineModel();
 </script>
 
-<template> 
+<template>
     <div class=" ">
         <div :class="flex">
-            <Label class=" flex  align-middle items-center text-nowrap" :customLabel="props.customLabel" v-if="label" :value="tanslatedLabel"  />
+            <Label
+                class="flex items-center align-middle text-nowrap"
+                :customLabel="props.customLabel"
+                v-if="label"
+                :value="tanslatedLabel"
+            />
 
-
-        <Select class="mt-1 text-xs" 
-                v-model="modelValue" 
+            <Select
+                class="mt-1 text-xs"
+                v-model="modelValue"
                 @update="$emit('update:modelValue', $event)"
                 :items="items"
                 :item-text="itemText"
@@ -93,10 +95,9 @@ const modelValue = defineModel()
                 :translationFolder="translationFolder"
                 :disabledCheckKey="props.disabledCheckKey"
                 :disabled_id="props.disabled_id"
-                v-bind="$attrs" />
-            </div>
-        <InputError v-if="errorMessage" 
-                    class="mt-1"
-                    :message="errorMessage" />
+                v-bind="$attrs"
+            />
+        </div>
+        <InputError v-if="errorMessage" class="mt-1" :message="errorMessage" />
     </div>
 </template>

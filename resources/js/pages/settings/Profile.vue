@@ -1,12 +1,13 @@
 <script setup lang="ts">
-    import { edit } from '@/routes/profile';
-    import { send } from '@/routes/verification';
-    import { Form, Head, Link, router, usePage } from '@inertiajs/vue3';
-    
-    import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
+import { edit } from '@/routes/profile';
+import { send } from '@/routes/verification';
+import { Form, Head, Link, router, usePage } from '@inertiajs/vue3';
+
+import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 
 import DeleteUser from '@/components/DeleteUser.vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
+// import InputError from '@/components/InputError.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,8 +34,10 @@ const breadcrumbItems: BreadcrumbItem[] = [
 const page = usePage();
 const user = ref(page.props.auth.user);
 
-watch(() => page.props.auth.user , ()=> user.value = page.props.auth.user)
-
+watch(
+    () => page.props.auth.user,
+    () => (user.value = page.props.auth.user),
+);
 
 // const isOpen = ref(false);
 // let closeTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -79,14 +82,14 @@ const updatePhotoPreview = () => {
 };
 
 const deleteCurrentUserAvatar = () => {
-   return router.delete(ProfileController.deleteAvatar() , {
-     preserveScroll: true,
+    return router.delete(ProfileController.deleteAvatar(), {
+        preserveScroll: true,
         onSuccess: () => {
-            user.value =  page.props.auth.user;
+            user.value = page.props.auth.user;
             photoPreview.value = null;
             clearPhotoFileInput();
         },
-   });
+    });
 };
 
 const clearPhotoFileInput = () => {
@@ -94,7 +97,6 @@ const clearPhotoFileInput = () => {
         photoInput.value = null;
     }
 };
-
 </script>
 
 <template>
@@ -238,17 +240,24 @@ const clearPhotoFileInput = () => {
                         <!-- Current Profile Photo -->
                         <div v-show="!photoPreview" class="mt-2">
                             <img
-                            @click.prevent="selectNewPhoto"
+                                @click.prevent="selectNewPhoto"
                                 alt="image"
-                                :src=" user.avatar ? `/storage/${user.avatar}` : '' "
-                                :class=" user.avatar  ? 'h-20 w-20 rounded-full object-cover border border-gray-100/50  transition duration-400 ease-in-out hover:cursor-pointer hover:scale-110' : ' hidden' "
+                                :src="
+                                    user.avatar ? `/storage/${user.avatar}` : ''
+                                "
+                                :class="
+                                    user.avatar
+                                        ? 'h-20 w-20 rounded-full border border-gray-100/50 object-cover transition duration-400 ease-in-out hover:scale-110 hover:cursor-pointer'
+                                        : 'hidden'
+                                "
                             />
                         </div>
 
                         <!-- New Profile Photo Preview -->
                         <div v-show="photoPreview" class="mt-2">
-                            <span   @click.prevent="selectNewPhoto"
-                                class="block h-20 w-20 rounded-full bg-cover bg-center bg-no-repeat  transition duration-400 ease-in-out hover:cursor-pointer hover:scale-110"
+                            <span
+                                @click.prevent="selectNewPhoto"
+                                class="block h-20 w-20 rounded-full bg-cover bg-center bg-no-repeat transition duration-400 ease-in-out hover:scale-110 hover:cursor-pointer"
                                 :style="
                                     'background-image: url(\'' +
                                     photoPreview +
@@ -261,14 +270,14 @@ const clearPhotoFileInput = () => {
                             type="button"
                             size="sm"
                             @click.prevent="selectNewPhoto"
-                            >
+                        >
                             {{ $t('general.Select A New Photo') }}
                         </Button>
-                        
+
                         <Button
-                        v-if="user.avatar"
-                        type="button"
-                        size="sm"
+                            v-if="user.avatar"
+                            type="button"
+                            size="sm"
                             class="mt-2 hover:cursor-pointer"
                             @click.prevent="deleteCurrentUserAvatar"
                         >

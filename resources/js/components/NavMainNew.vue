@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import { 
+import {
     SidebarMenu,
-     SidebarMenuButton,
-      SidebarMenuItem,
-       SidebarMenuSub,
-        SidebarMenuSubButton,
-         SidebarMenuSubItem 
-        } from '@/components/ui/sidebar';
+    SidebarMenuButton,
+    SidebarMenuItem,
+    SidebarMenuSub,
+    SidebarMenuSubButton,
+    SidebarMenuSubItem,
+} from '@/components/ui/sidebar';
 import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { onMounted, ref } from 'vue';
 
-import { useGeneralStore } from '@/stores/general';
+import { useGeneralStore } from '@/stores';
 import { storeToRefs } from 'pinia';
-const useGeneral = useGeneralStore()
-const { animate } = storeToRefs(useGeneral)
-
+const useGeneral = useGeneralStore();
+const { animate } = storeToRefs(useGeneral);
 
 interface Menu {
     items: NavItem[];
@@ -30,7 +29,7 @@ const menus = ref<NavItem[]>(page.props.menus);
 const slideActionName = ref<string>('');
 
 const openCloseSubMenu = (activeMenu: NavItem) => {
-    activeMenu.isActive = true
+    activeMenu.isActive = true;
     if (activeMenu.hasSubmenu) {
         activeMenu.open = !activeMenu.open;
         menus.value.forEach((menu: NavItem) => {
@@ -42,13 +41,12 @@ const openCloseSubMenu = (activeMenu: NavItem) => {
     }
 };
 
-
 onMounted(() => {
     menus.value.forEach((menu) => {
         if (menu.hasSubmenu) {
-            menu.subMenus.forEach((submenu : NavItem) => {
+            menu.subMenus.forEach((submenu: NavItem) => {
                 if (submenu.isActive) {
-                    slideActionName.value = ""; // keep it empty to prevent animation on sidebar menu when clicking on the current page or filter on it
+                    slideActionName.value = ''; // keep it empty to prevent animation on sidebar menu when clicking on the current page or filter on it
                     return (menu.open = true);
                     // return openCloseSubMenu(menu);
                 }
@@ -56,8 +54,6 @@ onMounted(() => {
         }
     });
 });
-
-
 
 const start = (el: HTMLElement): undefined => {
     el.style.height = el.scrollHeight + 'px';
@@ -70,19 +66,38 @@ const end = (el: HTMLElement): undefined => {
 <template>
     <SidebarMenu v-if="menus">
         <SidebarMenuItem v-for="item in items" :key="item.title">
-
             <div v-if="item.hasSubmenu">
-                <SidebarMenuButton as-child :is-active="item.isActive" @click="openCloseSubMenu(item)" class="hover:cursor-pointer">
+                <SidebarMenuButton
+                    as-child
+                    :is-active="item.isActive"
+                    @click="openCloseSubMenu(item)"
+                    class="hover:cursor-pointer"
+                >
                     <component :is="item.icon" />
                     <span>{{ item.title }}</span>
                 </SidebarMenuButton>
 
-                <transition :name="slideActionName" @enter="start" @after-enter="end" @before-leave="start" @after-leave="end">
+                <transition
+                    :name="slideActionName"
+                    @enter="start"
+                    @after-enter="end"
+                    @before-leave="start"
+                    @after-leave="end"
+                >
                     <div v-show="item.open" v-if="item?.subMenus?.length">
                         <SidebarMenuSub>
-                            <SidebarMenuSubItem v-for="subItem in item.subMenus" :key="subItem.title">
-                                <SidebarMenuSubButton as-child :is-active="subItem.isActive" @click="animate = false">
-                                    <Link :href="subItem.url">{{ subItem.title }}</Link>
+                            <SidebarMenuSubItem
+                                v-for="subItem in item.subMenus"
+                                :key="subItem.title"
+                            >
+                                <SidebarMenuSubButton
+                                    as-child
+                                    :is-active="subItem.isActive"
+                                    @click="animate = false"
+                                >
+                                    <Link :href="subItem.url">{{
+                                        subItem.title
+                                    }}</Link>
                                 </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                         </SidebarMenuSub>
@@ -91,9 +106,8 @@ const end = (el: HTMLElement): undefined => {
             </div>
 
             <div v-else>
-                
                 <SidebarMenuButton as-child :is-active="item.isActive">
-                    <Link :href="item.url"   @click="animate = false">
+                    <Link :href="item.url" @click="animate = false">
                         <component :is="item.icon" />
                         <span>{{ item.title }}</span>
                     </Link>

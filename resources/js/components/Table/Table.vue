@@ -1,20 +1,16 @@
 <script setup>
-import Th from "@/Components/Table/Th.vue";
-import Td from "@/Components/Table/Td.vue";
-import Pagination from "@/Components/Table/Pagination.vue";
-import { trans } from "laravel-vue-i18n";
-import Checkbox from "@/Components/Checkbox.vue";
-import { ref, computed, watch, onMounted } from "vue";
+import Checkbox from '@/components/Checkbox.vue';
+import Pagination from '@/components/Table/Pagination.vue';
+import Td from '@/components/Table/Td.vue';
+import Th from '@/components/Table/Th.vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 // import { emit } from "process";
 
-
-import { useGeneralStore } from '@/stores/general';
+import { useGeneralStore } from '@/stores';
 import { storeToRefs } from 'pinia';
 const useGeneral = useGeneralStore();
 const { animate } = storeToRefs(useGeneral);
-
-
 
 const props = defineProps({
     headers: {
@@ -27,24 +23,24 @@ const props = defineProps({
     },
     headersClasses: {
         type: String,
-        default: () => "",
+        default: () => '',
     },
 
     headerFooterClasses: {
         type: String,
-        default: () => "",
+        default: () => '',
     },
     trClasses: {
         type: String,
-        default: () => "",
+        default: () => '',
     },
     bodyClasses: {
         type: String,
-        default: () => "",
+        default: () => '',
     },
     hoverClasses: {
         type: String,
-        default: () => "",
+        default: () => '',
     },
     noCheckAll: {
         type: Boolean,
@@ -76,10 +72,9 @@ const props = defineProps({
     },
     tableHeight: {
         type: String,
-        default: "",
+        default: '',
     },
 });
-
 
 onMounted(() => {
     animate.value = true;
@@ -87,7 +82,7 @@ onMounted(() => {
 
 const startLeaveAnimation = () => {
     animate.value = false;
-    emit("startLeaveAnimation", false);
+    emit('startLeaveAnimation', false);
 };
 
 const checkedAllButton = ref();
@@ -95,26 +90,25 @@ const checkedAllButton = ref();
 watch(
     () => props.checkedAllButton,
     () => (checkedAllButton.value = props.checkedAllButton),
-    { deep: true }
+    { deep: true },
 );
 
-
-const emit = defineEmits(["callAxiosUrl", "checkedAll", "startLeaveAnimation"]);
+const emit = defineEmits(['callAxiosUrl', 'checkedAll', 'startLeaveAnimation']);
 
 const callAxiosUrl = (payload) => {
-    emit("callAxiosUrl", payload);
-    emit("startLeaveAnimation", false);
+    emit('callAxiosUrl', payload);
+    emit('startLeaveAnimation', false);
 };
 
 const theHeadersClasses = computed(() => {
     return `rtl:bg-linear-to-r  ltr:bg-linear-to-l  rounded-2xl font-normal text-white  from-gray-800  to-gray-700 dark:via-zinc-700 dark:from-black dark:to-black  ${
-        props.tableHeight == "" ? "border-y border-gray-200/40" : ""
+        props.tableHeight == '' ? 'border-y border-gray-200/40' : ''
     }  ${props.headersClasses} `;
 });
 const theheaderFooterClasses = computed(() => {
     return `rtl:bg-linear-to-r   ltr:bg-linear-to-l    font-normal text-white from-zinc-800 via-orange-200  to-zinc-900 dark:via-zinc-900  to-zinc-900 ${
         props.headerFooterClasses
-    } ${props.noPagination ? " " : "rounded-2xl "}`;
+    } ${props.noPagination ? ' ' : 'rounded-2xl '}`;
 });
 
 // const theTrClasses = (index) => {
@@ -132,49 +126,49 @@ const theheaderFooterClasses = computed(() => {
 const theTrClasses = (index) => {
     return ` ${
         index % 2 === 0
-            ? " rtl:bg-linear-to-r ltr:bg-linear-to-l from-orange-300 to-black dark:from-zinc-900 dark:via-gray-800 dark:to-zinc-900 rtl:hover:bg-linear-to-r ltr:hover:bg-linear-to-l    rounded-none hover:dark:from-zinc-800 hover:dark:to-gray-600 hover:from-orange-300/90 hover:to-black/80" +
+            ? ' rtl:bg-linear-to-r ltr:bg-linear-to-l from-orange-300 to-black dark:from-zinc-900 dark:via-gray-800 dark:to-zinc-900 rtl:hover:bg-linear-to-r ltr:hover:bg-linear-to-l    rounded-none hover:dark:from-zinc-800 hover:dark:to-gray-600 hover:from-orange-300/90 hover:to-black/80' +
               props.trClasses +
-              " "
-            : "rtl:bg-linear-to-r  ltr:bg-linear-to-l    rounded-none from-orange-200 to-black/90 dark:from-zinc-800 dark:via-gray-700 dark:to-zinc-800  rtl:hover:bg-linear-to-r ltr:hover:bg-linear-to-l    rounded-none hover:dark:from-zinc-800 hover:dark:to-gray-600 hover:from-orange-200/90 hover:to-black/80 " +
+              ' '
+            : 'rtl:bg-linear-to-r  ltr:bg-linear-to-l    rounded-none from-orange-200 to-black/90 dark:from-zinc-800 dark:via-gray-700 dark:to-zinc-800  rtl:hover:bg-linear-to-r ltr:hover:bg-linear-to-l    rounded-none hover:dark:from-zinc-800 hover:dark:to-gray-600 hover:from-orange-200/90 hover:to-black/80 ' +
               props.trClasses +
-              " "
+              ' '
     }`;
 };
 
 const headerTextColor = (index) => {
     return index == 0
-        ? "text-green-300"
+        ? 'text-green-300'
         : index == 1
-        ? "text-cyan-300"
-        : index == 2
-        ? "text-orange-300"
-        : index == 3
-        ? "text-red-300"
-        : index == 4
-        ? "text-indigo-300"
-        : index == 5
-        ? "text-pink-300"
-        : index == 6
-        ? "text-yellow-300"
-        : index == 7
-        ? "text-sky-300"
-        : index == 8
-        ? "text-green-300"
-        : index == 9
-        ? "text-orange-300"
-        : index == 10
-        ? "text-indigo-300"
-        : index == 11
-        ? "text-cyan-300"
-        : index == 12
-        ? "text-pink-300"
-        : index == 13
-        ? "text-green-300"
-        : index == 14
-        ? "text-yellow-300"
-        : index == 15
-        ? "text-orange-300"
-        : "text-gray-300";
+          ? 'text-cyan-300'
+          : index == 2
+            ? 'text-orange-300'
+            : index == 3
+              ? 'text-red-300'
+              : index == 4
+                ? 'text-indigo-300'
+                : index == 5
+                  ? 'text-pink-300'
+                  : index == 6
+                    ? 'text-yellow-300'
+                    : index == 7
+                      ? 'text-sky-300'
+                      : index == 8
+                        ? 'text-green-300'
+                        : index == 9
+                          ? 'text-orange-300'
+                          : index == 10
+                            ? 'text-indigo-300'
+                            : index == 11
+                              ? 'text-cyan-300'
+                              : index == 12
+                                ? 'text-pink-300'
+                                : index == 13
+                                  ? 'text-green-300'
+                                  : index == 14
+                                    ? 'text-yellow-300'
+                                    : index == 15
+                                      ? 'text-orange-300'
+                                      : 'text-gray-300';
 };
 
 // const theTrClasses = computed(() => {
@@ -187,156 +181,188 @@ const theHoverClasses = computed(() => {
 
 <template>
     <transition name="page" mode="out-in" appear>
-        <div v-if="animate"> 
-    <div class="flex flex-wrap">
-        <div class="flex-none w-full max-w-full">
-            <div
-                class="flex flex-col min-w-0 break-words border-zinc-400/20 border border-solid shadow-black shadow-md bg-clip-border"
-                :class="theheaderFooterClasses"
-            >
-                <div
-                    class="z-10 px-5 borde border-b-0 border-b-solid rounded-t-2xl border-b-transparent rtl:bg-linear-to-r ltr:bg-linear-to-l rounded-none"
-                >
+        <div v-if="animate">
+            <div class="flex flex-wrap">
+                <div class="w-full max-w-full flex-none">
                     <div
-                        class="flex flex-row gap-2 text-yellow-50 text-lg py-2"
+                        class="flex min-w-0 flex-col border border-solid border-zinc-400/20 bg-clip-border break-words shadow-md shadow-black"
+                        :class="theheaderFooterClasses"
                     >
-                        <slot name="title"> </slot>
-                    </div>
-                </div>
-
-                <div class="flex-auto">
-                    <div
-                        class="flex-grow overflow-auto tableheight"
-                        :class="props.tableHeight"
-                    >
-                        <!-- <div class=" overflow-scroll h-screen  p-0 overflow-x-auto "> -->
-                        <!-- <div class="p-0 "> -->
-
-                        <table
-                            class="items-center w-full mb-3 align-top text-slate-500"
+                        <div
+                            class="borde border-b-solid z-10 rounded-none rounded-t-2xl border-b-0 border-b-transparent px-5 ltr:bg-linear-to-l rtl:bg-linear-to-r"
                         >
-                            <thead
-                                class="sticky top-0 z-10 align-bottom bg-gray-800"
-                                :class="theHeadersClasses"
+                            <div
+                                class="flex flex-row gap-2 py-2 text-lg text-yellow-50"
                             >
-                                <Th
-                                    v-if="!props.noCheckAll"
-                                    class="border-b border-gray-300/50"
-                                >
-                                    <Checkbox
-                                        class="rtl:mr-1.5 ltr:ml-1.5"
-                                        v-model:checked="checkedAllButton"
-                                        @change="$emit('checkedAll')"
-                                    />
-                                </Th>
+                                <slot name="title"> </slot>
+                            </div>
+                        </div>
 
-                                <Th
-                                    v-for="(header, index) in headers"
-                                    :key="header.label"
-                                    :class="`${header.classes}  `"
-                                    class="border-b align-middle text-sm border-gray-300/50"
-                                >
-                                    <span
-                                        v-if="
-                                            header.name == 'name' &&
-                                            !noNamePadding
-                                        "
-                                        class="mx-12 text-wrap"
-                                        :class="`${props.headersClasses} ${
-                                            header?.color
-                                        } ${headerTextColor(index)}`"
-                                    >
-                                        {{ $t("general." + header.label + "") }}
-                                    </span>
-                                    <span
-                                        v-else
-                                        :class="`${props.headersClasses} ${
-                                            header?.color
-                                        } ${headerTextColor(index)}`"
-                                        class="text-md text-wrap"
-                                    >
-                                        {{ $t("general." + header.label + "") }}
-                                    </span>
-                                </Th>
-                            </thead>
-
-                            <tbody
-                                v-if="props.noPagination"
-                                :class="props.bodyClasses"
+                        <div class="flex-auto">
+                            <div
+                                class="tableheight flex-grow overflow-auto"
+                                :class="props.tableHeight"
                             >
-                                <!-- :class="`${theHoverClasses} ${index%2 === 1 ? 'from-orange-200 dark:from-zinc-800 dark:via-gray-900 dark:to-zinc-800 to-zinc-900' : ''}`" -->
+                                <!-- <div class=" overflow-scroll h-screen  p-0 overflow-x-auto "> -->
+                                <!-- <div class="p-0 "> -->
 
-                                <tr
-                                    v-for="(item, index) in items"
-                                    :class="theTrClasses(index)"
-                                    :key="index"
+                                <table
+                                    class="mb-3 w-full items-center align-top text-slate-500"
                                 >
-                                    <slot :item="item" :index="index"></slot>
+                                    <thead
+                                        class="sticky top-0 z-10 bg-gray-800 align-bottom"
+                                        :class="theHeadersClasses"
+                                    >
+                                        <Th
+                                            v-if="!props.noCheckAll"
+                                            class="border-b border-gray-300/50"
+                                        >
+                                            <Checkbox
+                                                class="ltr:ml-1.5 rtl:mr-1.5"
+                                                v-model:checked="
+                                                    checkedAllButton
+                                                "
+                                                @change="$emit('checkedAll')"
+                                            />
+                                        </Th>
 
-                                    <slot
-                                        name="item"
-                                        :item="item"
-                                        :index="1"
-                                    ></slot>
-                                </tr>
-                                <tr v-if="items?.length === 0">
-                                    <Td :colspan="headers.length + 1">
-                                        {{ $t("general.no data available") }}
-                                    </Td>
-                                </tr>
+                                        <Th
+                                            v-for="(header, index) in headers"
+                                            :key="header.label"
+                                            :class="`${header.classes} `"
+                                            class="border-b border-gray-300/50 align-middle text-sm"
+                                        >
+                                            <span
+                                                v-if="
+                                                    header.name == 'name' &&
+                                                    !noNamePadding
+                                                "
+                                                class="mx-12 text-wrap"
+                                                :class="`${props.headersClasses} ${
+                                                    header?.color
+                                                } ${headerTextColor(index)}`"
+                                            >
+                                                {{
+                                                    $t(
+                                                        'general.' +
+                                                            header.label +
+                                                            '',
+                                                    )
+                                                }}
+                                            </span>
+                                            <span
+                                                v-else
+                                                :class="`${props.headersClasses} ${
+                                                    header?.color
+                                                } ${headerTextColor(index)}`"
+                                                class="text-md text-wrap"
+                                            >
+                                                {{
+                                                    $t(
+                                                        'general.' +
+                                                            header.label +
+                                                            '',
+                                                    )
+                                                }}
+                                            </span>
+                                        </Th>
+                                    </thead>
 
-                                <tr v-if="props.has_extra_final_row">
-                                    <slot name="finalRow" />
-                                </tr>
-                            </tbody>
+                                    <tbody
+                                        v-if="props.noPagination"
+                                        :class="props.bodyClasses"
+                                    >
+                                        <!-- :class="`${theHoverClasses} ${index%2 === 1 ? 'from-orange-200 dark:from-zinc-800 dark:via-gray-900 dark:to-zinc-800 to-zinc-900' : ''}`" -->
 
-                            <tbody v-else :class="props.bodyClasses">
-                                <tr
-                                    class=" "
-                                    :class="theTrClasses(index)"
-                                    v-for="(item, index) in items.data"
-                                    :key="index"
-                                >
-                                    <slot :item="item" :index="index"></slot>
+                                        <tr
+                                            v-for="(item, index) in items"
+                                            :class="theTrClasses(index)"
+                                            :key="index"
+                                        >
+                                            <slot
+                                                :item="item"
+                                                :index="index"
+                                            ></slot>
 
-                                    <slot
-                                        name="item"
-                                        :item="item"
-                                        :index="1"
-                                    ></slot>
-                                </tr>
-                                <tr v-if="items.data?.length === 0">
-                                    <Td :colspan="headers.length + 1">
-                                        {{ $t("general.no data available") }}
-                                    </Td>
-                                </tr>
+                                            <slot
+                                                name="item"
+                                                :item="item"
+                                                :index="1"
+                                            ></slot>
+                                        </tr>
+                                        <tr v-if="items?.length === 0">
+                                            <Td :colspan="headers.length + 1">
+                                                {{
+                                                    $t(
+                                                        'general.no data available',
+                                                    )
+                                                }}
+                                            </Td>
+                                        </tr>
 
-                                <tr v-if="props.has_extra_final_row">
-                                    <slot name="finalRow" />
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div v-if="props.noPagination == false">
-                            <!-- v-if="items.meta?.links?.length > 3" -->
-                            <div class="items-center justify-center flex py-2">
-                                <Pagination
-                                    @startLeaveAnimation="startLeaveAnimation"
-                                    @callAxiosUrl="callAxiosUrl"
-                                    :links="items?.meta?.links"
-                                    :withAxios="props.withAxios"
-                                    :showPaginationNumber="
-                                        props.showPaginationNumber
-                                    "
-                                />
+                                        <tr v-if="props.has_extra_final_row">
+                                            <slot name="finalRow" />
+                                        </tr>
+                                    </tbody>
+
+                                    <tbody v-else :class="props.bodyClasses">
+                                        <tr
+                                            class=" "
+                                            :class="theTrClasses(index)"
+                                            v-for="(item, index) in items.data"
+                                            :key="index"
+                                        >
+                                            <slot
+                                                :item="item"
+                                                :index="index"
+                                            ></slot>
+
+                                            <slot
+                                                name="item"
+                                                :item="item"
+                                                :index="1"
+                                            ></slot>
+                                        </tr>
+                                        <tr v-if="items.data?.length === 0">
+                                            <Td :colspan="headers.length + 1">
+                                                {{
+                                                    $t(
+                                                        'general.no data available',
+                                                    )
+                                                }}
+                                            </Td>
+                                        </tr>
+
+                                        <tr v-if="props.has_extra_final_row">
+                                            <slot name="finalRow" />
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div v-if="props.noPagination == false">
+                                    <!-- v-if="items.meta?.links?.length > 3" -->
+                                    <div
+                                        class="flex items-center justify-center py-2"
+                                    >
+                                        <Pagination
+                                            @startLeaveAnimation="
+                                                startLeaveAnimation
+                                            "
+                                            @callAxiosUrl="callAxiosUrl"
+                                            :links="items?.meta?.links"
+                                            :withAxios="props.withAxios"
+                                            :showPaginationNumber="
+                                                props.showPaginationNumber
+                                            "
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    </div>
-</transition>
+    </transition>
 </template>
 
 <style scoped>

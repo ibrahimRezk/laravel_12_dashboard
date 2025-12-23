@@ -1,3 +1,4 @@
+import { RouteDefinition } from '@/wayfinder';
 import { InertiaLinkProps } from '@inertiajs/vue3';
 import type { LucideIcon } from 'lucide-vue-next';
 
@@ -7,7 +8,7 @@ export interface Auth {
 
 export interface BreadcrumbItem {
     title: string;
-    href: string;
+    href: RouteDefinition<'get'>;
 }
 
 export interface FlashMessages {

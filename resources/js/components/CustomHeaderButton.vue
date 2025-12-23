@@ -1,6 +1,6 @@
 <script setup>
-import Dropdown from '@/Components/Dropdown.vue';
-import FilterIcon from '@/Components/Icons/Filter.vue';
+import Dropdown from '@/components/Dropdown.vue';
+import FilterIcon from '@/components/Icons/Filter.vue';
 import { computed, ref } from 'vue';
 import Button from './ui/button/Button.vue';
 
