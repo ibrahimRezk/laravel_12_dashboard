@@ -111,12 +111,10 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
 
 
 <!-- //////////////////////////////////////////////////////// -->
-<div
-  class="w-full h-full  absolute top-0 left-0 bg-black/30  bg-contain bg-center rounded-lg border-0  -z-20 "
-/>
-<div
+
+<!-- <div
   class=" bg-no-repeat  h-full w-full bg-cover bg-center  rounded-lg absolute top-0 left-0 bg-[url('/assets/img/flowers.jpg')]  opacity-30  dark:opacity-10  -z-20 "
-/>
+/> -->
 <!-- //////////////////////////////////////////////////////// -->
 
 

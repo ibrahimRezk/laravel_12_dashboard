@@ -252,7 +252,7 @@ const {
     showDeleteModal,
     deleteMultipleItems,
 } = useDeleteItem({
-    // routeResourceName: routeResourceName,
+    destroyRoute: destroy,
 });
 
 
@@ -268,34 +268,37 @@ const { filters, isLoading, isFilled, resetFilter } = useFilters({
 
 
 const checkedAllButton = ref(false);
-const checkedItems = ref<number[]>([]);
+const checkedItems = ref<item[]>([]);
+const checkedItemsIds = ref<number[]>([]);
 
 const checkAllItems = () => {
     if (!checkedItems.value.length) {
         props.items.data.forEach((item) => {
             if (item.can?.delete == true) {
-                checkedItems.value.push(item.id);
+                checkedItems.value.push(item);
+                checkedItemsIds.value.push(item.id);
             }
         });
     } else {
         checkedItems.value = [];
+        checkedItemsIds.value = [];
     }
 };
 
 
 
 watch(
-    () => checkedItems.value,
+    () =>( checkedItems.value , checkedItemsIds.value),
     () =>
-        checkedItems.value.length > 0
+        checkedItems.value.length > 0 || checkedItemsIds.value.length > 0
             ? (checkedAllButton.value = true)
             : (checkedAllButton.value = false)
 );
 
 watch(
-    () => checkedItems.value.length,
+    () => (checkedItems.value.length , checkedItemsIds.value.length),
     () =>
-        checkedItems.value.length > 0
+        checkedItems.value.length > 0 || checkedItemsIds.value.length > 0
             ? (checkedAllButton.value = true)
             : (checkedAllButton.value = false)
 );
@@ -304,21 +307,26 @@ watch(
     () => deleteMultipleItems.value,
     () =>
         deleteMultipleItems.value == false
-            ? (checkedItems.value = [] , checkedAllButton.value = false)
+            ? (checkedItems.value = [] , checkedItemsIds.value = [] , checkedAllButton.value = false)
             : ''
 );
 watch(
     () => itemToDelete.value,
     () =>
         itemToDelete.value.length == 1
-            ? (checkedItems.value = [] , checkedAllButton.value = false)
+            ? (checkedItems.value = [] , checkedItemsIds.value = [] , checkedAllButton.value = false)
             : ''
 );
 
 
-const showDeleteItem = (item:item) => {
+
+
+
+const showDeleteItem = (item: item)  => {
     deleteMultipleItems.value = false;
     showDeleteModal(item);
+    checkedItems.value = []
+    checkedItemsIds.value = []
 };
 
 const deleteAll = () => {
@@ -358,7 +366,7 @@ const startLeaveAnimation = () => {
                 :show="isFilled"
                 @reset="resetFilter"
                 @deleteAll="deleteAll"
-                :checkedItems="checkedItems.length"
+                :checkedItemsIds="checkedItemsIds.length"
                 :showDeleteAll="can.delete"
             >
                 <Button
@@ -508,7 +516,7 @@ const startLeaveAnimation = () => {
                             v-if="item.can.delete"
                             :value="item.id"
                             class="rtl:mr-1 ltr:ml-2"
-                            v-model:checked="checkedItems"
+                            v-model:checked="checkedItemsIds"
                         />
 
                     

@@ -12,27 +12,32 @@ import {
 
 import useDeleteItem from '@/composables/useDeleteItem'; 
 
-const props = defineProps({
-    destroyRoute: '',
-});
+interface WayfinderRoute {
+    (args?: any, options?: any): any;
+    url: (args?: any, options?: any) => string;
+}
+
+
+const props = defineProps<{
+    destroyRoute: WayfinderRoute,
+}>();
 
 // import NationalityController from thePath;
 // import NationalityController from '@/actions/App/Http/Controllers/NationalityController';
 
 const {
-    close,
+    // close,
     deleteModal,
     itemToDelete,
     isDeleting,
-    showDeleteModal,
+    // showDeleteModal,
     handleDeleteItem,
     deleteMultipleItems,
 } = useDeleteItem({
     destroyRoute: props.destroyRoute,
 });
 
-console.log('itemToDelete')
-//
+
 </script>
 
 <template>
@@ -84,7 +89,7 @@ console.log('itemToDelete')
                                         {{
                                             deleteMultipleItems
                                                 ? $t('general.all_selected')
-                                                : itemToDelete.length > 0
+                                                : itemToDelete.length > 0 
                                                 ? itemToDelete[0].name
                                                 : ''
                                         }}

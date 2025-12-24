@@ -1,110 +1,120 @@
-import { ref } from "vue";
-import { router } from "@inertiajs/vue3";
-import { trans } from "laravel-vue-i18n";
-import { usePage } from "@inertiajs/vue3";
+import { router, usePage } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
+interface item {
+    id: number;
+    name: {
+        ar: string;
+        en: string;
+    };
+    active: boolean;
+    can?: {
+        delete:boolean,
+        update:boolean
+    };
+}
+interface Menu {
+    open: boolean;
+    isActive: boolean;
+}
 
+interface WayfinderRoute {
+    (args?: any, options?: any): any;
+    url: (args?: any, options?: any) => string;
+}
+interface params {
+    destroyRoute: WayfinderRoute;
+}
 
-const itemToDelete = ref([]);
+// 1. Move the refs OUTSIDE so they are shared across the whole app
+const itemToDelete = ref<item[] >([]);
+// const itemToDelete = ref<item[] | number[] >([]);
 const deleteModal = ref(false);
 const deleteMultipleItems = ref(false);
 const isDeleting = ref(false);
-const ids = ref([]);
+const ids = ref<(number | string)[]>([]);
 const destroyRoute = ref();
-const method = ref();
-
-export default function (params) {
-
-    const { destroyRoute: thedestroyRoute, method: calledMethod } =
-    params;
-    
-    destroyRoute.value = thedestroyRoute
-    method.value = calledMethod ?? "destroy"
-    
 
 
-    // console.log(destroy.url)
+export default function (params: params) {
 
-    const current_lang = document
-        .getElementsByTagName("html")[0]
-        .getAttribute("lang");
+    destroyRoute.value = params.destroyRoute;
+
+
 
     function close() {
         deleteModal.value = false;
         itemToDelete.value = [];
         ids.value = [];
         deleteMultipleItems.value = false;
-        // itemToDelete.value = {};
     }
 
-
-    function showDeleteModal(item) {
+    function showDeleteModal(item: item | item[]) {
         deleteModal.value = true;
-        itemToDelete.value = []
-        ids.value = []
-        if (deleteMultipleItems.value == true) {
+        itemToDelete.value = [];
+        ids.value = []; 
+        
+        if (Array.isArray(item)) {
+            deleteMultipleItems.value = true;
             itemToDelete.value = item;
-            itemToDelete.value.forEach((id) => ids.value.push(id));
+            itemToDelete.value.forEach((item) => ids.value.push(item.id));
+            
         } else {
-            itemToDelete.value.push(item);
-            ids.value.push(item.id);
+            deleteMultipleItems.value = false;
+            itemToDelete.value = [item];
+            ids.value = [item.id];
         }
     }
 
     function handleDeleteItem() {
+        if (!destroyRoute.value) {
+            console.error("No destroy route provided to useDelete");
+            return;
+        }
+         router.delete(
+                    destroyRoute.value.url(`${ids.value}`),
+                    {
+                        preserveScroll: true,
+                        preserveState: true,
+                        onBefore: () => {
+                            isDeleting.value = true;
+                        },
+                        onSuccess: () => {
+                            deleteModal.value = false;
+                            itemToDelete.value = [];
+                            ids.value = [];
+                            deleteMultipleItems.value = false;
+        
+                        },
+                        onFinish: () => {
+                            isDeleting.value = false;
+                            usePage().props.menus.forEach((menu: Menu) => {
+                                return menu.isActive
+                                    ? (menu.open = true)
+                                    : (menu.open = false);
+                            });
+                        },
+                    },
+                );
 
-// console.log('llll')
-// console.log(ids.value)
+        // // Use Ziggy route helper
+        // // @ts-ignore
+        // const url = route(thedestroyRoute, ids.value.length === 1 ? ids.value[0] : { ids: ids.value });
 
-        router.delete(destroyRoute.value.url(`${ids.value}`) ,
-        // router.delete(
-
-            // route(`${destroyRoute.value}.${method.value}`, {
-            //     id: ids.value,
-            // }),
-
-
-            {
-                preserveScroll: true,
-                preserveState: true,
-                onBefore: () => {
-                    isDeleting.value = true;
-                },
-                onSuccess: () => {
-                    deleteModal.value = false;
-                    itemToDelete.value = [];
-                    ids.value = [];
-                    deleteMultipleItems.value = false;
-
-                    // itemToDelete.value = {};
-
-                    // Toast.fire({
-                    //   // toast: true,
-                    //   position: current_lang == 'ar'? 'top-start' : 'top-end',
-                    //   icon: "success",
-                    //   title: method.value == 'destroy' ? trans('general.item deleted successfully') : trans('general.Item Rolled back successfully'),
-
-                    //     iconColor: 'white',
-                    //     color:'black',  // text color
-                    //     // background: '#1cac78        ', // green
-                    //     // background: '#00a877       ', // green
-                    //     // background: '#39ff14   ', // lime
-                    //     // background: '#dc143c    ', // red
-                    //     // background: "#B8860B        ", // gold
-
-                    //     background: method.value == 'destroy' ? '#dc143c' : '#B8860B', // red
-                    // });
-                },
-                onFinish: () => {
-                    isDeleting.value = false;
-                    usePage().props.menus.forEach((menu) => {
-                        menu.isActive
-                            ? (menu.open = true)
-                            : (menu.open = false);
-                    });
-                },
-            }
-        );
+        // router.delete(url, {
+        //     preserveScroll: true,
+        //     onBefore: () => { isDeleting.value = true; },
+        //     onSuccess: () => { close(); },
+        //     onFinish: () => {
+        //         isDeleting.value = false;
+        //         const pageProps = usePage().props as any;
+        //         if (pageProps.menus) {
+        //             pageProps.menus.forEach((menu: Menu) => {
+        //                 menu.open = menu.isActive;
+        //             });
+        //         }
+        //     },
+        // });
     }
 
     return {
@@ -115,6 +125,5 @@ export default function (params) {
         deleteMultipleItems,
         handleDeleteItem,
         close,
-
     };
 }
