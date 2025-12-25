@@ -62,7 +62,7 @@ export const buttonVariants = cva(
         transparent_black: "flex items-center align-middle  rounded-lg shadow-sm ring-1 transition duration-75  focus-within:ring-20 focus-within:ring-orange-300/20 ring-orange-500/30  border-none  text-base text-zinc-400  placeholder:text-zinc-400 focus:ring-1   xs:text-xs     bg-zinc-900/80 transpare     focus:border-orange-400  focus:ring-orange-200/40 focus:ring-opacity-60 ",
 
       },
-      size: {
+      size: { 
         default: 'h-9 px-4 py-2 capitalize has-[>svg]:px-3',
         xs: 'h-5 rounded-sm capitalize text-xs  gap-1.5 px-2 has-[>svg]:px-2.5',
         sm: 'h-5 rounded-md  capitalize gap-1.5 text-[12px] px-3 has-[>svg]:px-2.5',

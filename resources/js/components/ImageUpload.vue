@@ -1,180 +1,196 @@
-<script setup>
-import { onMounted, ref, watch } from "vue";
-import Dropzone from "dropzone";
-import { usePage } from "@inertiajs/vue3";
-import "dropzone/dist/dropzone.css";
-import { trans } from "laravel-vue-i18n";
+<script setup lang="ts">
+import { usePage } from '@inertiajs/vue3';
+import axios from 'axios'; // Ensure axios is imported
+import Dropzone from 'dropzone';
+import 'dropzone/dist/dropzone.css';
+import { trans } from 'laravel-vue-i18n';
+import { onMounted, ref, watch } from 'vue';
 
+// 1. Define strict TypeScript interfaces for your data
+interface ImageItem {
+    img: {
+        id: number;
+        name: string;
+        size: number;
+        mime_type: string;
+        original_url: string;
+    };
+}
 
-// import { usePage } from "@inertiajs/vue3";
+interface Props {
+    item?: {
+        images?: ImageItem[];
+    };
+    modelType: string;
+    collection?: string;
+    modelId: number;
+    maxFilesize?: number;
+    maxFiles?: number;
+}
 
-import "dropzone/dist/dropzone.css";
-
-const props = defineProps({
-    item: {
-        type: Object,
-        default: () => {},
-    },
-    modelType: {
-        type: String,
-    },
-    collection: {
-        type: String,
-        default:''
-    },
-    modelId: {
-        type: Number,
-        
-    },
-    maxFilesize: {
-        type: Number,
-        default: 1024,
-    },
-    maxFiles: {
-        type: Number,
-        default: 10,
-    },
+const props = withDefaults(defineProps<Props>(), {
+    item: () => ({ images: [] }),
+    collection: '',
+    maxFilesize: 1024,
+    maxFiles: 10,
 });
 
-
+// Dropzone instance reference for the watcher
+let dzInstance: Dropzone | null = null;
 const maxFilesNumber = ref(props.maxFiles);
 
+// Calculate initial max files if items already exist
 onMounted(() => {
+    if (props.item?.images) {
+        maxFilesNumber.value = props.maxFiles - props.item.images.length;
+    }
+
     Dropzone.autoDiscover = false;
-    const dropzone = new Dropzone("#image-upload", {
-        url: route("images.store"),
+
+    dzInstance = new Dropzone('#image-upload', {
+        url: window.route('images.store'), // Assuming Ziggy is global
         headers: {
-            // "X-CSRF-TOKEN": usePage().props.csrf_token
-
-            "X-CSRF-TOKEN": usePage().props.csrf_token,
-            // "X-CSRF-TOKEN": document.querySelector("meta[name='csrf-token'] ?.content,") this will not work becase it brings the token from the last session not from currnt one
+            'X-CSRF-TOKEN': (usePage().props as any).csrf_token,
         },
-        paramName: "image",
+        paramName: 'image',
         maxFilesize: props.maxFilesize,
-        // maxFiles: maxFilesNumber.value,  // in watch to be more dynamic
-        // acceptedFiles: ".jpeg, .jpg, .png",  / down to accept all types of images
+        maxFiles: maxFilesNumber.value,
         addRemoveLinks: true,
+        acceptedFiles: 'image/*',
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // params: {
-        //             _token: '{{ csrf_token() }}'
-        //         },
-        acceptedFiles: "image/*",
-        dictDefaultMessage: trans('general.press here or drage and drop images here'),
-        // 'اضغط هنا لرفع الملفات او قم بسحب الملفات  وافلاتها هنا',
-        dictFallbackMessage: trans('general.Your browser does not support multi-image and drag and drop') , // emam
-        dictInvalidFileType: trans('general.You cannot upload this type of file'), // emam
-        dictCancelUpload:trans('general.Cancel upload'), // emam
-        dictCancelUploadConfirmation:trans('general.Are you sure you want to cancel the file upload?') , // emam
-        dictMaxFilesExceeded:trans('general.You cannot upload more than this number') , // emam
+        // Translations
+        dictDefaultMessage: trans(
+            'general.press here or drage and drop images here',
+        ),
+        dictFallbackMessage: trans(
+            'general.Your browser does not support multi-image and drag and drop',
+        ),
+        dictInvalidFileType: trans(
+            'general.You cannot upload this type of file',
+        ),
+        dictCancelUpload: trans('general.Cancel upload'),
+        dictCancelUploadConfirmation: trans(
+            'general.Are you sure you want to cancel the file upload?',
+        ),
+        dictMaxFilesExceeded: trans(
+            'general.You cannot upload more than this number',
+        ),
+        dictFileTooBig: trans('general.File is too big'),
+        dictRemoveFile: trans('general.delete'),
 
-        ///////////// new ///////////////////////////////
-        // dictFallbackText:trans('general.Please use the fallback form below to upload your files like in the olden days.'),
-        dictFileTooBig:trans('general.File is too big'),
-        // dictResponseError: trans('general.Server responded with {{statusCode}} code.'),
-        dictRemoveFile:trans('general.delete'),
-        ////////////////////////////////////////////////////////////////////
-
-        removedfile: function (file) {
-            file.previewElement.remove(); // emam
-            axios.delete(route("images.destroy", { id: file.image_id }));
-            maxFilesNumber.value = maxFilesNumber.value + 1;
-            return;
+        // Handles file removal
+        removedfile: function (file: any) {
+            if (file.previewElement) {
+                file.previewElement.remove();
+            }
+            if (file.image_id) {
+                axios.delete(
+                    window.route('images.destroy', { id: file.image_id }),
+                );
+                maxFilesNumber.value++;
+            }
+            return this; // Dropzone expects the instance returned
         },
 
-        init: function () {
-            props.item.images?.forEach(
-                (image) => {
-                    const mock = {
-                        name: image.img.name,
-                        image_id: image.img.id,
-                        size: image.img.size,
-                        type: image.img.mime_type,
-                    };
-                    this.emit("addedfile", mock);
+        init: function (this: Dropzone) {
+            // Load existing images
+            props.item?.images?.forEach((image) => {
+                const mockFile = {
+                    name: image.img.name,
+                    size: image.img.size,
+                    image_id: image.img.id,
+                    accepted: true,
+                } as any;
 
-                    // images.img comming from laboratory resourcey
-                    this.options.thumbnail.call(this, mock, image.img.original_url);   // this will get the original image 
+                this.displayExistingFile(mockFile, image.img.original_url);
 
+                // Remove progress bar for existing files
+                if (mockFile.previewElement) {
+                    mockFile.previewElement
+                        .querySelector('.dz-progress')
+                        ?.remove();
+                }
+            });
 
-                    const dzProgress =
-                        document.getElementsByClassName("dz-progress");
-                    dzProgress[0].classList.remove("dz-progress");
-                },
-
-                // this must be inside forEach but must be outside the callback function of foreach    .... basicaly between }, of the callback function  and ) of the foreach;
-                this.on("addedfile", function (file) {
-                    file.previewElement.addEventListener("click", function () {
-                        window.open(
-                            file.previewElement.children[0].children[0]
-                                .currentSrc,
-                            "_blank"
-                        );
-                    });
-                })
-            );
+            // Click to view full image logic (Fixed nesting)
+            this.on('addedfile', (file: any) => {
+                file.previewElement.addEventListener('click', () => {
+                    const img = file.previewElement.querySelector('img');
+                    if (img?.src) {
+                        window.open(img.src, '_blank');
+                    }
+                });
+            });
         },
     });
 
-    dropzone.on("sending", (file, xhr, formData) => {
-        formData.append("modelType", props.modelType);
-        formData.append("modelId", props.modelId);
-        formData.append("collection", props.collection);
+    dzInstance.on('sending', (file: any, xhr: any, formData: any) => {
+        formData.append('modelType', props.modelType);
+        formData.append('modelId', props.modelId.toString());
+        formData.append('collection', props.collection);
     });
-    dropzone.on("success", function (file, response) {
+
+    dzInstance.on('success', (file: any, response: any) => {
         file.image_id = response.id;
-        maxFilesNumber.value = maxFilesNumber.value - 1;
+        maxFilesNumber.value--;
     });
+});
 
-    watch(
-        () => maxFilesNumber.value,
-        // () => console.log(dropzone.options.maxFiles)
-        () => (dropzone.options.maxFiles = maxFilesNumber.value)
-    );
-
-    // Jkh6xlVBVhfjYBwt4beUuwUHHmqwszi3WC5LyoO8
+// Update dropzone options when the ref changes
+watch(maxFilesNumber, (newVal) => {
+    if (dzInstance) {
+        dzInstance.options.maxFiles = newVal;
+    }
 });
 </script>
-<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////// important code to move the error messages under the images down alittle
-bit to show remove link -->
-<style>
-.dropzone .dz-preview .dz-error-message {
-    top: 150px !important;
-}
-</style>
-<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
 <template>
-    <div class="flex justify-center items-center">
-        <div
-            class="text-yellow-200 text-sm border border-gray-200/20 rounded-full px-3"
-        >
-            {{ $t("general.You can only upload") }}
-            <span
-                class="text-white border rounded-full px-2 mx-1 text-sm border-gray-200/40 bg-zinc-900"
+    <div class="flex flex-col items-center">
+        <div class="flex items-center justify-center">
+            <div
+                class="rounded-full border border-gray-200/20 px-3 py-1 text-sm text-yellow-200"
             >
-                {{ maxFilesNumber }}</span
-            >
-            <span>
-                {{
-                    maxFilesNumber > 1
-                        ? $t("general.images")
-                        : $t("general.image")
-                }}
-            </span>
+                {{ $t('general.You can only upload') }}
+                <span
+                    class="mx-1 rounded-full border border-gray-200/40 bg-zinc-900 px-2 text-sm text-white"
+                >
+                    {{ maxFilesNumber }}
+                </span>
+                <span>
+                    {{
+                        maxFilesNumber === 1
+                            ? $t('general.image')
+                            : $t('general.images')
+                    }}
+                </span>
+            </div>
         </div>
-    </div>
 
-    <div class="dropzone mt-3 shadow-xl bg-white" id="image-upload">
-        <div v-if="props.item.images?.length < 1 ">
-        <div class="dz-message" data-dz-message>
-            <div>
-                    Drop Image<span v-if="maxFilesNumber > 1">s</span> here to upload
+        <div
+            class="dropzone mt-3 w-full rounded-lg border-2 border-dashed border-gray-300 bg-white shadow-xl"
+            id="image-upload"
+        >
+            <div class="dz-message" data-dz-message>
+                <div class="text-gray-400">
+                    {{ $t('general.press here or drage and drop images here') }}
+                </div>
             </div>
         </div>
     </div>
-    </div>
-
-
 </template>
+
+<style>
+/* Adjust error message position to not block delete link */
+.dropzone .dz-preview .dz-error-message {
+    top: 150px !important;
+}
+
+/* Ensure the dropzone has a minimum height */
+#image-upload {
+    min-height: 200px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+</style>

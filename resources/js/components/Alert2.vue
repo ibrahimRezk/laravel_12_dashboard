@@ -23,7 +23,7 @@ const props = withDefaults(
 );
 
 
-const page = usePage()
+const page = usePage() 
 const messages = <FlashMessages>page.props.messages
 
 

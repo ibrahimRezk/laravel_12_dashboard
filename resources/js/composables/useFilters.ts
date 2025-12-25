@@ -1,120 +1,114 @@
 import { router, usePage } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
-
 import { useGeneralStore } from '@/stores';
 import { storeToRefs } from 'pinia';
-// const useGeneral = useGeneralStore()
-// const { paginationNumber } = storeToRefs(useGeneral)
 
-const filters = ref();
-// const routeResourceName = ref();
-const method = ref();
-const route = ref();
-const id = ref();
+// Define the Wayfinder Route Type
+interface WayfinderRoute {
+    url: (args?: any) => string;
+}
 
-export default function (params) {
-    const {
-        filters: defaultFilters,
-        // routeResourceName: theRouteResourceName,
-        method: theMethod,
-        route: theRoute,
-        id: theId,
-    } = params;
-    // we have to convert filters to ref becase it is calling a v-model
-    // const filters = ref(defaultFilters );
+interface Menu {
+    open: boolean;
+    isActive: boolean;
+}
 
-    filters.value = defaultFilters;
-    // routeResourceName.value = theRouteResourceName;
-    method.value = theMethod;
-    route.value = theRoute;
-    id.value = theId;
-    ///// we can use it like below but after refresh the page we lose the input
-    // const {  routeResourceName } = params;
-    // const filters = ref({});
+interface FilterParams {
+    filters: Record<string, any>;
+    route: WayfinderRoute;
+    method?: string;
+    id?: number | string;
+}
+
+export default function useFilters(params: FilterParams) {
+    // 1. Move refs INSIDE so they are private to the component using them
+    const filters = ref({ ...params.filters });
+    const route = ref(params.route);
+    const isLoading = ref(false);
+    const fetchItemsHandler = ref<ReturnType<typeof setTimeout> | null>(null);
+
+    // 2. Reset logic
     function resetFilter() {
-        // const searchParams = new URLSearchParams(window.location.search);
-        // const paginationNumber = searchParams.get('paginationNumber')
-        Object.keys(filters.value).forEach((k) =>
-            k !== 'paginationNumber' ? (filters.value[k] = '') : '',
-        );
-
         const useGeneral = useGeneralStore();
         const { paginationNumber } = storeToRefs(useGeneral);
 
-        filters.value = { paginationNumber: paginationNumber.value };
+        // Reset all keys except paginationNumber
+        Object.keys(filters.value).forEach((k) => {
+            if (k !== 'paginationNumber') {
+                filters.value[k] = '';
+            }
+        });
+
+        filters.value.paginationNumber = paginationNumber.value;
     }
 
+    // 3. Computed check to see if any filter is active (excluding pagination)
     const isFilled = computed(() => {
-        let { page, paginationNumber, ...rest } = filters.value;
-        /// page is the first parameter in addressbar after ? "[http://127.0.0.1:8000/admin/products?page=1&name=]" it will be alwayes there and have value because of pagination so we want to look at the second or third parameter or whatever  witch is ...rest  and apply filters.value to it and if it is there it will return true otherwise it will return false //// we did that to return false after we remove search input and refresh
+        const { page, paginationNumber, ...rest } = filters.value;
         return Object.values(rest).some(
-            (v) => !['', null, undefined].includes(v),
+            (v) => v !== '' && v !== null && v !== undefined
         );
+        console.log(page , paginationNumber) /// just to remove the error of un used item in const { page, paginationNumber , ..rest}
     });
 
-    const isLoading = ref(false);
-    const fetchItemsHandler = ref(null);
-
+    // 4. The Fetching Logic
     function fetchItems() {
+        // Clean up "page" if it's the only thing left
         if (
-            Object.values(filters.value).length == 1 &&
-            Object.keys(filters.value)[0] == 'page'
+            Object.keys(filters.value).length === 1 &&
+            filters.value.hasOwnProperty('page')
         ) {
-            filters.value = {};
+            delete filters.value.page;
         }
 
-        let filtersWithPage = ref(
-            Object.values(filters.value).length > 0
-                ? { ...filters.value, page: 1 }
-                : '',
-        );
+        // Always reset to page 1 when a filter changes
+        const queryData = Object.keys(filters.value).length > 0
+            ? { ...filters.value, page: 1 }
+            : {};
 
         router.get(
             route.value.url(),
-            {
-                ...filtersWithPage.value,
-            },
+            queryData,
             {
                 preserveState: true,
                 preserveScroll: true,
                 replace: true,
                 onBefore: () => (isLoading.value = true),
-                // onFinish: () => isLoading.value = false,
-                onFinish: () => [
-                    (isLoading.value = false),
-                    usePage().props.menus.forEach((menu) => {
-                        // menu.label.toLowerCase() == routeResourceName
-                        //     ? (menu.open = true)
-                        //     : (menu.open = false);
-                        return menu.isActive
-                            ? (menu.open = true)
-                            : (menu.open = false);
-                    }),
-                ],
-            },
+                onFinish: () => {
+                    isLoading.value = false;
+                    
+                    // Safely update menu state
+                    const props = usePage().props as any;
+                    if (props.menus) {
+                        props.menus.forEach((menu: Menu) => {
+                            menu.open = menu.isActive;
+                        });
+                    }
+                },
+            }
         );
     }
 
+    // 5. Watcher with Debounce
     watch(
         filters,
         () => {
-            // console.log(filters.value)
-            clearTimeout(fetchItemsHandler.value);
+            if (fetchItemsHandler.value) {
+                clearTimeout(fetchItemsHandler.value);
+            }
 
-            // filters.value.forEach((f , i) => f == '' ? filters.value.unshift(i , 1) : '')
             fetchItemsHandler.value = setTimeout(() => {
+                // Remove empty strings from the object before sending
+                Object.keys(filters.value).forEach((f) => {
+                    if (filters.value[f] === '' && filters.value[f] !== 0) {
+                        delete filters.value[f];
+                    }
+                });
+                
                 fetchItems();
             }, 300);
-            // delete empty filter from url
-            Object.keys(filters.value).forEach((f) =>
-                filters.value[f] == '' && filters.value[f] !== 0
-                    ? delete filters.value[f]
-                    : '',
-            );
         },
-        {
-            deep: true,
-        },
+        { deep: true }
     );
 
     return {

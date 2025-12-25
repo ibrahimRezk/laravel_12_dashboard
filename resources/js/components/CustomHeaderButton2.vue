@@ -1,43 +1,52 @@
-<script setup lang="ts">
-import { computed, ref } from 'vue';
+<script setup>
 import Dropdown from '@/components/Dropdown.vue';
 import FilterIcon from '@/components/Icons/Filter.vue';
-import { Button, type ButtonVariants } from './ui/button'; 
+import { computed, ref } from 'vue';
+import Button from './ui/button/Button.vue';
 
-interface Props {
-    width?: string;
-    // Use the type-safe variants from your button config
-    variant?: ButtonVariants['variant']; 
-    size?: ButtonVariants['size'];
-    title?: string;
-    iconType?: string;
-    button_title?: string;
-    showTitle?: boolean;
-    keepOpened?: boolean;
-    color?: string;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-    width: '36',
-    variant: 'linear_orange',
-    size: 'xs',
-    title: 'headers',
-    iconType: '',
-    button_title: 'show headers',
-    showTitle: true,
-    keepOpened: false,
-    color: 'linear_orange'
+const props = defineProps({
+    width: {
+        type: String,
+        default: '36',
+    },
+    variant: {
+        type: String,
+        default: 'linear_orange',
+    },
+    size: {
+        type: String,
+        default: 'xs',
+    },
+    title: {
+        type: String,
+        default: 'headers',
+    },
+    iconType: {
+        type: String,
+        default: '',
+    },
+    button_title: {
+        type: String,
+        default: 'show headers',
+    },
+    showTitle: {
+        type: Boolean,
+        default: true,
+    },
+    keepOpened: {
+        type: Boolean,
+        default: false,
+    },
 });
 
-// 3. Typed state
-const contentClasses = ref<string[]>([
+const contentClasses = ref([
     'py-2 rtl:bg-linear-to-r ltr:bg-linear-to-l from-orange-600 to-gray-900',
 ]);
 
-// 4. Computed logic with basic safety check
-const direction = computed((): 'right' | 'left' => {
-    const htmlLang = document.getElementsByTagName('html')[0]?.getAttribute('lang');
-    return htmlLang === 'ar' ? 'right' : 'left';
+const direction = computed(() => {
+    if (document.getElementsByTagName('html')[0].getAttribute('lang') == 'ar')
+        return 'right';
+    else return 'left';
 });
 </script>
 
@@ -45,8 +54,8 @@ const direction = computed((): 'right' | 'left' => {
     <Dropdown
         :align="direction"
         :width="props.width"
-        :keepOpened="props.keepOpened"
-        :contentClasses="props.showTitle ? contentClasses.join(' ') : ''"
+        :keepOpened="keepOpened"
+        :contentClasses="props.showTitle == true ? contentClasses : ''"
     >
         <template #trigger>
             <span class="inline-flex rounded-md">
@@ -58,7 +67,7 @@ const direction = computed((): 'right' | 'left' => {
                 >
                     {{ $t('general.' + props.button_title) }}
                     <FilterIcon
-                        v-if="props.iconType === 'filter'"
+                        v-if="props.iconType == 'filter'"
                         class="ltr:ml-2 rtl:mr-2"
                     />
                 </Button>
@@ -75,17 +84,15 @@ const direction = computed((): 'right' | 'left' => {
             <div v-show="props.showTitle" class="border-t border-gray-200" />
 
             <slot />
-            
             <div
-                v-show="$slots.checkedItemHeader"
                 :class="
-                    props.color === 'linear_orange'
+                    props.color == 'linear_orange'
                         ? 'from-orange-400'
                         : 'from-zinc-900'
                 "
                 class="flex flex-col justify-between to-gray-800 ltr:bg-linear-to-l rtl:bg-linear-to-r"
             >
-                <slot name="checkedItemHeader" />
+                <slot name="checkedItemHeader"> </slot>
             </div>
 
             <div v-show="props.showTitle" class="border-t border-gray-100" />

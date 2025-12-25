@@ -25,7 +25,7 @@ const props = withDefaults(
 
 
 watch(
-    () => usePage().props.messages?.success,
+    () => (usePage().props.messages as FlashMessages)?.success,
     (successMessage) => {
         if (successMessage !== null && successMessage !== '') {
             toast(trans(`general.${successMessage}`), {
@@ -82,7 +82,7 @@ watch(
 );
 
 watch(
-    () => usePage().props.messages?.error,
+    () => (usePage().props.messages as FlashMessages)?.error,
     (errorMessage) => {
         if (errorMessage !== null && errorMessage !== '') {
             toast(trans(`general.${errorMessage}`), {
