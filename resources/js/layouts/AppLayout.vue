@@ -13,6 +13,30 @@ withDefaults(defineProps<Props>(), {
     header: () => '',
     subHeader: () => '',
 });
+
+
+
+
+
+
+// Source - https://stackoverflow.com/a
+// Posted by Mark, modified by community. See post 'Timeline' for change history
+// Retrieved 2025-12-25, License - CC BY-SA 4.0
+
+//   const tabArray = vscode.window.tabGroups.all;
+//   const firstGroupOfTabs: ReadonlyArray<vscode.Tab> = tabArray[0].tabs;
+  
+//   let firstTabUri: vscode.Uri;  
+//   if (firstGroupOfTabs[0].input instanceof vscode.TabInputText) firstTabUri = firstGroupOfTabs[0].input.uri;
+import * as vscode from 'vscode';
+
+const tabArray = vscode.window.tabGroups.all;
+
+console.log(tabArray)
+
+
+
+
 </script>
 
 <template>
