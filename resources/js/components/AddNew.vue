@@ -9,7 +9,7 @@ import Button from "@/components/ui/button/Button.vue";
 interface Props {
     show?: boolean; // Optional property with default value
     showDeleteAll?: boolean; // Optional property with default value
-    checkedItemsIds?: number; // Optional property with default value
+    checkedItems?: number; // Optional property with default value
 }
 
 // 2. Use the interface with defineProps
@@ -17,10 +17,10 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
     show: false,
     showDeleteAll: false,
-    checkedItemsIds: 0,
+    checkedItems: 0,
 });
 
-const {  checkedItemsIds } = toRefs(props);
+const {  checkedItems } = toRefs(props);
 
 // 3. Define the emitted events and their payload types
 interface Emits {
@@ -96,7 +96,7 @@ const deleteAll = () => {
                     <Button
                         v-if="props.showDeleteAll"
                         class="mx-3 hover:cursor-pointer px-5"
-                        v-show="checkedItemsIds > 0"
+                        v-show="checkedItems > 0"
                         variant="linear_red"
                         size="sm"
                         @click="deleteAll"

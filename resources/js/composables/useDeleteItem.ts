@@ -60,7 +60,7 @@ export default function (params: params) {
             itemToDelete.value.forEach((item) => ids.value.push(item.id));
             
         } else {
-            deleteMultipleItems.value = false;
+            deleteMultipleItems.value = false; 
             itemToDelete.value = [item];
             ids.value = [item.id];
         }

@@ -160,22 +160,9 @@ const breadcrumb: BreadcrumbItem[] = [
     },
 ];
 
-// const opened = ref(0);
-// const method = ref('');
-// const showScreenExeptSubmenu = ref(false);
-// const routeResourceName = ref(props.routeResourceName);
+
 const editMode = ref(false);
 
-// const emptyErrors = () => {
-//     Object.keys(props.errors).forEach((error) => (props.errors[error] = ''));
-// };
-
-
-// const fireshowDialogModal2 = () => {
-//     editMode.value = false;
-//     emptyErrors();
-//     showDialogModal();
-// };
 
 
 const currentItem:fillFormType = useForm({
@@ -201,7 +188,6 @@ watch(()=> isOpen.value , ()=> isOpen.value == false ?
   currentItem.reset() : ''
 )
 
-// watch(()=> isOpen.value , ()=> console.log(isOpen.value))
 
 const fireShowEditModal = (item: item) => {
     currentItem.reset();
@@ -209,8 +195,6 @@ const fireShowEditModal = (item: item) => {
     fillForm(item)
     editMode.value = true;
     // emptyErrors();
-
-    // method.value = 'update';
 };
 
 
@@ -228,27 +212,10 @@ watch(
     () => filterHeadersMethod(),
 );
 
-// const {
-//     closeDialogModal,
-//     dialogModal,
-//     itemToSave,
-//     isSaving,
-//     showDialogModal,
-//     showEditModal,
-//     handleSavingItem,
-// } = useDialogModal({
-//     routeResourceName: routeResourceName,
-//     // form: form,
-//     opened,
-//     // showScreenExeptSubmenu,
-//     method,
-//     editMode,
-// });
 
 
 
 const {
-    itemToDelete,
     showDeleteModal,
     deleteMultipleItems,
 } = useDeleteItem({
@@ -260,7 +227,6 @@ const {
 
 const { filters, isLoading, isFilled, resetFilter } = useFilters({
     filters: props.filters,
-    // routeResourceName: props.routeResourceName,
     method: props.method,
     route : index
 });
@@ -269,36 +235,33 @@ const { filters, isLoading, isFilled, resetFilter } = useFilters({
 
 const checkedAllButton = ref(false);
 const checkedItems = ref<item[]>([]);
-const checkedItemsIds = ref<number[]>([]);
 
 const checkAllItems = () => {
     if (!checkedItems.value.length) {
         props.items.data.forEach((item) => {
             if (item.can?.delete == true) {
                 checkedItems.value.push(item);
-                checkedItemsIds.value.push(item.id);
             }
         });
     } else {
         checkedItems.value = [];
-        checkedItemsIds.value = [];
     }
 };
 
 
 
 watch(
-    () =>( checkedItems.value , checkedItemsIds.value),
+    () =>( checkedItems.value ),
     () =>
-        checkedItems.value.length > 0 || checkedItemsIds.value.length > 0
+        checkedItems.value.length > 0
             ? (checkedAllButton.value = true)
             : (checkedAllButton.value = false)
 );
 
 watch(
-    () => (checkedItems.value.length , checkedItemsIds.value.length),
+    () => (checkedItems.value.length ),
     () =>
-        checkedItems.value.length > 0 || checkedItemsIds.value.length > 0
+        checkedItems.value.length > 0
             ? (checkedAllButton.value = true)
             : (checkedAllButton.value = false)
 );
@@ -307,14 +270,7 @@ watch(
     () => deleteMultipleItems.value,
     () =>
         deleteMultipleItems.value == false
-            ? (checkedItems.value = [] , checkedItemsIds.value = [] , checkedAllButton.value = false)
-            : ''
-);
-watch(
-    () => itemToDelete.value,
-    () =>
-        itemToDelete.value.length == 1
-            ? (checkedItems.value = [] , checkedItemsIds.value = [] , checkedAllButton.value = false)
+            ? (checkedItems.value = [] , checkedAllButton.value = false)
             : ''
 );
 
@@ -326,7 +282,7 @@ const showDeleteItem = (item: item)  => {
     deleteMultipleItems.value = false;
     showDeleteModal(item);
     checkedItems.value = []
-    checkedItemsIds.value = []
+    // checkedItemsIds.value = []
 };
 
 const deleteAll = () => {
@@ -366,7 +322,7 @@ const startLeaveAnimation = () => {
                 :show="isFilled"
                 @reset="resetFilter"
                 @deleteAll="deleteAll"
-                :checkedItemsIds="checkedItemsIds.length"
+                :checkedItems="checkedItems.length"
                 :showDeleteAll="can.delete"
             >
                 <Button
@@ -514,9 +470,9 @@ const startLeaveAnimation = () => {
                     <Td light>
                         <Checkbox
                             v-if="item.can.delete"
-                            :value="item.id"
+                            :value="item"
                             class="rtl:mr-1 ltr:ml-2"
-                            v-model:checked="checkedItemsIds"
+                            v-model:checked="checkedItems"
                         />
 
                     

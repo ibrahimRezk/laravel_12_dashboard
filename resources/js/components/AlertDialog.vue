@@ -26,7 +26,7 @@ const props = defineProps<{
 // import NationalityController from '@/actions/App/Http/Controllers/NationalityController';
 
 const {
-    // close,
+    // close, 
     deleteModal,
     itemToDelete,
     isDeleting,

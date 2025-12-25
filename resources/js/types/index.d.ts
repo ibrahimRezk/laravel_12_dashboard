@@ -19,7 +19,7 @@ export interface NavItem { // new
     title: string;
     icon?: LucideIcon;
     url?: string;
-    href?: string;
+    href: string;
     icon?: LucideIcon;
     isActive?: boolean; 
     isVisible?: boolean; 
