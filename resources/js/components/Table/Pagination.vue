@@ -94,10 +94,10 @@ function isDisabled(link) {
     return link.url == null || link.active;
 }
 
-const link = (label) => {
-    return label;
-    // return label.includes(previous) ? 'السابق' : label
-};
+// const link = (label) => {
+//     return label;
+//     // return label.includes(previous) ? 'السابق' : label
+// };
 </script>
 
 <template>
@@ -153,7 +153,7 @@ const link = (label) => {
                     <span v-if="link.label.includes('&')">
                         <button
                             v-if="withAxios"
-                            class="page-link relative block bg-transparent px-3 py-1.5 transition-all duration-300 outline-none hover:bg-gray-200 hover:text-gray-800 focus:shadow-none md:hidden"
+                            class="hover:cursor-pointer page-link relative block bg-transparent px-3 py-1.5 transition-all duration-300 outline-none hover:bg-gray-200 hover:text-gray-800 focus:shadow-none md:hidden"
                             :class="{
                                 'text-gray-400': isDisabled(link),
                                 'font-bold text-gray-900 dark:font-normal dark:text-gray-400/70':
@@ -168,7 +168,7 @@ const link = (label) => {
 
                         <button
                             v-else
-                            class="page-link relative block bg-transparent px-3 py-1.5 transition-all duration-300 outline-none hover:bg-gray-200 hover:text-gray-800 focus:shadow-none md:hidden"
+                            class="hover:cursor-pointer  page-link relative block bg-transparent px-3 py-1.5 transition-all duration-300 outline-none hover:bg-gray-200 hover:text-gray-800 focus:shadow-none md:hidden"
                             :class="{
                                 'text-gray-400': isDisabled(link),
                                 'font-bold text-gray-900 dark:font-normal dark:text-gray-400/70':
@@ -191,7 +191,7 @@ const link = (label) => {
                 >
                     <button
                         v-if="withAxios"
-                        class="page-link relative border-zinc-400 bg-transparent px-3 py-1.5 transition-all duration-300 outline-none hover:bg-zinc-500 hover:text-gray-800 focus:shadow-none dark:border-zinc-400/40"
+                        class="hover:cursor-pointer  page-link relative border-zinc-400 bg-transparent px-3 py-1.5 transition-all duration-300 outline-none hover:bg-zinc-500 hover:text-gray-800 focus:shadow-none dark:border-zinc-400/40"
                         :class="{
                             'hover:ltr:rounded-l-full hover:rtl:rounded-r-full':
                                 link.label.includes('Previous'),
@@ -218,7 +218,7 @@ const link = (label) => {
 
                     <button
                         v-else
-                        class="page-link relative border-zinc-400 bg-transparent px-3 py-1.5 transition-all duration-300 outline-none hover:bg-zinc-500 hover:text-gray-800 focus:shadow-none dark:border-zinc-400/40"
+                        class="hover:cursor-pointer  page-link relative border-zinc-400 bg-transparent px-3 py-1.5 transition-all duration-300 outline-none hover:bg-zinc-500 hover:text-gray-800 focus:shadow-none dark:border-zinc-400/40"
                         :class="{
                             'hover:ltr:rounded-l-full hover:rtl:rounded-r-full':
                                 link.label.includes('Previous'),

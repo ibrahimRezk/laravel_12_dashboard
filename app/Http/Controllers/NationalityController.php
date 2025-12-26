@@ -59,7 +59,8 @@ class NationalityController extends Controller
                 )
             )
 
-            ->oldest('id')  // to show oldest first
+            ->latest('id')  // to show oldest first
+            // ->oldest('id')  // to show oldest first
 
             ->paginate(pagination())->onEachSide(1)->appends(request()->query());
 
