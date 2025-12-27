@@ -120,11 +120,10 @@ watch(
                     <button
                         class=" page-link     dark:hover:bg-zinc-600  page-link relative block  px-3 py-1.5 transition-all duration-300 outline-none hover:cursor-pointer hover:bg-gray-700 hover:text-gray-300 focus:shadow-none "
                         :class="{
-                            'text-zinc-400': isDisabled(link),
-                            'bg-zinc-800 font-normal text-gray-100 dark:text-white dark:bg-zinc-700': link.active,
-                            'font-bold text-gray-900 dark:font-normal dark:text-gray-400/70':
-                                    !isDisabled(link),
-                            'border-x border-zinc-400/30': !link.label.includes('Previous')
+                            'text-zinc-900 dark:text-gray-500': isDisabled(link) && (link.label.includes('Previous') ||  link.label.includes('Next') ||  link.label.includes('...')),
+                            'bg-zinc-900  text-gray-100  font-semibold dark:font-normal dark:text-white dark:bg-zinc-500': link.active,
+                            'font-bold text-gray-900 dark:font-normal dark:text-gray-400': !isDisabled(link),
+                            'border-x border-zinc-400/30': !link.label.includes('Previous') ||  !link.label.includes('Next'),
                         }"
                         @click.prevent="withAxios ? $emit('callAxiosUrl', link) : goToUrl(link)"
                         :disabled="isDisabled(link)"
