@@ -110,7 +110,7 @@ const end = (el: HTMLElement): undefined => {
                         <span class="flex justify-between">
                             <span class="flex gap-3">
                                 <AppLogoIcon
-                                    class="size-5 fill-current text-black/70 dark:text-white"
+                                    class="size-5 fill-current text-black/70 dark:text-white "
                                 />
 
                                 <span> {{ item.title }} </span>
@@ -205,13 +205,18 @@ const end = (el: HTMLElement): undefined => {
                         <Link :href="item.href" @click="startLeaveAnimation">
                             <component :is="item.icon" />
 
+                        <span class="flex justify-between">
+                                
                             <span class="flex gap-3">
                                 <AppLogoIcon
-                                    class="size-5 fill-current text-black/70 dark:text-white"
+                                class="size-5 fill-current text-black/70 dark:text-white "
                                 />
-
+                                
                                 <span> {{ item.title }} </span>
                             </span>
+                        </span>
+
+                    
                         </Link>
                     </SidebarMenuButton>
                 </div>
