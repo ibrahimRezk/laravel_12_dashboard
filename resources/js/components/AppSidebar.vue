@@ -17,7 +17,7 @@ import { dashboard } from '@/routes';
 // import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { Link, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 
 
 // const mainNavItems: NavItem[] = [
@@ -27,6 +27,18 @@ import { computed } from 'vue';
 //         icon: LayoutGrid,
 //     },
 // ];
+
+
+
+import { storeToRefs } from 'pinia';
+import { useGeneralStore } from '@/stores';
+const useGeneral = useGeneralStore();
+const { animate } = storeToRefs(useGeneral);
+// const { paginationNumber } = storeToRefs(useGeneral);
+
+onMounted(() => {
+    animate.value = true;
+});
 
 
 

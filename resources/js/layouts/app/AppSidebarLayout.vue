@@ -39,7 +39,7 @@ withDefaults(defineProps<Props>(), {
                 :subHeader="subHeader"
             />
             <transition name="page" mode="out-in" appear>
-                <div v-if="animate">
+            <div v-if="animate">
                     <slot />
                 </div>
             </transition>

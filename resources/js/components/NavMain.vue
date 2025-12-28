@@ -25,15 +25,17 @@ import { Link, usePage } from '@inertiajs/vue3';
 import { onMounted, ref } from 'vue';
 
 import { useGeneralStore } from '@/stores';
-import { storeToRefs } from 'pinia';
-const useGeneral = useGeneralStore();
-const { animate } = storeToRefs(useGeneral);
-const { paginationNumber } = storeToRefs(useGeneral);
 const page = usePage();
 
 defineProps<{
     items: NavItem[];
 }>();
+
+
+import { storeToRefs } from 'pinia';
+const useGeneral = useGeneralStore();
+const { animate } = storeToRefs(useGeneral);
+const { paginationNumber } = storeToRefs(useGeneral);
 
 onMounted(() => {
     animate.value = true;
