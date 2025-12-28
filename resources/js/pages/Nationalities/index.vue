@@ -686,13 +686,14 @@ const startLeaveAnimation = () => {
                                 ? 'from-green-500/30 to-green-500/10'
                                 : 'from-red-500/30 to-red-500/10'
                         "
-                        >active
+                        >
                         <Checkbox
-                            class="dialog-input"
-                            id="is_active"
-                            name="active"
+                        class="dialog-input"
+                        id="is_active"
+                        name="active"
                             v-model:checked="currentItem.active"
-                        />
+                            />
+                        <span>active</span>
                     </Label>
                     <InputError :message="errors.active" />
                 </div>

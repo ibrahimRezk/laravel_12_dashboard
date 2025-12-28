@@ -144,10 +144,10 @@ const theheaderFooterClasses = computed(() => {
 const theTrClasses = (index: number) => {
     return ` ${
         index % 2 === 0
-            ? ' rtl:bg-linear-to-r ltr:bg-linear-to-l from-orange-300 to-black dark:from-zinc-900 dark:via-gray-800 dark:to-zinc-900 rtl:hover:bg-linear-to-r ltr:hover:bg-linear-to-l    rounded-none hover:dark:from-zinc-800 hover:dark:to-gray-600 hover:from-orange-300/90 hover:to-black/80' +
+            ? ' rtl:bg-linear-to-r ltr:bg-linear-to-l from-orange-300 to-black/80 dark:from-zinc-900 dark:via-gray-800 dark:to-zinc-900 rtl:hover:bg-linear-to-r ltr:hover:bg-linear-to-l    rounded-none hover:dark:from-zinc-800 hover:dark:to-gray-600 hover:from-orange-300/90 hover:to-black/80' +
               props.trClasses +
               ' '
-            : 'rtl:bg-linear-to-r  ltr:bg-linear-to-l    rounded-none from-orange-200 to-black/90 dark:from-zinc-800 dark:via-gray-700 dark:to-zinc-800  rtl:hover:bg-linear-to-r ltr:hover:bg-linear-to-l    rounded-none hover:dark:from-zinc-800 hover:dark:to-gray-600 hover:from-orange-200/90 hover:to-black/80 ' +
+            : 'rtl:bg-linear-to-r  ltr:bg-linear-to-l    rounded-none from-orange-200 to-black/70 dark:from-zinc-800 dark:via-gray-700 dark:to-zinc-800  rtl:hover:bg-linear-to-r ltr:hover:bg-linear-to-l    rounded-none hover:dark:from-zinc-800 hover:dark:to-gray-600 hover:from-orange-200/90 hover:to-black/80 ' +
               props.trClasses +
               ' '
     }`;
