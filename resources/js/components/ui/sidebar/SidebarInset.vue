@@ -5,6 +5,11 @@ import { cn } from '@/lib/utils'
 const props = defineProps<{
   class?: HTMLAttributes['class']
 }>()
+
+
+import videoPath from '../../../../../public/assets/videos/homebg2_1440p.webm';
+
+
 </script>
 
 <template>
@@ -23,6 +28,27 @@ const props = defineProps<{
 <div
   class="w-full h-full absolute top-0 left-0 bg-[url('/assets/img/grid.svg')] bg-contain bg-center opacity-25  dark:opacity-10  -z-20"
 />
+
+
+        <video :src="videoPath" type="video/webm" autoplay muted loop playsinline class="background-video opacity-60  -z-20"/>
+
+        
     <slot />
   </main>
 </template>
+
+
+<style scoped>
+
+/* The actual video element */
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures video covers the screen without distortion */
+  z-index: -1;       /* Puts the video behind other content */
+}
+
+</style>

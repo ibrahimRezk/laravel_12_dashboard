@@ -304,19 +304,16 @@ const startLeaveAnimation = () => {
 
 
 
-
+// import videoPath from '@/assets/videos/homebg2_1440p.webm';
 
 </script>
 
+
+
 <template>
+
     <AppLayout :breadcrumbs="breadcrumb" :header="'Nationalities'">
         <Head :title="props.title" />
-
-      
-
-
-
-
         <Container>
             <AddNew
                 :show="isFilled"
