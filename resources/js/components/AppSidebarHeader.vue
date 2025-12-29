@@ -2,7 +2,7 @@
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItemType } from '@/types'; 
-import LangSwitcher from './SettingBar.vue';
+import SettingBar from './SettingBar.vue';
 
 withDefaults(
     defineProps<{
@@ -30,7 +30,7 @@ withDefaults(
                 </template>
             </div>
             <div>
-                <LangSwitcher />
+                <SettingBar />
             </div>
         </div>
     </div>

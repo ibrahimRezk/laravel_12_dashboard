@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { Link, router, usePage } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+// import Button from './ui/button/Button.vue';
+import Dropdown from './Dropdown.vue';
+import DropdownLink from './DropdownLink.vue';
 
+import { router, usePage } from '@inertiajs/vue3';
 import { logout } from '@/routes';
-import { LogOut } from 'lucide-vue-next';
+import {  LogOut } from 'lucide-vue-next';
+
+// import {  Settings } from 'lucide-vue-next'; // this one has a different icon
+import {  Settings2 } from 'lucide-vue-next'; // this one has a different icon
 
 import { edit as profileLink } from '@/routes/profile';
 
@@ -25,89 +31,85 @@ watch(
 );
 
 const handleLogout = () => {
-    router.flushAll();
+    // router.flushAll();
+    router.post(logout())
+
 };
 
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-
-import { useHoverDropdown } from '@/composables/useHoverDropdown';
-
-const ProfileMenu = useHoverDropdown();
-const profileOpen = ProfileMenu.isOpen;
+const direction = computed(() => {
+    if (document.getElementsByTagName('html')[0].getAttribute('lang') == 'en')
+        return 'left';
+    else return 'right';
+});
 </script>
 <template>
-    <DropdownMenu v-model:open="profileOpen" :modal="false">
-        <div
-            class="flex"
-            @mouseenter="ProfileMenu.handleEnter"
-            @mouseleave="ProfileMenu.handleLeave"
-        >
-            <DropdownMenuTrigger as-child>
-                <span
-                    class="inline-flex justify-center rounded-full align-middle transition hover:scale-110"
-                >
-                    <button type="button">
-                        <div v-if="user.avatar">
-                            <img
-                                alt="image"
-                                :src="
-                                    user.avatar ? `/storage/${user.avatar}` : ''
-                                "
-                                class="h-9 w-9 rounded-full border border-gray-100/50 object-cover"
-                            />
-                        </div>
-                        <div
-                            v-else
-                            class="flex h-9 w-9 items-center justify-center rounded-full border border-transparent bg-white align-middle text-sm font-medium text-gray-500 transition hover:inline-flex hover:text-gray-700 focus:outline-none"
+    <div class="relative flex items-center">
+        <div class=" sm:flex sm:items-center">
+            <div class="relative">
+                <Dropdown :align="direction" width="36">
+                    <template #trigger>
+                        <span
+                            class="inline-flex justify-center rounded-full align-middle transition hover:scale-110"
                         >
-                            {{ getInitials(user.name) }}
-                        </div>
-                    </button>
-                </span>
-            </DropdownMenuTrigger>
-        </div>
+                            <button type="button">
+                                <div v-if="user.avatar">
+                                    <img
+                                        alt="image"
+                                        :src="
+                                            user.avatar
+                                                ? `/storage/${user.avatar}`
+                                                : ''
+                                        "
+                                        class="h-9 w-9 rounded-full border border-gray-100/50 object-cover"
+                                    />
+                                </div>
+                                <div
+                                    v-else
+                                    class="flex h-9 w-9 items-center justify-center rounded-full border border-transparent bg-white align-middle text-sm font-medium text-gray-500 transition hover:inline-flex hover:text-gray-700 focus:outline-none"
+                                >
+                                    {{ getInitials(user.name) }}
+                                </div>
+                            </button>
+                        </span>
+                    </template>
 
-        <DropdownMenuContent class="w-36" align="start" :side-offset="0">
-            <div
-                @mouseenter="ProfileMenu.handleEnter"
-                @mouseleave="ProfileMenu.handleLeave"
-            >
-                <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                        <Link
+                    <template #content>
+                        <div></div>
+                        <DropdownLink
                             @click="animate = false"
                             :href="profileLink()"
-                            as="button"
-                            class="mx-auto block h-full w-full text-sm hover:cursor-pointer"
                         >
-                            settings
-                        </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                        <div
-                            class="border-t border-gray-100 dark:border-gray-200/10"
-                        />
-                        <Link
-                            class="flex h-full w-full items-center hover:cursor-pointer"
-                            :href="logout()"
-                            @click="handleLogout"
+                            <div class="flex">
+                                 <div class="my-auto">
+                                    <Settings2 class="mr-2 h-4 w-4" />
+                                </div>
+                                <div class="flex flex-col justify-center">
+                                    settings
+                                </div>
+                            </div>
+                        </DropdownLink>
+
+                        <DropdownLink
                             as="button"
+                            class="border-t border-gray-700/20 dark:border-gray-200/10 "
+                            @click="handleLogout"
                             data-test="logout-button"
                         >
-                            <LogOut class="mr-2 h-4 w-4" />
-                            <span> Log out</span>
-                        </Link>
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
+                            <div class="flex">
+                                <div class="my-auto">
+                                    <LogOut class="mr-2 h-4 w-4" />
+                                </div>
+                                <div class="flex flex-col justify-center">
+                                    <span
+                                        class="text-size-sm mb-1 leading-normal font-normal"
+                                        >Log out</span
+                                    >
+                                </div>
+                            </div>
+                        </DropdownLink>
+                    </template>
+                </Dropdown>
             </div>
-        </DropdownMenuContent>
-    </DropdownMenu>
+        </div>
+    </div>
 </template>

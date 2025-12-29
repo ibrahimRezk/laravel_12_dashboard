@@ -30,7 +30,7 @@ import videoPath from '../../../../../public/assets/videos/homebg2_1440p.webm';
 />
 
 
-        <video :src="videoPath" type="video/webm" autoplay muted loop playsinline class="background-video opacity-60  -z-20"/>
+        <!-- <video :src="videoPath" type="video/webm" autoplay muted loop playsinline class="background-video opacity-60  -z-20"/> -->
 
         
     <slot />
@@ -38,7 +38,7 @@ import videoPath from '../../../../../public/assets/videos/homebg2_1440p.webm';
 </template>
 
 
-<style scoped>
+<!-- <style scoped>
 
 /* The actual video element */
 .background-video {
@@ -51,4 +51,4 @@ import videoPath from '../../../../../public/assets/videos/homebg2_1440p.webm';
   z-index: -1;       /* Puts the video behind other content */
 }
 
-</style>
+</style> -->
