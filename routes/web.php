@@ -78,3 +78,13 @@ require __DIR__.'/settings.php';
 
 
 // there is a separator in sidebarmenuitem.vue
+
+// ليعمل النظام بشكل سليم قم اولا بتفعيل هذا الجزء 
+  // wayfinder({
+        //     formVariants: true,
+        // }),
+        // في  vit.config.ts
+        // ثم قم بعمل
+        // php artisan wayfinder:generate --with-form 
+        //  ثم قم بإلغاء تفعيل الجزء الأول مرة أخرى
+        // ثم قم بعمل npm run dev or npm run build
