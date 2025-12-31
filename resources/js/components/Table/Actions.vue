@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Link } from "@inertiajs/vue3";
-import Edit from "@/Components/Icons/Edit.vue";
-import Trash from "@/Components/Icons/Trash.vue";
+import Edit from "@/components/Icons/Edit.vue";
+import Trash from "@/components/Icons/Trash.vue";
 
 defineProps({
     editLink: {

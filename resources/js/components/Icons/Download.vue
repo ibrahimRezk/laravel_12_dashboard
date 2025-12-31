@@ -1,5 +1,4 @@
-<script setup>
-</script>
+<script setup lang="ts"></script>
 
 <template>
     <div class=" text-green-500 mb-1   hover:cursor-pointer">

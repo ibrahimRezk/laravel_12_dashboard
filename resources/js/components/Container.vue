@@ -15,7 +15,7 @@ const props = defineProps({
   <transition name="page" mode="out-in" appear >
         <div v-if="props.animate">
   <!-- <div class="max-w-7xl mx-auto sm:px-6 lg:px-8"> -->
-  <div class="w-full px-2 py-2  pb-10  rounded-xl shadow-md border border-gray-400/40 border-x-0 rtl:bg-linear-to-r  ltr:bg-linear-to-l from-zinc-800/40 via-orange-200/40 to-zinc-800/40 dark:from-zinc-950/40 dark:to-zinc-950/40 dark:via-zinc-800/40  mx-auto  max-w-[1800px] ">
+  <div class="w-full px-2 py-2  pb-10  rounded-xl shadow-md border border-gray-400/40 border-x-0 rtl:bg-linear-to-r  ltr:bg-linear-to-l from-zinc-800/40 via-orange-200/40 to-zinc-800/40 dark:from-zinc-950/40 dark:to-zinc-950/40 dark:via-zinc-800/40  mx-auto  max-w-450 ">
     <slot />
   </div>
 </div>

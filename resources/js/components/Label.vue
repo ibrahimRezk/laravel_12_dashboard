@@ -1,61 +1,64 @@
-<script setup>
+<script setup lang="ts">
 import { trans } from 'laravel-vue-i18n';
-import { computed  } from "vue";
+import { computed } from "vue";
 
+interface Props {
+    value?: string;
+    customLabel?: string;
+    fontSize?: 'sm' | 'xs';
+    printMode?: boolean;
+}
 
-const props = defineProps({
-    value: String,
-    customLabel: {
-        type: String,
-        default: "",
-    },
-    fontSize : {
-        type: String,
-        default: 'sm',
-    },
-
-    printMode: {
-        type: Boolean,
-        default: false,
-    },
+const props = withDefaults(defineProps<Props>(), {
+    value: "",
+    customLabel: "",
+    fontSize: 'sm',
+    printMode: false,
 });
 
-const sizeClasses= computed(()=>{
-    return {
-        'sm':'text-sm ',
-        'xs':'text-xs mb-2'
-    }[props.fontSize]
-})
+// Computed translation to avoid naming conflict with the prop
+const translatedCustomLabel = computed(() => {
+    return props.customLabel ? trans(`general.${props.customLabel}`) : '';
+});
 
+const sizeClasses = computed(() => {
+    return props.fontSize === 'xs' ? 'text-xs mb-2' : 'text-sm';
+});
 
-const modeClasses = computed(()=>{
-   return  props.printMode ?  'text-gray-900 ' : 'text-gray-100 '
-})
+const modeClasses = computed(() => {
+    // Print mode usually needs dark text on white paper, 
+    // while non-print (dark mode) needs light text.
+    return props.printMode ? 'text-gray-900' : 'text-zinc-700 dark:text-zinc-300';
+});
 
-const classes = computed(()=>{
-    return  `${sizeClasses.value} ${modeClasses.value} block font-medium `
-})
+const labelClasses = computed(() => {
+    return [
+        sizeClasses.value,
+        modeClasses.value,
+        'block font-medium'
+    ].join(' ');
+});
 
-
-const customLableClasses = computed(()=>{
-    return  ` ${modeClasses.value} bmx-3 text-xs  w-full `
-})
-
-
-
-
-const customLabel = computed(()=>{
-    return trans(`general.${props.customLabel}`)
-})
+const subLabelClasses = computed(() => {
+    return [
+        modeClasses.value,
+        'mx-3 text-xs opacity-75' // Fixed typo 'bmx-3' to 'mx-3'
+    ].join(' ');
+});
 </script>
 
 <template>
-    <label :class="classes" >
-        <span v-if="value">{{ value }}
-
-            <span  v-if="props.customLabel" :class="customLableClasses">{{customLabel}}</span>
-        </span>
+    <label :class="labelClasses">
+        <template v-if="value">
+            <span>{{ value }}</span>
+            
+            <span v-if="customLabel" :class="subLabelClasses">
+                {{ translatedCustomLabel }}
+            </span>
+        </template>
         
-        <span v-else><slot /></span>
+        <template v-else>
+            <slot />
+        </template>
     </label>
 </template>

@@ -1,36 +1,41 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-
-const props = defineProps({
-
-    disabled:{
-        type:Boolean,
-        default:false
-    },
-
-    value: {
-        type: [String,Number,Object],
-        default: null,
-    },
-
+// Use defineOptions to handle attribute inheritance if needed
+defineOptions({
+    inheritAttrs: true
 });
 
-// const modelValue = defineModel()
-const checked = defineModel('checked')
-const input = ref(null);
+interface Props {
+    disabled?: boolean;
+    value?: string | number | object | null;
+}
 
+withDefaults(defineProps<Props>(), {
+    disabled: false,
+    value: null,
+});
 
+/**
+ * defineModel('checked') handles the two-way binding.
+ * If 'value' is provided, 'checked' will likely be an array.
+ * If no 'value' is provided, 'checked' is usually a boolean.
+ */
+const checked = defineModel<any>('checked');
+
+const input = ref<HTMLInputElement | null>(null);
+
+// Expose the input ref so parent components can call .focus() if needed
+defineExpose({ focus: () => input.value?.focus() });
 </script>
-
 
 <template>
     <input
-    ref="input"
-    :value="props.value"
-    v-model="checked"
-    :disabled="props.disabled"
-    type="checkbox"
-    class=" rounded p-1 text-yellow-600 dark:text-slate-400/10 dark:border-gray-300/50 checked:border-gray-100/50 border dark:bg-black/40  border-gray-300 shadow-sm focus:ring-indigo-500 checked:hover:border-gray-200"
->
+        ref="input"
+        type="checkbox"
+        :value="value"
+        v-model="checked"
+        :disabled="disabled"
+        class="rounded p-1 text-yellow-600 border-gray-300 shadow-sm focus:ring-indigo-500 dark:text-slate-400/10 dark:border-gray-300/50 dark:bg-black/40 border checked:border-gray-100/50 checked:hover:border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
 </template>
