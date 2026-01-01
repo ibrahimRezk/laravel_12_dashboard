@@ -20,6 +20,6 @@ function pagination() {
     // //     return PAGINATION_COUNT;
     // // }
 
-    return PAGINATION_COUNT != request('paginationNumber') && request('paginationNumber') != null  ? request('paginationNumber') : PAGINATION_COUNT;
+    return request('paginationNumber') != 10 && request('paginationNumber') != null  ? request('paginationNumber') : 10;
 }
 

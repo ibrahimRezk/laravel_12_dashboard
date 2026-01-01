@@ -65,7 +65,7 @@ class HandleInertiaRequests extends Middleware
 
 
             
-            'paginationNumber' => PAGINATION_COUNT,
+            'paginationNumber' => 10,
 
             'menus' => [
                 [

@@ -7,7 +7,6 @@ use Laravel\Fortify\Features;
 
 
 
-const PAGINATION_COUNT = 10;
 
 
 
@@ -76,6 +75,8 @@ Route::middleware([
 require __DIR__.'/settings.php';
 
 
+// importan   on github inside selectgroup.vue    fix  this => import Select from "@/Components/Select.vue";    to "vue"
+ 
 
 // there is a separator in sidebarmenuitem.vue
 

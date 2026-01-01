@@ -18,7 +18,10 @@ test('profile information can be updated', function () {
     $response = $this
         ->actingAs($user)
         ->patch(route('profile.update'), [
-            'name' => 'Test User',
+            'name' => [
+                'ar' => 'Test User',
+                'en' => 'Test User',
+            ],
             'email' => 'test@example.com',
         ]);
 
@@ -27,7 +30,6 @@ test('profile information can be updated', function () {
         ->assertRedirect(route('profile.edit'));
 
     $user->refresh();
-
     expect($user->name)->toBe('Test User');
     expect($user->email)->toBe('test@example.com');
     expect($user->email_verified_at)->toBeNull();
@@ -39,7 +41,10 @@ test('email verification status is unchanged when the email address is unchanged
     $response = $this
         ->actingAs($user)
         ->patch(route('profile.update'), [
-            'name' => 'Test User',
+            'name' => [
+                'ar' => 'Test User',
+                'en' => 'Test User',
+            ],
             'email' => $user->email,
         ]);
 
@@ -52,34 +57,39 @@ test('email verification status is unchanged when the email address is unchanged
 
 test('user can delete their account', function () {
     $user = User::factory()->create();
-
     $response = $this
-        ->actingAs($user)
-        ->delete(route('profile.destroy'), [
-            'password' => 'password',
-        ]);
-
+    ->actingAs($user)
+    ->delete(route('profile.destroy'), [
+        'password' => 'password',
+    ]);
+    // dd($response);
+    
     $response
-        ->assertSessionHasNoErrors()
-        ->assertRedirect(route('home'));
-
+    ->assertSessionHasNoErrors()
+    ->assertRedirect(route('home'));
+    
     $this->assertGuest();
-    expect($user->fresh())->toBeNull();
+    // expect($user->fresh())->toBeNull(); // not working because we use soft delete
+    $this->assertSoftDeleted($user);
+    expect($user->fresh()->deleted_at)->not->toBeNull();
 });
+
+
+
 
 test('correct password must be provided to delete account', function () {
     $user = User::factory()->create();
-
+    
     $response = $this
-        ->actingAs($user)
-        ->from(route('profile.edit'))
-        ->delete(route('profile.destroy'), [
-            'password' => 'wrong-password',
-        ]);
-
+    ->actingAs($user)
+    ->from(route('profile.edit'))
+    ->delete(route('profile.destroy'), [
+        'password' => 'wrong-password',
+    ]);
+    
     $response
-        ->assertSessionHasErrors('password')
-        ->assertRedirect(route('profile.edit'));
-
+    ->assertSessionHasErrors('password')
+    ->assertRedirect(route('profile.edit'));
+    
     expect($user->fresh())->not->toBeNull();
 });

@@ -65,10 +65,12 @@ class ProfileController extends Controller
         $request->validate([
             'password' => ['required', 'current_password'],
         ]);
-
+        
         $user = $request->user();
-
-        if ($user()->avatar) {
+        
+        // dd($user->avatar);
+        // dd('heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeere');
+        if ($user->avatar) {
             Storage::disk('public')->delete($request->user()->avatar);
         }
 

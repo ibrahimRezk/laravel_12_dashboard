@@ -1,12 +1,21 @@
-<script setup>
-import { computed, onMounted, onUnmounted, watch } from "vue";
+<script setup lang="ts">
+import {  watch } from "vue";
 
-const props = defineProps({
-    show: {
-        type: Boolean,
-        default: false,
-    },
-});
+
+interface props {
+    show: boolean
+}
+
+const props = withDefaults(defineProps<props>() , {
+    show: false
+})
+
+// const props = defineProps({
+//     show: {
+//         type: Boolean,
+//         default: false,
+//     },
+// });
 
 watch(
     () => props.show,
@@ -14,7 +23,7 @@ watch(
         if (props.show) {
             document.body.style.overflow = "hidden";
         } else {
-            document.body.style.overflow = null;
+            document.body.style.overflow = '';
         }
     }
 );
