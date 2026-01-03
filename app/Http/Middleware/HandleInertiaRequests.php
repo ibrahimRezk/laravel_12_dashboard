@@ -72,49 +72,27 @@ class HandleInertiaRequests extends Middleware
                     'title' => 'Dashboard',
                     'href' => route('dashboard'),
                     'isActive' => $request->routeIs('dashboard'),
-                    // 'isVisible' => $request->user()?->can('view dashboard'),
+                    'isVisible' => $request->user()?->can('view dashboard'),
                 ],
                 [
                     'title' => 'Nationalities',
                     'href' => route('nationalities.index'),
                     'isActive' => $request->routeIs('nationalities.index'),
-                    // 'isVisible' => $request->user()?->can('view dashboard'),
+                    'isVisible' => $request->user()?->can('view nationalities'),
                 ],
                 [
-                    'title' => 'Dashboard2',
-                    'isActive' => $request->routeIs(['dashboard' , 'dashboard']),
-                    // 'isVisible' => $request->user()?->can('view dashboard'),
+                    'title' => 'General Settings',
+                    'isActive' => $request->routeIs(['systemSettings.*']),
+                    'isVisible' => $request->user()?->can('view system settings'),
 
                     'hasSubmenu' => true,
                     'open' => false,
                     'subMenus' => [
                         [
-                            'title' => 'Dashboard3',
-                            'href' => route('dashboard'),
-                            'isActive' => $request->routeIs('dashboard'),
-                            // 'isVisible' => $request->user()?->can('view dashboard'),
-                        ],
-
-                        [
-                            'title' => 'Dashboard4',
-                            'href' => route('dashboard'),
-                            'isActive' => $request->routeIs('dashboard'),
-                            // 'isVisible' => $request->user()?->can('view dashboard'),
-                        ],
-                    ]
-                ],
-                [
-                    'title' => 'Dashboard5',
-                    'isActive' => $request->routeIs(['dashboard']),
-                    // 'isVisible' => $request->user()?->can('view dashboard'),
-                    'hasSubmenu' => true,
-                    'open' => false,
-                    'subMenus' => [
-                        [
-                            'title' => 'Dashboard6',
-                            'href' => route('dashboard'),
-                            'isActive' => $request->routeIs('dashboard'),
-                            // 'isVisible' => $request->user()?->can('view dashboard6'),
+                            'title' => 'system settings',
+                            'href' => route('systemSettings.index'),
+                            'isActive' => $request->routeIs('systemSettings.index'),
+                            'isVisible' => $request->user()?->can('view system settings'),
                         ],
 
                     ]

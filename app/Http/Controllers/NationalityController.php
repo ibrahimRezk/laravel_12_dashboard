@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Inertia\Inertia;
 use App\Models\Nationality;
 use Illuminate\Http\Request;
@@ -11,18 +12,29 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\NationalityRequest;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Resources\NationalityResource;
-
-class NationalityController extends Controller
+use Illuminate\Routing\Controllers\Middleware;
+class NationalityController extends Controller implements HasMiddleware
 {
 
     // private string $routeResourceName = 'nationalities';
 
-    public function __construct()
+    // public function __construct()
+    // {
+    //     $this->middleware('can:view nationalities')->only('index');
+    //     $this->middleware('can:create nationality')->only(['store']);
+    //     $this->middleware('can:edit nationality')->only(['update']);
+    //     $this->middleware('can:delete nationality')->only('destroy');
+    // }
+
+    public static function middleware(): array
     {
-        // $this->middleware('can:view nationalities')->only('index');
-        // $this->middleware('can:create nationality')->only(['store']);
-        // $this->middleware('can:edit nationality')->only(['update']);
-        // $this->middleware('can:delete nationality')->only('destroy');
+        return [
+            // Apply 'can' middleware to specific methods
+            new Middleware('can:view nationalities', only: ['index']),
+            new Middleware('can:create nationality', only: ['store']),
+            new Middleware('can:edit nationality', only: ['update']),
+            new Middleware('can:delete nationality', only: ['destroy']),
+        ];
     }
 
     public function index(Request $request)

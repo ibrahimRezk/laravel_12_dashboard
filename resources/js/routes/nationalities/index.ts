@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\NationalityController::index
- * @see app/Http/Controllers/NationalityController.php:28
+ * @see app/Http/Controllers/NationalityController.php:40
  * @route '/nationalities'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\NationalityController::index
- * @see app/Http/Controllers/NationalityController.php:28
+ * @see app/Http/Controllers/NationalityController.php:40
  * @route '/nationalities'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\NationalityController::index
- * @see app/Http/Controllers/NationalityController.php:28
+ * @see app/Http/Controllers/NationalityController.php:40
  * @route '/nationalities'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\NationalityController::index
- * @see app/Http/Controllers/NationalityController.php:28
+ * @see app/Http/Controllers/NationalityController.php:40
  * @route '/nationalities'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\NationalityController::index
- * @see app/Http/Controllers/NationalityController.php:28
+ * @see app/Http/Controllers/NationalityController.php:40
  * @route '/nationalities'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\NationalityController::index
- * @see app/Http/Controllers/NationalityController.php:28
+ * @see app/Http/Controllers/NationalityController.php:40
  * @route '/nationalities'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\NationalityController::index
- * @see app/Http/Controllers/NationalityController.php:28
+ * @see app/Http/Controllers/NationalityController.php:40
  * @route '/nationalities'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -157,7 +157,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     create.form = createForm
 /**
 * @see \App\Http\Controllers\NationalityController::store
- * @see app/Http/Controllers/NationalityController.php:127
+ * @see app/Http/Controllers/NationalityController.php:140
  * @route '/nationalities'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -172,7 +172,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\NationalityController::store
- * @see app/Http/Controllers/NationalityController.php:127
+ * @see app/Http/Controllers/NationalityController.php:140
  * @route '/nationalities'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -181,7 +181,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\NationalityController::store
- * @see app/Http/Controllers/NationalityController.php:127
+ * @see app/Http/Controllers/NationalityController.php:140
  * @route '/nationalities'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -191,7 +191,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\NationalityController::store
- * @see app/Http/Controllers/NationalityController.php:127
+ * @see app/Http/Controllers/NationalityController.php:140
  * @route '/nationalities'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -201,7 +201,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\NationalityController::store
- * @see app/Http/Controllers/NationalityController.php:127
+ * @see app/Http/Controllers/NationalityController.php:140
  * @route '/nationalities'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -406,7 +406,7 @@ edit.head = (args: { nationality: string | number } | [nationality: string | num
     edit.form = editForm
 /**
 * @see \App\Http\Controllers\NationalityController::update
- * @see app/Http/Controllers/NationalityController.php:150
+ * @see app/Http/Controllers/NationalityController.php:163
  * @route '/nationalities/{nationality}'
  */
 export const update = (args: { nationality: number | { id: number } } | [nationality: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -421,7 +421,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\NationalityController::update
- * @see app/Http/Controllers/NationalityController.php:150
+ * @see app/Http/Controllers/NationalityController.php:163
  * @route '/nationalities/{nationality}'
  */
 update.url = (args: { nationality: number | { id: number } } | [nationality: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -454,7 +454,7 @@ update.url = (args: { nationality: number | { id: number } } | [nationality: num
 
 /**
 * @see \App\Http\Controllers\NationalityController::update
- * @see app/Http/Controllers/NationalityController.php:150
+ * @see app/Http/Controllers/NationalityController.php:163
  * @route '/nationalities/{nationality}'
  */
 update.put = (args: { nationality: number | { id: number } } | [nationality: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -463,7 +463,7 @@ update.put = (args: { nationality: number | { id: number } } | [nationality: num
 })
 /**
 * @see \App\Http\Controllers\NationalityController::update
- * @see app/Http/Controllers/NationalityController.php:150
+ * @see app/Http/Controllers/NationalityController.php:163
  * @route '/nationalities/{nationality}'
  */
 update.patch = (args: { nationality: number | { id: number } } | [nationality: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -473,7 +473,7 @@ update.patch = (args: { nationality: number | { id: number } } | [nationality: n
 
     /**
 * @see \App\Http\Controllers\NationalityController::update
- * @see app/Http/Controllers/NationalityController.php:150
+ * @see app/Http/Controllers/NationalityController.php:163
  * @route '/nationalities/{nationality}'
  */
     const updateForm = (args: { nationality: number | { id: number } } | [nationality: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -488,7 +488,7 @@ update.patch = (args: { nationality: number | { id: number } } | [nationality: n
 
             /**
 * @see \App\Http\Controllers\NationalityController::update
- * @see app/Http/Controllers/NationalityController.php:150
+ * @see app/Http/Controllers/NationalityController.php:163
  * @route '/nationalities/{nationality}'
  */
         updateForm.put = (args: { nationality: number | { id: number } } | [nationality: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -502,7 +502,7 @@ update.patch = (args: { nationality: number | { id: number } } | [nationality: n
         })
             /**
 * @see \App\Http\Controllers\NationalityController::update
- * @see app/Http/Controllers/NationalityController.php:150
+ * @see app/Http/Controllers/NationalityController.php:163
  * @route '/nationalities/{nationality}'
  */
         updateForm.patch = (args: { nationality: number | { id: number } } | [nationality: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -518,7 +518,7 @@ update.patch = (args: { nationality: number | { id: number } } | [nationality: n
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\NationalityController::destroy
- * @see app/Http/Controllers/NationalityController.php:177
+ * @see app/Http/Controllers/NationalityController.php:190
  * @route '/nationalities/{nationality}'
  */
 export const destroy = (args: { nationality: string | number } | [nationality: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -533,7 +533,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\NationalityController::destroy
- * @see app/Http/Controllers/NationalityController.php:177
+ * @see app/Http/Controllers/NationalityController.php:190
  * @route '/nationalities/{nationality}'
  */
 destroy.url = (args: { nationality: string | number } | [nationality: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -561,7 +561,7 @@ destroy.url = (args: { nationality: string | number } | [nationality: string | n
 
 /**
 * @see \App\Http\Controllers\NationalityController::destroy
- * @see app/Http/Controllers/NationalityController.php:177
+ * @see app/Http/Controllers/NationalityController.php:190
  * @route '/nationalities/{nationality}'
  */
 destroy.delete = (args: { nationality: string | number } | [nationality: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -571,7 +571,7 @@ destroy.delete = (args: { nationality: string | number } | [nationality: string 
 
     /**
 * @see \App\Http\Controllers\NationalityController::destroy
- * @see app/Http/Controllers/NationalityController.php:177
+ * @see app/Http/Controllers/NationalityController.php:190
  * @route '/nationalities/{nationality}'
  */
     const destroyForm = (args: { nationality: string | number } | [nationality: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -586,7 +586,7 @@ destroy.delete = (args: { nationality: string | number } | [nationality: string 
 
             /**
 * @see \App\Http\Controllers\NationalityController::destroy
- * @see app/Http/Controllers/NationalityController.php:177
+ * @see app/Http/Controllers/NationalityController.php:190
  * @route '/nationalities/{nationality}'
  */
         destroyForm.delete = (args: { nationality: string | number } | [nationality: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

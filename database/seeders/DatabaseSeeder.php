@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             
             $this->call([
                 UserSeeder::class,
-                // RolesSeeder::class,
+                RolesSeeder::class,
             ]);
             Nationality::factory(100)->create();
     }

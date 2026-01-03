@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AttachPermissionToRoleController;
+use App\Http\Controllers\DetachPermissionFromRoleController;
 use App\Http\Controllers\NationalityController;
+use App\Http\Controllers\RolesController;
+use App\Http\Controllers\SystemSettingController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -32,6 +37,24 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
     
+    Route::resource('systemSettings', SystemSettingController::class)->only(['index' , 'store']);
+    Route::resource('nationalities', NationalityController::class);
+
+
+
+
+
+
+    Route::resource('admins', AdminController::class)->parameters(['admins' => 'user']);
+    Route::resource('roles', RolesController::class);
+    Route::post('roles/attach-permission', AttachPermissionToRoleController::class)->name('roles.attach-permission');
+    Route::post('roles/detach-permission', DetachPermissionFromRoleController::class)->name('roles.detach-permission');
+
+
+
+
+
+
     Route::get('dashboard2', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard2');
@@ -53,7 +76,6 @@ Route::middleware([
     })->name('dashboard6');
 
 
-        Route::resource('nationalities', NationalityController::class);
 
 
 

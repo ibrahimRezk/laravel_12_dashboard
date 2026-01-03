@@ -2,59 +2,49 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use App\Models\AdminJob;
+
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Inertia\Inertia;
-use App\Models\Store;
-use App\Models\Salary;
-use App\Models\Account;
 use App\Models\Setting;
 use App\Models\Admin;
-use App\Models\Treasury;
-use App\Models\ShiftType;
-use App\Models\Attendance;
-use App\Models\Departement;
-use App\Models\AlertMonitor;
-use App\Models\JournalEntry;
-use App\Models\SalaryAction;
-use App\Models\ServiceOrder;
+
 use Illuminate\Http\Request;
 use App\Models\PagePermission;
-use App\Models\FiscalYearMonth;
-use App\Models\JournalEntryDetail;
 use Illuminate\Support\Facades\DB;
-use App\Http\Resources\JobResource;
-use App\Models\TreasuryTransaction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Resources\StoreResource;
 use App\Http\Requests\AdminRequest;
-use Diglactic\Breadcrumbs\Breadcrumbs;
-use App\Http\Traits\SalaryCalculations;
-use App\Http\Resources\AdminResource;
-use App\Http\Resources\TreasuryResource;
-use App\Http\Resources\ShiftTypeResource;
+// use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Database\Eloquent\Builder;
-use App\Http\Resources\DepartementResource;
 use App\Http\Resources\PagePermissionResource;
-
-class AdminController extends Controller
+use Illuminate\Routing\Controllers\Middleware;
+class AdminController extends Controller implements HasMiddleware
 {
-    use SalaryCalculations;
 
     private string $routeResourceName = 'admins';
 
 
-    public function __construct()
+    // public function __construct()
+    // {
+    //     $this->middleware('can:view admins')->only('index', 'show');
+    //     $this->middleware('can:create admin')->only(['store']);
+    //     $this->middleware('can:edit admin')->only(['update']);
+    //     $this->middleware('can:delete admin')->only('destroy');
+    // }
+
+        public static function middleware(): array
     {
-        $this->middleware('can:view admins')->only('index', 'show');
-        $this->middleware('can:create admin')->only(['store']);
-        $this->middleware('can:edit admin')->only(['update']);
-        $this->middleware('can:delete admin')->only('destroy');
+        return [
+            // Apply 'can' middleware to specific methods
+            new Middleware('can:view admins', only: ['index' , 'show']),
+            new Middleware('can:create admin', only: ['store']),
+            new Middleware('can:edit admin', only: ['update']),
+            new Middleware('can:delete admin', only: ['destroy']),
+        ];
     }
 
     public function index(Request $request)
@@ -98,18 +88,12 @@ class AdminController extends Controller
 
 
 
-        $today = (int) date('d', strtotime(date('Y-m-d')));
-        $year_and_month = date('Y-m', strtotime(date('Y-m-d')));
-        $currentMonthData = FiscalYearMonth::where('year_and_month', $year_and_month)->where('status', 2)->first();
 
-
-
-        $breadcrumbs = Breadcrumbs::render('admins');
+        // $breadcrumbs = Breadcrumbs::render('admins');
 
 
         return Inertia::render('AdminsAndRoles/Admins/Index', [
             'title' => 'system admins',
-            'currentMonthData' => $currentMonthData ?? null,
             'items' => UserResource::collection($users),
             'roles' => RoleResource::collection(Role::where('name', '!=', 'Super Admin')->get()),
 
@@ -152,7 +136,7 @@ class AdminController extends Controller
             ],
 
             'method' => 'index',
-            'breadcrumbs' => $breadcrumbs['breadcrumbs'],
+            // 'breadcrumbs' => $breadcrumbs['breadcrumbs'],
 
 
         ]);
@@ -170,7 +154,7 @@ class AdminController extends Controller
 
         $role->load(['permissions:permissions.id,permissions.name']);
 
-        $breadcrumbs = Breadcrumbs::render('adminData', $user);
+        // $breadcrumbs = Breadcrumbs::render('adminData', $user);
 
 
         return Inertia::render('AdminsAndRoles/Admins/Show', [
@@ -213,7 +197,7 @@ class AdminController extends Controller
                 ],
             ],
             'method' => 'index',
-            'breadcrumbs' => $breadcrumbs['breadcrumbs'],
+            // 'breadcrumbs' => $breadcrumbs['breadcrumbs'],
 
         ]);
     }
@@ -263,22 +247,6 @@ class AdminController extends Controller
             $role->save();
 
 
-            // if ($request->image) {
-            //     // if ($request->hasFile('image')) {
-            //     ///////       $user->media()->delete();
-            //     $user->addMediaFromRequest('image')
-            //         ->withResponsiveImages() // this will create multipe sizes of the same image but it will take time on creating
-            //         ->toMediaCollection();
-            // }
-
-            // alert monitor //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            $monitoring_status = Setting::select('id', 'active_monitoring')->first()->active_monitoring;
-            if ($monitoring_status == true) {
-                $this->alertMonitor(null, $user, 'create');
-            }
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
             DB::commit();
             // dd('$role');
             return redirect()->back()->with('success', 'item created successfully');
@@ -304,14 +272,6 @@ class AdminController extends Controller
             $data["name"]["ar"] = $request->name['ar'];
             $data["name"]["en"] = $request->name['en'];
 
-
-            //////////////////////////////////////////////////////////////////////////////////////////////
-            $monitoring_status = Setting::select('id', 'active_monitoring')->first()->active_monitoring;
-            if ($monitoring_status == true) {
-                $this->alertMonitor($user, $data, 'update');
-            }
-            //////////////////////////////////////////////////////////////////////////////////////////////
-            ///////// end create attendance month for the admin ////////////////////////////////////////////////////////////////
             $user->update($data);
 
             $admin = Admin::find($user->profile->id);
@@ -358,12 +318,6 @@ class AdminController extends Controller
                     abort(403, 'general.you can not delete an item that has previous activity on the system or you do not have permission');
                 }
 
-                // alert monitor ///////////////////////////////////////////////////////////
-                $monitoring_status = Setting::select('id', 'active_monitoring')->first()->active_monitoring;
-                if ($monitoring_status == true) {
-                    $this->alertMonitor($user, null, 'delete');
-                }
-                ////////////////////////////////////////////////////////////////////////////
                 $admin->delete();
                 $user->delete();
 
@@ -378,51 +332,4 @@ class AdminController extends Controller
         }
     }
 
-    public function alertMonitor($oldUserData, $newUserData, $method)
-    {
-
-
-        if ($method == 'create') {
-            $data['alert_module_code'] = 8;
-            $data['alert_move_type_code'] = 8; // check
-            $data['other_table_foreing_id'] = $newUserData->id;
-            $data['other_table_name'] = 'App\Models\User';
-            $data['added_by'] = auth()->user()->id;
-            $data['description']['ar'] = 'اضافة حساب مدير نظام جديد بإسم: ' . $newUserData->getTranslation('name', 'ar');
-            $data['description']['en'] = 'add a new admin account named : ' . $newUserData->getTranslation('name', 'en');
-        } elseif ($method == 'update') {
-            $data['alert_module_code'] = 8;
-            $data['alert_move_type_code'] = 9; // check
-            $data['other_table_foreing_id'] = $oldUserData->id;
-            $data['other_table_name'] = 'App\Models\User';
-
-            $data['added_by'] = auth()->user()->id;
-            $data['description']['ar'] = ' : تعديل حساب مدير النظام ' . $oldUserData->getTranslation('name', 'ar');
-            $data['description']['en'] = 'update an admin account :' . $oldUserData->getTranslation('name', 'en');
-
-            if ($oldUserData->getTranslation('name', 'ar') !== $newUserData['name']['ar']) {
-                $data['description']['ar'] .= ' وتم تغيير اسم حساب مدير النظام بالعربية الى ' . $newUserData['name']['ar'];
-                $data['description']['en'] .= ' and an Admin account arabic name changed to ' . $newUserData['name']['ar'];
-            }
-            if ($oldUserData->getTranslation('name', 'en') !== $newUserData['name']['en']) {
-                $data['description']['ar'] .= ' وتم تغيير اسم حساب مدير النظام بالانجليزية الى ' . $newUserData['name']['en'];
-                $data['description']['en'] .= ' and an Admin account english name changed to ' . $newUserData['name']['en'];
-            }
-            if ($oldUserData->active !== $newUserData['active']) {
-                $data['description']['ar'] .= ' وتم تغيير الحالة الى ' . ($newUserData['active'] == 1 ? 'نشط' : 'غير نشط');
-                $data['description']['en'] .= ' and status changed to ' . ($newUserData['active'] == 1 ? 'active' : 'inactive');
-            }
-        } elseif ($method == 'delete') {
-            $data['alert_module_code'] = 8;
-            $data['alert_move_type_code'] = 10; // check
-            $data['other_table_foreing_id'] = $oldUserData->id;
-            $data['other_table_name'] = 'App\Models\User';
-            $data['added_by'] = auth()->user()->id;
-            $data['description']['ar'] = 'حذف حساب مدير النظام  :  ' . $oldUserData->getTranslation('name', 'ar');
-            $data['description']['en'] = 'delete the Admin account : ' . $oldUserData->getTranslation('name', 'en');
-        }
-
-
-        return AlertMonitor::create($data);
-    }
 }

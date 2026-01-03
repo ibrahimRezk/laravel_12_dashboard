@@ -93,26 +93,28 @@ const end = (el: HTMLElement): undefined => {
 </script>
 
 <template>
-    <perfectScrollbar>
-        <SidebarMenu v-if="menus">
+    <perfectScrollbar class=" h-full">
+        <SidebarMenu v-if="menus" >
             <SidebarMenuItem v-for="item in items" :key="item.title">
                 <div v-if="item.hasSubmenu">
                     <SidebarMenuButton
+                    v-if="item.isVisible"
                         as-child
                         :is-active="item.isActive"
                         @click="openCloseSubMenu(item)"
                         class="border hover:cursor-pointer ltr:bg-linear-to-r rtl:bg-linear-to-l"
                         :class="
                             item.isActive
-                                ? 'to-black/80 hover:to-black/50 dark:from-white/20 dark:hover:from-white/30'
-                                : 'from-black/20 to-black/20'
+                                ? 'to-black/30 dark:to-black/70 hover:to-black/50 dark:from-white/70 dark:via-white/40  dark:hover:from-white/80 dark:hover:via-white/60 dark:text-zinc-900 '
+                                : 'from-black/20 to-black/20 font-normal'
                         "
                     >
                         <component :is="item.icon" />
                         <span class="flex justify-between">
                             <span class="flex gap-3">
-                                <AppLogoIcon
-                                    class="size-5 fill-current text-black/70 dark:text-white "
+                                 <AppLogoIcon
+                                class="size-5 fill-current text-black/70  "
+                                :class="item.isActive ? 'dark:text-black/70' : 'dark:text-white/70'"
                                 />
 
                                 <span> {{ item.title }} </span>
@@ -121,7 +123,7 @@ const end = (el: HTMLElement): undefined => {
                             <svg
                                 v-if="current_lang == 'ar'"
                                 :class="{
-                                    '-rotate-90 transition duration-300 ease-in-out':
+                                    '-rotate-90 transition duration-300 ease-in-out dark:text-white/70':
                                         item.open,
                                     'rotate-0 transition duration-300 ease-in-out':
                                         !item.open,
@@ -140,7 +142,7 @@ const end = (el: HTMLElement): undefined => {
                             <svg
                                 v-else
                                 :class="{
-                                    'rotate-90 transition duration-300 ease-in-out':
+                                    'rotate-90 transition duration-300 ease-in-out dark:text-white/70':
                                         item.open,
                                     'rotate-0 transition duration-300 ease-in-out':
                                         !item.open,
@@ -174,14 +176,17 @@ const end = (el: HTMLElement): undefined => {
                                 >
                                     <SidebarMenuSubButton
                                         as-child
+                                            v-if="item.isVisible"
+
                                         :is-active="subItem.isActive"
+
                                         @click="startLeaveAnimation"
                                         class="border hover:cursor-pointer ltr:bg-linear-to-r rtl:bg-linear-to-l"
-                                        :class="
-                                            subItem.isActive
-                                                ? 'to-black/80 font-bold hover:to-black/50 dark:from-white/20 dark:hover:from-white/30'
-                                                : 'from-black/20 to-black/20'
-                                        "
+                                       :class="
+                            subItem.isActive
+                                ? 'to-black/30 dark:to-black/70  hover:to-black/50 dark:from-white/70 dark:via-white/40  dark:hover:from-white/80 dark:hover:via-white/60 font-bold dark:text-zinc-900 '
+                                : 'from-black/20 to-black/20'
+                        "
                                     >
                                         <Link :href="subItem.href"
                                             >{{ subItem.title }}
@@ -197,10 +202,10 @@ const end = (el: HTMLElement): undefined => {
                     <SidebarMenuButton
                         as-child
                         :is-active="item.isActive"
-                        class="border hover:cursor-pointer ltr:bg-linear-to-r rtl:bg-linear-to-l"
+                        class="border hover:cursor-pointer ltr:bg-linear-to-r rtl:bg-linear-to-l transition-colors"
                         :class="
                             item.isActive
-                                ? 'to-black/80 hover:to-black/50 dark:from-white/20 dark:hover:from-white/30'
+                                ? 'to-black/30 dark:to-black/70 hover:to-black/50 dark:from-white/70 dark:via-white/40  dark:hover:from-white/80 dark:hover:via-white/60 dark:text-zinc-900 '
                                 : 'from-black/20 to-black/20'
                         "
                     >
@@ -211,7 +216,8 @@ const end = (el: HTMLElement): undefined => {
                                 
                             <span class="flex gap-3">
                                 <AppLogoIcon
-                                class="size-5 fill-current text-black/70 dark:text-white "
+                                class="size-5 fill-current text-black/70  "
+                                :class="item.isActive ? 'dark:text-black/70' : 'dark:text-white/70'"
                                 />
                                 
                                 <span> {{ item.title }} </span>

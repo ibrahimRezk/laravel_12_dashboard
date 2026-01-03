@@ -91,8 +91,8 @@ const direction = computed(() => {
             </SidebarMenu>
         </SidebarHeader>
 
-        <SidebarContent>
-            <NavMain :items="mainNavItems" />
+        <SidebarContent >
+            <NavMain :items="mainNavItems"  />
 
         </SidebarContent>
 

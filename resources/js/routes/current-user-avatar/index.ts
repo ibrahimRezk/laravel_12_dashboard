@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::deleteMethod
- * @see app/Http/Controllers/Settings/ProfileController.php:86
+ * @see app/Http/Controllers/Settings/ProfileController.php:88
  * @route '/settings/profile/delete-profile-avatar'
  */
 export const deleteMethod = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -16,7 +16,7 @@ deleteMethod.definition = {
 
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::deleteMethod
- * @see app/Http/Controllers/Settings/ProfileController.php:86
+ * @see app/Http/Controllers/Settings/ProfileController.php:88
  * @route '/settings/profile/delete-profile-avatar'
  */
 deleteMethod.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ deleteMethod.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Settings\ProfileController::deleteMethod
- * @see app/Http/Controllers/Settings/ProfileController.php:86
+ * @see app/Http/Controllers/Settings/ProfileController.php:88
  * @route '/settings/profile/delete-profile-avatar'
  */
 deleteMethod.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -35,7 +35,7 @@ deleteMethod.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> =
 
     /**
 * @see \App\Http\Controllers\Settings\ProfileController::deleteMethod
- * @see app/Http/Controllers/Settings/ProfileController.php:86
+ * @see app/Http/Controllers/Settings/ProfileController.php:88
  * @route '/settings/profile/delete-profile-avatar'
  */
     const deleteMethodForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -50,7 +50,7 @@ deleteMethod.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> =
 
             /**
 * @see \App\Http\Controllers\Settings\ProfileController::deleteMethod
- * @see app/Http/Controllers/Settings/ProfileController.php:86
+ * @see app/Http/Controllers/Settings/ProfileController.php:88
  * @route '/settings/profile/delete-profile-avatar'
  */
         deleteMethodForm.delete = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
