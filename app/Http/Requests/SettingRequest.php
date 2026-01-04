@@ -24,8 +24,10 @@ class SettingRequest extends FormRequest
     {
 
         return [
-            'name.*' => ['bail', 'required', 'string', 'max:255'],
-            'address.*' => ['bail', 'required', 'string', 'max:255'],
+            'name.ar' => ['bail', 'required', 'string', 'max:255'],
+            'name.en' => ['bail', 'required', 'string', 'max:255'],
+            'address.ar' => ['bail', 'required', 'string', 'max:255'],
+            'address.en' => ['bail', 'required', 'string', 'max:255'],
             'active' => ['bail', 'required', 'boolean'],
             'phone' => ['bail',  'required', 'string', 'max:255'],
             'email' => ['bail', 'required', 'string', 'email', 'max:255'],

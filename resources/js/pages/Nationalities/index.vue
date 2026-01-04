@@ -621,7 +621,7 @@ const startLeaveAnimation = () => {
             </Button>
         </template> -->
 
-    <DialogModal>
+    <DialogModal :title="editMode ? 'update nationality' : 'add new nationality' ">
         <Form
             v-bind=" editMode ? update.form(currentItem.id) :  store.form()"
             :reset-on-success="['name.ar', 'name.en', 'active']"

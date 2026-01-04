@@ -9,6 +9,15 @@ import { useModal } from '@/composables/useModal';
 
 const { isOpen } = useModal();
 
+interface props {
+    title: string,
+    width?: string
+}
+const props = withDefaults(defineProps<props>(),{
+    title: '',
+    width: 'w-full'
+})
+
 </script>
 
 <template>
@@ -19,12 +28,13 @@ const { isOpen } = useModal();
             </DialogTrigger> -->
 
         <DialogContent
-            class="top-16 max-h-[calc(100vh-5rem)] w-full translate-y-0! overflow-auto border-0 from-orange-300 to-zinc-800 p-4 md:max-w-3xl ltr:bg-linear-to-l rtl:bg-linear-to-r dark:from-gray-900 dark:via-gray-700 dark:to-gray-900"
+            class="top-16 max-h-[calc(100vh-5rem)]  translate-y-0! overflow-auto border-0 from-orange-300 to-zinc-800 p-4 md:max-w-3xl ltr:bg-linear-to-l rtl:bg-linear-to-r dark:from-gray-900 dark:via-gray-700 dark:to-gray-900"
+            :class="props.width"
         >
             <DialogHeader
                 class="flex items-center justify-center rounded border-zinc-400/50 from-orange-100 to-zinc-900 p-2 text-center text-lg text-white shadow-md ltr:bg-linear-to-l rtl:bg-linear-to-r dark:border dark:from-transparent dark:via-slate-900 dark:to-transparent"
             >
-                <DialogTitle>Edit profile</DialogTitle>
+                <DialogTitle>{{title}}</DialogTitle>
                 <!-- <DialogDescription>
                         Make changes to your profile here. Click save when
                         you're done.

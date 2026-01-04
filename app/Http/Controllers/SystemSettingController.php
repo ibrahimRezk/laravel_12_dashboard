@@ -49,7 +49,7 @@ class SystemSettingController extends Controller implements HasMiddleware
             'title' => 'System Settings',
             'item' => $settings != null ? new SettingResource($settings) : null,
             'logoPath' => asset('attachments/logo/' . $settings?->logo) ?? '',
-            'routeResourceName' => $this->routeResourceName,
+            // 'routeResourceName' => $this->routeResourceName,
             'can' => [
                 'edit' => $request->user()->can('edit settings'),
             ],
