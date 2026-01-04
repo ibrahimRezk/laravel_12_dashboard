@@ -126,7 +126,7 @@ const form = useForm({
     weekendDays: props?.item?.weekendDays ?? [],
 
     // // currentLogo: null,
-    logo: null,
+    logo: null as File | null,
 });
 
 // const color = computed(()=>{
@@ -185,6 +185,7 @@ const loadFile = (event: Event): void => {
         output.onload = () => {
             URL.revokeObjectURL(output.src); // free memory
         };
+         form.logo = target.files[0];
     }
 };
 
@@ -488,10 +489,6 @@ const theadClass = computed(() => {
                                             <input
                                                 class="mx-5 hidden cursor-pointer bg-black py-3"
                                                 type="file"
-                                                @input="
-                                                    form.logo =
-                                                        $event?.target?.files[0]
-                                                "
                                                 @change="loadFile($event)"
                                             />
 
@@ -520,7 +517,7 @@ const theadClass = computed(() => {
                                     </label>
                                     <InputError
                                         class="flex justify-start"
-                                        :message="props.errors.logo"
+                                        :message="props.errors?.logo"
                                     />
                                 </td>
                             </tr>
