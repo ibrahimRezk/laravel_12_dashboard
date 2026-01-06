@@ -1,109 +1,218 @@
-<script setup>
-import { computed, ref, onMounted } from "vue";
-import { router } from "@inertiajs/vue3";
-import Container from "@/Components/Container.vue";
-import Card from "@/Components/Card/Card.vue";
-import Table from "@/Components/Table/Table.vue";
-import Td from "@/Components/Table/Td.vue";
-import Button from "@/Components/Button.vue";
-import Input from "@/Components/Input.vue";
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import Table from "@/components/Table/Table.vue";
+import Td from "@/components/Table/Td.vue";
+import {  attachPermission , detachPermission  } from '@/routes/roles'
+
 import { trans } from "laravel-vue-i18n";
-import Checkbox from "@/Components/Checkbox.vue";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import BreadCrumbs from "@/Components/BreadCrumbs.vue";
 
 
-import { Axios } from "axios";
+import axios from 'axios';
 
-const props = defineProps({
-    role: {
-        type: Object,
-        default: () => {
-            permissions: [];
-        },
+interface permission {
+    id: number;
+    name:string ;
+    permissions: string[]
+
+}
+interface rolePermission {
+    id: number;
+    name: string
+}
+
+
+interface role {
+    id?: number;
+    name?: string;
+    slug: {
+        ar: string;
+        en: string;
+    };
+    permissions: rolePermission[]
+}
+
+
+interface Props {
+    item?: role; 
+    pagesPermissions?: permission[]  
+
+}
+
+
+const props = withDefaults(defineProps<Props>(), {
+
+    item: () => ({
+       id: 0,
+       name: '',
+        slug: {
+        ar: '',
+        en: ''
     },
-    // permissions: {
-    //     type: Array,
-    // },
-    pagesPermissions: {
-        type: Array,
-    },
-    // specialPermissions: {
-    //     type: Array,
-    // },
-    breadcrumbs: {
-        type: [Array, Object],
-        default: [{}],
-    },
+    permissions : []
+    }),
+        pagesPermissions: () => ([]),
+
 });
 
-const roleHasPermission = (permission) => {
+
+
+
+// const props = defineProps({
+//     role: {
+//         type: Object,
+//         default: () => {
+//             permissions: [];
+//         },
+//     },
+//     // permissions: {
+//     //     type: Array,
+//     // },
+//     pagesPermissions: {
+//         type: Array,
+//     },
+//     // specialPermissions: {
+//     //     type: Array,
+//     // },
+//     breadcrumbs: {
+//         type: [Array, Object],
+//         default: [{}],
+//     },
+// });
+
+const roleHasPermission = (permission: number) => {
     /// return boolean
-    return props.role.permissions.some((p) => p.id == permission);
+    return props.item.permissions.some((p) => p.id == permission);
 };
 const direction = ref(
     document.getElementsByTagName("html")[0].getAttribute("dir")
 );
 
-const attachDeattachPermission = (event, permission) => {
-    if (event.target.checked == true) {
-        axios
-            .post(route("roles.attach-permission"), {
-                roleId: props.role.id,
-                permissionId: permission,
-                type: 1 // normal permission to be assigned to a role
-            })
-            .then((response) => {
-                return toastMethod(event, response.data);
-            });
-    } else if (event.target.checked == false) {
-        axios
-            .post(route("roles.detach-permission"), {
-                roleId: props.role.id,
-                permissionId: permission,
-                type: 1 // normal permission to be assigned to a role
+// const attachDeattachPermission = (event, permission) => {
+//     if (event.target.checked == true) {
+//         axios
+//             .post(route("roles.attach-permission"), {
+//                 roleId: props.role.id,
+//                 permissionId: permission,
+//                 type: 1 // normal permission to be assigned to a role
+//             })
+//             .then((response) => {
+//                 return toastMethod(event, response.data);
+//             });
+//     } else if (event.target.checked == false) {
+//         axios
+//             .post(route("roles.detach-permission"), {
+//                 roleId: props.role.id,
+//                 permissionId: permission,
+//                 type: 1 // normal permission to be assigned to a role
 
-            })
-            .then((response) => {
-                return toastMethod(event, response.data);
-            });
-    }
+//             })
+//             .then((response) => {
+//                 return toastMethod(event, response.data);
+//             });
+//     }
+// };
+
+interface ApiResponse {
+    result: string;
+    message: string;
+}
+
+const attachDeattachPermission = (event: Event, permission: number | string): void => {
+    // Cast the target to HTMLInputElement to access .checked
+    const target = event.target as HTMLInputElement;
+    const isChecked = target.checked;
+
+    // Determine the route based on checkbox state
+    const url = isChecked 
+        ? attachPermission().url
+        : detachPermission().url;
+
+    axios
+        .post<ApiResponse>(url, {
+            roleId: props.item.id,
+            permissionId: permission,
+            type: 1 
+        })
+        .then((response) => {
+            toastMethod(event, response.data);
+        })
+        .catch((error) => {
+            console.log(error)
+            // Optional: Handle network errors by reverting the UI state
+            target.checked = !isChecked;
+        });
 };
 
-const toastMethod = (event, response) => {
+const toastMethod = (event: Event, response: ApiResponse): void => {
+    const target = event.target as HTMLInputElement;
+
     if (response.result !== "error") {
         toast(trans(`general.${response.message}`), {
             type: toast.TYPE.SUCCESS,
             autoClose: 2500,
             theme: "colored",
-            position:
-                direction.value == "ltr"
-                    ? toast.POSITION.TOP_RIGHT
-                    : toast.POSITION.TOP_LEFT,
-            rtl: direction.value == "ltr" ? false : true,
-            transition: "bounce", // flip , slide , zoom , bounce
+            position: direction.value === "ltr"
+                ? toast.POSITION.TOP_RIGHT
+                : toast.POSITION.TOP_LEFT,
+            rtl: direction.value !== "ltr",
+            transition: "bounce",
             hideProgressBar: false,
             pauseOnHover: true,
         });
     } else {
-        event.target.checked = !event.target.checked; // this line to undo check or uncheck action to return it to it's original case becase we have here error
+        // Revert the checkbox state if the backend returned an error
+        target.checked = !target.checked;
+        
         toast(trans(`general.something goes wrong`), {
-            ////////////////////
-            type: toast.TYPE.ERROR, /////////////////////
+            type: toast.TYPE.ERROR,
             autoClose: 2500,
             theme: "colored",
-            position:
-                direction.value == "ltr"
-                    ? toast.POSITION.TOP_RIGHT
-                    : toast.POSITION.TOP_LEFT,
-            rtl: direction.value == "ltr" ? false : true,
-            transition: "bounce", // flip , slide , zoom , bounce
+            position: direction.value === "ltr"
+                ? toast.POSITION.TOP_RIGHT
+                : toast.POSITION.TOP_LEFT,
+            rtl: direction.value !== "ltr",
+            transition: "bounce",
             hideProgressBar: false,
             pauseOnHover: true,
         });
     }
 };
+
+// const toastMethod = (event, response) => {
+//     if (response.result !== "error") {
+//         toast(trans(`general.${response.message}`), {
+//             type: toast.TYPE.SUCCESS,
+//             autoClose: 2500,
+//             theme: "colored",
+//             position:
+//                 direction.value == "ltr"
+//                     ? toast.POSITION.TOP_RIGHT
+//                     : toast.POSITION.TOP_LEFT,
+//             rtl: direction.value == "ltr" ? false : true,
+//             transition: "bounce", // flip , slide , zoom , bounce
+//             hideProgressBar: false,
+//             pauseOnHover: true,
+//         });
+//     } else {
+//         event.target.checked = !event.target.checked; // this line to undo check or uncheck action to return it to it's original case becase we have here error
+//         toast(trans(`general.something goes wrong`), {
+//             ////////////////////
+//             type: toast.TYPE.ERROR, /////////////////////
+//             autoClose: 2500,
+//             theme: "colored",
+//             position:
+//                 direction.value == "ltr"
+//                     ? toast.POSITION.TOP_RIGHT
+//                     : toast.POSITION.TOP_LEFT,
+//             rtl: direction.value == "ltr" ? false : true,
+//             transition: "bounce", // flip , slide , zoom , bounce
+//             hideProgressBar: false,
+//             pauseOnHover: true,
+//         });
+//     }
+// };
 
 const headers = [
     { name: "#", label: "#" },
@@ -151,19 +260,7 @@ const headers = [
 //     },
 // ];
 
-const headersClasses = computed(() => {
-    return " from-gray-800 to-gray-700 ";
-});
-const headerFooterClasses = computed(() => {
-    return " from-zinc-800 via-orange-200  to-zinc-900 ";
-});
 
-const trClasses = computed(() => {
-    return " from-orange-200 to-black  ";
-});
-const hoverClasses = computed(() => {
-    return " from-amber-50 to-gray-800  ";
-});
 const checkboxClasses = computed(() => {
     return "rounded text-yellow-600 border-gray-300 shadow-sm focus:ring-indigo-500";
 });
@@ -180,10 +277,6 @@ const checkboxClasses = computed(() => {
     <Table
     :headers="headers"
     :items="props.pagesPermissions"
-    :headersClasses="headersClasses"
-    :trClasses="trClasses"
-    :hoverClasses="hoverClasses"
-    :headerFooterClasses="headerFooterClasses"
     noCheckAll
     tableHeight="customtableheight"
             noPagination
@@ -203,16 +296,13 @@ const checkboxClasses = computed(() => {
                 </Td>
     
                 <Td light>
-                    <!-- <Button color="gradient_white" small class="">
-                        {{ item.name }}
-                    </Button> -->
-    
+
                     <div class="flex min-w-36">
                         {{ item.name }}
                     </div>
                 </Td>
     
-                <Td light>
+               <Td light>
                     <input
                         @change="
                             attachDeattachPermission(
@@ -227,7 +317,7 @@ const checkboxClasses = computed(() => {
                         :checked="roleHasPermission(item.permissions['view'])"
                     />
                 </Td>
-                <Td light>
+                 <Td light>
                     <input
                         @change="
                             attachDeattachPermission(
@@ -334,53 +424,6 @@ const checkboxClasses = computed(() => {
                 </Td>
             </template>
         </Table>
-        <!-- <div class=" lg:col-span-2 mt-2">
-            <div class=" bg-white/40 rounded-t px-5 py-1 text-gray-800 font-bold"> {{ $t('general.extra permissions')}} </div>
-            <div class=" w-full border rounded-b  border-white/30 bg-black/40 ">
-    
-                <div class="  p-1 " v-for="(item, index) in props.specialPermissions" :key="index">
-                    <div  class="flex justify-startw-full text-sm items-center gap-3  p-2 text-gray-200  "
-                    :class="index  == props.specialPermissions?.length - 1 ? '' : ' border-b border-gray-200/10' "
-                    > 
-                        <input
-                        @change="
-                            attachDeattachPermission(
-                                $event,
-                                item.permissions['id']
-                            )
-                        "
-                        :class="checkboxClasses"
-                        type="checkbox"
-                        v-show="item.permissions['id']"
-                        :disabled="item.permissions['id'] == null"
-                        :checked="roleHasPermission(item.permissions['id'])"
-                    /> 
-                        <span> {{ item.name }} </span>   
-                        
-                    </div>
-                </div>
-    
-                <div class="  p-1" v-for="(item, index) in props.specialPermissions" :key="index">
-                    <label  class="flex justify-start col-span-1 w-full text-sm shadow-2 shadow-black/20  items-center gap-3 border bg-black/40  rounded  border-white/40 p-2 h-16 text-gray-200   "> 
-                        <input
-                        @change="
-                            attachDeattachPermission(
-                                $event,
-                                item.permissions['id']
-                            )
-                        "
-                        :class="checkboxClasses"
-                        type="checkbox"
-                        v-show="item.permissions['id']"
-                        :disabled="item.permissions['id'] == null"
-                        :checked="roleHasPermission(item.permissions['id'])"
-                    /> 
-                        <span> {{ item.name }} </span>   
-                    </label>
-                </div>
 
-    </div>
-
-        </div> -->
 
 </template>

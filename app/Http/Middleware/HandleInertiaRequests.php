@@ -97,6 +97,34 @@ class HandleInertiaRequests extends Middleware
 
                     ]
                 ],
+                [
+                    'title' => 'Admins & Permissions',
+                    'isActive' =>
+                        $request->routeIs('admins.*')
+                        or $request->routeIs('roles.*')
+                    ,
+
+                     'isVisible' => 
+                    $request->user()?->can('view admins') 
+                    || $request->user()?->can('view roles'),
+                    'hasSubmenu' => true,
+                    'open' => false,
+                    'subMenus' => [
+                        [
+                            'title' => 'System Admins',
+                            'href' => route('admins.index'),
+                            'isActive' => $request->routeIs('admins.*'),
+                            'isVisible' => $request->user()?->can('view admins'),
+                            
+                        ],
+                        [
+                            'title' => 'Roles and Permissions',
+                            'href' => route('roles.index'),
+                            'isActive' => $request->routeIs('roles.*'),
+                            'isVisible' => $request->user()?->can('view roles'),
+                        ],
+                    ],
+                ],
             ],
 
         ];

@@ -5,7 +5,7 @@ import AddNew from '@/components/AddNew.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem } from '@/types';
+import { type header , meta , links , BreadcrumbItem   ,fillFormType ,permissions ,filtersValuesDataType   } from '@/types';
 import { Form, Head, useForm } from '@inertiajs/vue3';
 import {ref , watch} from 'vue';
 import Filters from './Filters.vue';
@@ -41,27 +41,23 @@ function fireshowDialogModal() {
 }
 
 //////////////////////////////////////////
-
-
-interface header {
-    name: string;
-    title: string;
+interface Props {
+    edit?: boolean;
+    title?: string;
+    // routeResourceName?: string;
+    items?: itemsData; // Assuming 'items' is an array of objects
+    headers?: header[];
+    filters?: Record<string, any>;
+    errors?: Record<string, any>;
+    method?: string;
+    can?: permissions;
 }
 
-interface meta {
-    current_page: number;
-    from: number;
-    last_page: number;
-    per_page: number;
-    to: number;
-    total: number;
-}
 
-interface links {
-    first: string;
-    last: string;
-    prev: string | null;
-    next: string | null;
+interface itemsData {
+    data: item[];
+    links: links;
+    meta: meta;
 }
 
 interface item {
@@ -79,52 +75,9 @@ interface item {
 
 
 
-interface itemsData {
-    data: item[];
-    links: links;
-    meta: meta;
-}
-
-interface fillFormType {
-            [key: string]: any;
-
-}
-
-interface permissions {
-    create: boolean;
-    update: boolean;
-    delete: boolean;
-}
-
-interface Props {
-    edit?: boolean;
-    title?: string;
-    // routeResourceName?: string;
-    items?: itemsData; // Assuming 'items' is an array of objects
-    headers?: header[];
-    filters?: Record<string, any>;
-    errors?: Record<string, any>;
-    method?: string;
-    can?: permissions;
-}
-
-interface filtersValuesDataType {
-    [key: string]: {
-        id: string;
-        data: string | number;
-    };
-}
-
-interface header {
-    name: string;
-    label: string;
-}
-
-
 const props = withDefaults(defineProps<Props>(), {
     edit: false,
     title: '',
-    // routeResourceName: '',
     headers: () => [],
     items: () => ({
         data: [],
@@ -147,7 +100,7 @@ const props = withDefaults(defineProps<Props>(), {
     errors: () => ({}),
     can: () => ({
         create: false,
-        update: false,
+        edit: false,
         delete: false,
     }),
     method: '',
@@ -278,7 +231,7 @@ watch(
 
 
 
-const showDeleteItem = (item: item)  => {
+const showDeleteItemModal = (item: item)  => {
     deleteMultipleItems.value = false;
     showDeleteModal(item);
     checkedItems.value = []
@@ -546,7 +499,7 @@ const startLeaveAnimation = () => {
                             :show-edit="item.can.edit"
                             :show-delete="item.can.delete"
                             @editClicked="fireShowEditModal(item)"
-                            @deleteClicked="showDeleteItem(item)"
+                            @deleteClicked="showDeleteItemModal(item)"
                         >
                         </Actions>
                     </Td>
@@ -668,7 +621,6 @@ const startLeaveAnimation = () => {
                         id="name.en"
                         name="name.en"
                         v-model="currentItem.name.en"
-
                     />
                     <InputError :message="errors['name.en']" />
                 </div>

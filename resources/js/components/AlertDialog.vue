@@ -52,12 +52,12 @@ const {
             class="top-16 max-h-[calc(100vh-5rem)] w-full max-w-xl translate-y-0! gap-0 overflow-auto p-0"
         >
             <div
-                class="rounded-t-lg from-orange-200 to-red-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4 ltr:bg-linear-to-l rtl:bg-linear-to-r dark:from-gray-900 dark:via-gray-700 dark:to-gray-900"
+                class="rounded-t-lg from-orange-200 to-red-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4 ltr:bg-linear-to-l rtl:bg-linear-to-r "
             >
                 <!-- <div class="sm:flex sm:items-start "> -->
                 <div class="flex items-center justify-center text-center">
                     <div
-                        class="mx-auto flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-12 sm:w-12 dark:bg-red-200"
+                        class="mx-auto flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-12 sm:w-12 "
                     >
                         <svg
                             class="h-6 w-6 text-red-600"
@@ -79,7 +79,7 @@ const {
                             class="mx-2 mt-3 px-8 sm:mt-0 sm:ml-4 sm:text-center"
                         >
                             <div
-                                class="rounded border border-gray-400/40 from-orange-50 px-2 shadow-md ltr:bg-linear-to-l rtl:bg-linear-to-r dark:to-orange-300"
+                                class="rounded border border-zinc-400/40 from-orange-50 px-2 shadow-md ltr:bg-linear-to-l rtl:bg-linear-to-r "
                             >
                                 <h3 class="text-lg font-bold text-sky-900">
                                     <AlertDialogTitle>
@@ -101,7 +101,7 @@ const {
                         </div>
                         <AlertDialogDescription>
                             <div
-                                class="mt-4 flex justify-center font-semibold dark:font-normal dark:text-red-100"
+                                class="mt-4 flex justify-center font-semibold dark:text-gray-800 "
                             >
                                 {{ $t('general.delete confirmation') }}
                             </div>
@@ -111,11 +111,11 @@ const {
             </div>
 
             <AlertDialogFooter
-                class="flex flex-row justify-end rounded-b-lg border-t border-black/20 from-orange-200 to-zinc-900 px-6 py-1 text-right ltr:bg-linear-to-l rtl:bg-linear-to-r dark:from-zinc-700 dark:to-black"
+                class="flex flex-row justify-end rounded-b-lg border-t border-black/20 from-orange-200 to-zinc-900 px-6 py-1 text-right ltr:bg-linear-to-l rtl:bg-linear-to-r "
             >
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel class=" dark:hover:bg-gray-300 dark:hover:text-gray-800">Cancel</AlertDialogCancel>
                 <AlertDialogAction
-                    class="bg-red-700 hover:cursor-pointer hover:bg-red-800"
+                    class="bg-red-700 hover:cursor-pointer hover:bg-red-800 dark:text-zinc-300"
                     @click="handleDeleteItem"
                     :disabled="isDeleting"
                     variant="red"

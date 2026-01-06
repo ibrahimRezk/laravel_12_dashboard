@@ -75,7 +75,7 @@ class UserResource extends JsonResource
             'can' => [
                 'edit' => $request->user()?->can('edit user'),
                 'delete' => $request->user()?->can('delete user'),
-                'show' => $request->user()?->can('show user'),
+                'view' => $request->user()?->can('view user'),
             ],
 
     

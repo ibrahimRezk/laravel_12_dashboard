@@ -29,20 +29,22 @@ class AdminRequest extends FormRequest
      */
     public function rules(): array
     {
-        $model = $this->id ?? null;
+        // $model = $this->id ?? null;
+        // dd($model);
+                $model = $this->route('user');
+
         $passwordRule = $model ? ['nullable'] : ['required'];
 
         return [
-            'name.*' => ['bail', 'required', 'string', 'max:255' ,UniqueTranslationRule::for('users', 'name')->ignore($this->id)],
-            'email' => ['bail', 'required', 'email', 'max:255', Rule::unique(User::class)->ignore($model ?? null)],
+            'name.*' => ['bail', 'required', 'string', 'max:255' ,UniqueTranslationRule::for('users', 'name')->ignore($model?->id)],
+            'email' => ['bail', 'required', 'email', 'max:255', Rule::unique(User::class)->ignore($model?->id)],
             'password' => ['bail', ...$passwordRule, Password::defaults()],
             'passwordConfirmation' => ['bail', ...$passwordRule, 'same:password'],
 
 
             'phone' => ['bail', 'nullable', 'string', 'max:255'],
-            'active' => ['bail', 'boolean'],
 
-            // 'roleId' => ['bail',  'required', Rule::exists(Role::class, 'id')],
+            'roleId' => ['bail',  'required', Rule::exists(Role::class, 'id')],
 
 
         ];

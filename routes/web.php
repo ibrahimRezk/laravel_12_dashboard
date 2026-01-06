@@ -42,38 +42,10 @@ Route::middleware([
 
 
 
-
-
-
     Route::resource('admins', AdminController::class)->parameters(['admins' => 'user']);
     Route::resource('roles', RolesController::class);
     Route::post('roles/attach-permission', AttachPermissionToRoleController::class)->name('roles.attach-permission');
     Route::post('roles/detach-permission', DetachPermissionFromRoleController::class)->name('roles.detach-permission');
-
-
-
-
-
-
-    Route::get('dashboard2', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard2');
-
-    Route::get('dashboard3', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard3');
-
-    Route::get('dashboard4', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard4');
-
-    Route::get('dashboard5', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard5');
-
-    Route::get('dashboard6', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard6');
 
 
 
@@ -95,6 +67,15 @@ Route::middleware([
 
 
 require __DIR__.'/settings.php';
+
+// breadcrumb multiple stage , darkmode delete modal
+
+// check pos and hrms userresource this line :
+//                 'show' => $request->user()?->can('show user'),
+// has to be
+//                 'view' => $request->user()?->can('view user'),
+
+
 
 
 // importan   on github inside selectgroup.vue    fix  this => import Select from "@/Components/Select.vue";    to "vue"

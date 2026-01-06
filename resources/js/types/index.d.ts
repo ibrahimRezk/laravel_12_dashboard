@@ -78,5 +78,61 @@ export interface TableProps {
   tableHeight?: string;
 }
 
+
+
+
+
+
+
+export interface header {
+    name: string;
+    label: string;
+}
+
+export interface meta {
+    current_page: number;
+    from: number;
+    last_page: number;
+    per_page: number;
+    to: number;
+    total: number;
+}
+
+export interface links {
+    first: string;
+    last: string;
+    prev: string | null;
+    next: string | null;
+}
+
+
+
+
+
+export interface fillFormType {
+            [key: string]: any;
+
+}
+
+export interface permissions {
+    create?: boolean;
+    edit?: boolean;
+    delete?: boolean;
+}
+
+
+export interface filtersValuesDataType {
+    [key: string]: {
+        id: string;
+        data: string | number;
+    };
+}
+
+
+
+
+
+
+
 export type BreadcrumbItemType = BreadcrumbItem;
 export type FlashMessagesType = FlashMessages;

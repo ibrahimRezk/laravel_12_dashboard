@@ -1,77 +1,181 @@
-<script setup>
-import Layout from "@/Layouts/Authenticated.vue";
-import BreadCrumbs from "@/Components/BreadCrumbs.vue";
-import Container from "@/Components/Container.vue";
-import InputError from "@/Components/InputError.vue";
-import Button from "@/Components/Button.vue";
-import Card from "@/Components/Card/Card.vue";
-import { Head, useForm } from "@inertiajs/vue3";
-import { ref, computed, watch, onMounted } from "vue";
-import CustomHeaderButton from "@/Components/CustomHeaderButton.vue";
-import useHeaders from "@/Composables/useHeaders.js";
-import Table from "@/Components/Table/Table.vue";
-import Td from "@/Components/Table/Td.vue";
-import Actions from "@/Components/Table/Actions.vue";
-import Modal from "@/Components/ConfirmationModal.vue";
-import useDialogModal from "@/Composables/useDialogModal.js";
-import DialogModal from "@/Components/DialogModal.vue";
-import Label from "@/Components/Label.vue";
-import Input from "@/Components/Input.vue";
-import AddNew from "@/Components/AddNew.vue";
+<script setup lang="ts">
+import AddNew from '@/components/AddNew.vue';
+import Container from '@/components/Container.vue';
+import CustomHeaderButton from '@/components/CustomHeaderButton.vue';
+import DialogModal from '@/components/DialogModal.vue';
+import InputError from '@/components/InputError.vue';
+import Actions from '@/components/Table/Actions.vue';
+import Table from '@/components/Table/Table.vue';
+import Td from '@/components/Table/Td.vue';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import useHeaders from '@/composables/useHeaders.js';
+import { Form, Head, router, useForm } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
 import Filters from "./Filters.vue";
-import useDeleteItem from "@/Composables/useDeleteItem.js";
-import useFilters from "@/Composables/useFilters.js";
-import CheckboxGroup from "@/Components/CheckboxGroup.vue";
-import SelectGroup from "@/Components/SelectGroup.vue";
-import InputGroup from "@/Components/InputGroup.vue";
-import { trans } from "laravel-vue-i18n";
-import { router } from "@inertiajs/vue3";
+import AlertDialog from '@/components/AlertDialog.vue';
+import Checkbox from '@/components/Checkbox.vue';
+import { Button } from '@/components/ui/button';
+import DialogFooter from '@/components/ui/dialog/DialogFooter.vue';
+import Spinner from '@/components/ui/spinner/Spinner.vue';
+import useDeleteItem from '@/composables/useDeleteItem.js';
+import useFilters from '@/composables/useFilters.js';
+import { useModal } from '@/composables/useModal';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { destroy, index, show as showAdmin, store, update } from '@/routes/admins';
+import {
+    type header,
+    BreadcrumbItem,
+    fillFormType,
+    filtersValuesDataType,
+    meta,
+    links,
+    permissions,
+} from '@/types';
 
-const props = defineProps({
-    edit: {
-        type: Boolean,
-        default: false,
-    },
-    title: {
-        type: String,
-    },
-    items: {
-        type: Object,
-        default: () => {},
-    },
+import AdminController from '@/actions/App/Http/Controllers/AdminController';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 
-    headers: {
-        type: Array,
-        default: () => [],
-    },
-    roles: {
-        type: Array,
-        default: () => [],
-    },
+// import {
+//     Listbox,
+//     ListboxButton,
+//     ListboxOption,
+//     ListboxOptions,
+// } from '@headlessui/vue';
 
-    filters: {
-        type: Object,
-        default: () => ({}),
-    },
-    errors: {
-        type: Object,
-        default: () => {},
-    },
-    routeResourceName: {
-        type: String,
-        required: true,
-    },
-    method: String,
-    can: Object,
-    breadcrumbs: {
-        type: [Array, Object],
-        default: [{}],
-    },
+// const props = defineProps({
+//     edit: {
+//         type: Boolean,
+//         default: false,
+//     },
+//     title: {
+//         type: String,
+//     },
+//     items: {
+//         type: Object,
+//         default: () => {},
+//     },
+
+//     headers: {
+//         type: Array,
+//         default: () => [],
+//     },
+//     roles: {
+//         type: Array,
+//         default: () => [],
+//     },
+
+//     filters: {
+//         type: Object,
+//         default: () => ({}),
+//     },
+//     errors: {
+//         type: Object,
+//         default: () => {},
+//     },
+//     routeResourceName: {
+//         type: String,
+//         required: true,
+//     },
+//     method: String,
+//     can: Object,
+//     breadcrumbs: {
+//         type: [Array, Object],
+//         default: [{}],
+//     },
+// });
+
+interface role {
+    id: number;
+    name: string;
+}
+
+interface Props {
+    edit?: boolean;
+    title?: string;
+    // routeResourceName?: string;
+    items?: itemsData; // Assuming 'items' is an array of objects
+    headers?: header[];
+    roles?: role[];
+    filters?: Record<string, any>;
+    errors?: Record<string, any>;
+    method?: string;
+    can?: permissions;
+}
+
+
+export interface itemsData {
+    data: item[];
+    links: links;
+    meta: meta;
+}
+
+interface item {
+    id: number;
+    name: {
+        ar: string;
+        en: string;
+    };
+    email: string;
+    password: string;
+    roleId: number;
+    active: boolean;
+    can?: {
+        delete: boolean;
+        update: boolean;
+        view: boolean;
+    };
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    edit: false,
+    title: '',
+    headers: () => [],
+    items: () => ({
+        data: [],
+        links: {
+            first: '',
+            last: '',
+            prev: null,
+            next: null,
+        },
+        meta: {
+            current_page: 1,
+            from: 1,
+            last_page: 1,
+            per_page: 10,
+            to: 1,
+            total: 0,
+        },
+    }),
+    roles: () => [],
+    filters: () => ({}),
+    errors: () => ({}),
+    can: () => ({
+        create: false,
+    }),
 });
 
-const show = (id) => {
-    // router.get(route("admin_treasury.show", { id: id }));
-    router.get(route(`${props.routeResourceName}.show`, { id: id }));
+const breadcrumb: BreadcrumbItem[] = [
+    {
+        title: props.title,
+        href: AdminController.index(),
+    },
+];
+
+const show = (id: number) => {
+    startLeaveAnimation()
+    router.get(showAdmin(id));
+    // router.get(route(`${props.routeResourceName}.show`, { id: id }));
+    // console.log(id);
 };
 
 ///////////////////////filter headers/////////////////////////////////////////////////////
@@ -84,146 +188,101 @@ const { filterHeadersMethod, showColumnItems, finalHeaders, filteredHeaders } =
 
 watch(
     () => filteredHeaders.value,
-    () => filterHeadersMethod()
+    () => filterHeadersMethod(),
 );
 
-// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-const opened = ref(0);
-const method = ref("");
-const showScreenExeptSubmenu = ref(false);
-const routeResourceName = ref(props.routeResourceName);
 const editMode = ref(false);
 
-const form = useForm({
-    name: {
-        ar: "",
-        en: "",
-    },
-    email: "",
-    password: "",
-    passwordConfirmation: "",
-    active: true,
-    roleId: "",
-    phone: "",
-});
+// const form = useForm({
+//     name: {
+//         ar: "",
+//         en: "",
+//     },
+//     email: "",
+//     password: "",
+//     passwordConfirmation: "",
+//     active: true,
+//     roleId: "",
+//     phone: "",
+// });
 
-const active = computed(() => {
-    return form.active == true
-        ? trans("general.active")
-        : trans("general.inactive");
-});
-
-const emptyErrors = () => {
-    Object.keys(props.errors).forEach((error) => (props.errors[error] = ""));
-};
+const { open, isOpen } = useModal();
 
 const fireshowDialogModal = () => {
-    form.reset();
-    // form.defaults() // to get previos data if accedintaly close modal
     editMode.value = false;
-    emptyErrors();
-    showDialogModal();
+    open();
 };
-const fireShowEditModal = (item) => {
-    form.reset();
-    editMode.value = true;
-    method.value = "update";
-    emptyErrors();
+
+const currentItem: fillFormType = useForm({
+    id: 0,
+    name: {
+        ar: '',
+        en: '',
+    },
+    active: true,
+    email: '',
+    password: '',
+    passwordConfirmation: '',
+    roleId: null,
+});
+
+const fillForm = (item: fillFormType) => {
+    Object.keys(currentItem).forEach((key) =>
+        item[key] !== undefined && key !== 'name'
+            ? (currentItem[key] = item[key])
+            : '',
+    );
+    currentItem.name.ar = item['name.ar'];
+    currentItem.name.en = item['name.en'];
+    currentItem.roleId = item?.roles?.[0]?.id;
+};
+
+watch(
+    () => isOpen.value,
+    () => (isOpen.value == false ? currentItem.reset() : ''),
+);
+
+const fireShowEditModal = (item: item) => {
+    currentItem.reset();
+    isOpen.value = true;
     fillForm(item);
-    showEditModal(item);
+    editMode.value = true;
+    // emptyErrors();
 };
 
-const fillForm = (item) => {
-    Object.keys(form).forEach((key) => {
-        item[key] !== undefined && key !== "name"
-            ? (form[key] = item[key])
-            : "";
+// const yesClasses = computed(() => {
+//     return `bg-linear-to-l from-yellow-800 to-yellow-500 hover:from-gray-900 hover:to-yellow-500 active:bg-yellow-900 focus:border-white focus:shadow-outline-yellow rtl:ml-1 ltr:mr-1  ${statusClass.value}`;
+// });
 
-        form.roleId = item.roles[0]?.id;
+// const noClasses = computed(() => {
+//     return `bg-linear-to-l from-red-800 to-red-500 hover:from-gray-900 hover:to-red-500 active:bg-red-900 focus:border-white focus:shadow-outline-red  ltr:ml-1 rtl:mr-1 ${statusClass.value}`;
+// });
 
-        if (item.profile) {
-            item.profile[key] !== undefined
-                ? (form[key] = item.profile[key])
-                : "";
-        }
-    });
-    form.name.ar = item["name.ar"];
-    form.name.en = item["name.en"];
+// const statusClass = computed(() => {
+//     return "text-white font-normal  shadow-md  border-white text-shadow-none hover:scale-110 border border-transparent rounded-xl   capitalize tracking-wider focus:outline-none transition ease-in-out duration-150   rtl:pr-3 py-1   text-xs";
+// });
+
+const activeColor = (item: item) => {
+    return item.active == true ? 'linear_green' : 'linear_red';
 };
 
-const yesClasses = computed(() => {
-    return `bg-gradient-to-l from-yellow-800 to-yellow-500 hover:from-gray-900 hover:to-yellow-500 active:bg-yellow-900 focus:border-white focus:shadow-outline-yellow rtl:ml-1 ltr:mr-1  ${statusClass.value}`;
-});
-
-const noClasses = computed(() => {
-    return `bg-gradient-to-l from-red-800 to-red-500 hover:from-gray-900 hover:to-red-500 active:bg-red-900 focus:border-white focus:shadow-outline-red  ltr:ml-1 rtl:mr-1 ${statusClass.value}`;
-});
-
-const statusClass = computed(() => {
-    return "text-white font-normal  shadow-md  border-white text-shadow-none hover:scale-110 border border-transparent rounded-xl   capitalize tracking-wider focus:outline-none transition ease-in-out duration-150   rtl:pr-3 py-1   text-xs";
-});
-
-const addNewOrEdit = () => {
-    return editMode.value == true ? editAdmin() : addNewAdmin();
-};
-
-const editAdmin = () => {
-    editMode.value == true;
-    method.value = "update";
-    routeResourceName.value = `${props.routeResourceName}`;
-    return handleSavingItem();
-};
-
-const addNewAdmin = () => {
-    // console.log(props.routeResourceName)
-    editMode.value == false;
-    method.value = "store";
-    routeResourceName.value = `${props.routeResourceName}`;
-    return handleSavingItem();
-};
-
-const {
-    closeDialogModal,
-    dialogModal,
-    itemToSave,
-    isSaving,
-    showDialogModal,
-    showEditModal,
-    handleSavingItem,
-} = useDialogModal({
-    routeResourceName: routeResourceName,
-    form: form,
-    opened,
-    showScreenExeptSubmenu,
-    method,
-    editMode,
-});
-
-const {
-    close,
-    deleteModal,
-    itemToDelete,
-    isDeleting,
-    showDeleteModal,
-    handleDeleteItem,
-    deleteMultipleItems,
-} = useDeleteItem({
-    routeResourceName: props.routeResourceName,
+const { showDeleteModal, deleteMultipleItems } = useDeleteItem({
+    destroyRoute: destroy,
 });
 
 const { filters, isLoading, isFilled, resetFilter } = useFilters({
     filters: props.filters,
-    routeResourceName: props.routeResourceName,
     method: props.method,
+    route: index,
 });
 
-const checkedItems = ref([]);
+const checkedAllButton = ref(false);
+const checkedItems = ref<item[]>([]);
+
 const checkAllItems = () => {
     if (!checkedItems.value.length) {
         props.items.data.forEach((item) => {
-            // props.items.data.forEach((item) => {
-            if (item.can.delete == true) {
+            if (item.can?.delete == true) {
                 checkedItems.value.push(item);
             }
         });
@@ -231,13 +290,17 @@ const checkAllItems = () => {
         checkedItems.value = [];
     }
 };
-const checkedAllButton = ref(false);
-
-// watch(() => checkedItems.value,
-//     () => checkedItems.value.length > 0 ? checkedAllButton.value = true : checkedAllButton.value = false)
 
 watch(
-    () => checkedItems.value.length,
+    () =>( checkedItems.value ),
+    () =>
+        checkedItems.value.length > 0
+            ? (checkedAllButton.value = true)
+            : (checkedAllButton.value = false)
+);
+
+watch(
+    () => (checkedItems.value.length ),
     () =>
         checkedItems.value.length > 0
             ? (checkedAllButton.value = true)
@@ -246,36 +309,32 @@ watch(
 
 watch(
     () => deleteMultipleItems.value,
-    () => (deleteMultipleItems.value == false ? (checkedItems.value = []) : "")
+    () =>
+        deleteMultipleItems.value == false
+            ? (checkedItems.value = [] , checkedAllButton.value = false)
+            : ''
 );
+
+
+;
+
+const showDeleteItemModal = (item: item) => {
+    deleteMultipleItems.value = false;
+    showDeleteModal(item);
+    checkedItems.value = [];
+    // checkedItemsIds.value = []
+};
 
 const deleteAll = () => {
     deleteMultipleItems.value = true;
     showDeleteModal(checkedItems.value);
 };
 
-const headersClasses = computed(() => {
-    return " from-gray-800 to-gray-700 ";
-});
-const headerFooterClasses = computed(() => {
-    return " from-zinc-800 via-orange-200  to-zinc-900 ";
-});
-
-const trClasses = computed(() => {
-    return " from-orange-200 to-black  ";
-});
-const hoverClasses = computed(() => {
-    return " from-amber-50 to-gray-800  ";
-});
-
-const activeColor = (item) => {
-    return item.active == 1 ? "gradient_green" : "gradient_red";
-};
-
-const filtersValuesData = ref({});
-const filtersValuesDataMethod = (data) => {
+const filtersValuesData = ref({} as filtersValuesDataType);
+const filtersValuesDataMethod = (data: filtersValuesDataType) => {
     filtersValuesData.value = data;
 };
+
 const animate = ref(true);
 const startLeaveAnimation = () => {
     animate.value = false;
@@ -283,16 +342,9 @@ const startLeaveAnimation = () => {
 </script>
 
 <template>
-    <Head :title="title" />
+    <AppLayout :breadcrumbs="breadcrumb" :header="'admins'">
+        <Head :title="props.title" />
 
-    <Layout>
-        <template #breadcrumbs>
-            <bread-crumbs :crumbs="breadcrumbs"></bread-crumbs>
-        </template>
-
-        <template #header>
-            {{ $t("general." + title) }}
-        </template>
         <Container :animate="animate">
             <AddNew
                 :show="isFilled"
@@ -302,11 +354,13 @@ const startLeaveAnimation = () => {
                 :showDeleteAll="can.delete"
             >
                 <Button
-                    color="gradient_blue"
+                    variant="linear_blue"
+                    size="md"
+                                        class="hover:cursor-pointer"
                     v-if="can.create"
                     @click="fireshowDialogModal"
                 >
-                    {{ $t("general.add new system admin") }}
+                    {{ $t('general.add new system admin') }}
                 </Button>
 
                 <!-- /////////////////////////////////////////custum headers /////////////////////////////////////////////////// -->
@@ -314,39 +368,40 @@ const startLeaveAnimation = () => {
                     <CustomHeaderButton
                         :showTitle="false"
                         button_title="filter"
-                        color="gradient_black"
+                        variant="linear_black"
                         width="60"
                         iconType="filter"
                     >
                         <Filters
-                            v-model="filters"
-                            @filtersValuesData="filtersValuesDataMethod"
-                            :is-loading="isLoading"
-                            no-padding
-                        />
+                        v-model="filters"
+                        @filtersValuesData="filtersValuesDataMethod"
+                        :is-loading="isLoading"
+                        no-padding
+                    />
                     </CustomHeaderButton>
-                    <CustomHeaderButton>
+                     <CustomHeaderButton  size="md">
                         <template #checkedItemHeader>
                             <div
                                 v-for="(header, index) in props.headers"
                                 :key="index"
+                                class="from-orange-400 flex flex-col justify-between rtl:bg-linear-to-r ltr:bg-linear-to-l to-gray-800"
                             >
                                 <Label
-                                    class="mx-1 mt-2 mb-2 rtl:bg-gradient-to-r ltr:bg-gradient-to-l from-yellow-500 via-orange-600 to-red-900 px-2 py-1 rounded shadow-md border border-gray-300"
+                                    class="mx-1 mt-2 mb-2 rounded border border-gray-300  ltr:bg-linear-to-l rtl:bg-linear-to-r from-yellow-500 via-orange-600 to-red-900 px-2 py-1 shadow-md "
                                 >
-                                    <div class="flex justify-between">
+                                    <div class="flex w-full justify-between">
                                         <div>
                                             <h1 class="text-gray-200">
                                                 {{
-                                                    $t("general." + header.name)
+                                                    $t('general.' + header.name)
                                                 }}
                                             </h1>
                                         </div>
                                         <div>
                                             <input
-                                                class="rounded mx-1 border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                                class="focus:ring-opacity-50 mx-1 rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200"
                                                 type="checkbox"
-                                                :id="header[index]"
+                                                :id="header.name"
                                                 :value="header"
                                                 v-model="filteredHeaders"
                                             />
@@ -362,15 +417,11 @@ const startLeaveAnimation = () => {
 
             <!-- <Card class=""> -->
             <Table
-                @startLeaveAnimation="startLeaveAnimation"
+                 @startLeaveAnimation="startLeaveAnimation"
                 :headers="finalHeaders"
                 :items="items"
-                :headersClasses="headersClasses"
-                :trClasses="trClasses"
-                :hoverClasses="hoverClasses"
-                :headerFooterClasses="headerFooterClasses"
+                :checked-all-button="checkedAllButton"
                 @checkedAll="checkAllItems()"
-                :checkedAllButton="checkedAllButton"
                 noNamePadding
                 class="mt-2"
             >
@@ -390,39 +441,34 @@ const startLeaveAnimation = () => {
                                         'paginationNumber'))
                         "
                     >
-                        {{ $t("general.list_of") }}
-                        {{ $t("general." + props.title) }}
+                        {{ $t('general.list_of') }}
+                        {{ $t('general.' + props.title) }}
                     </span>
 
                     <span v-else class=" ">
-                        <span class="text-yellow-100 px-2 text-sm">
-                            {{ $t("general.active filters") }} :
+                        <span class="px-2 text-sm text-yellow-100">
+                            {{ $t('general.active filters') }} :
                         </span>
-                        <!-- <span
-                v-if="props.filters.store_ids"
-            >
-                {{ $t("general.list_of") }}
-            </span> -->
 
                         <span class="flex flex-wrap">
                             <span v-for="(f, i) in filtersValuesData" :key="i">
                                 <Button
                                     v-if="f.data"
-                                    class="mx-1 flex justify-between mt-2 items-center"
+                                    class="mx-1 mt-2 flex items-center justify-between"
                                     small
-                                    color="transparent_yellow"
+                                    variant="transparent_yellow"
                                 >
-                                    {{ $t("general." + i) }} :
+                                    {{ $t('general.' + i) }} :
                                     <Button
-                                        class="rtl:mr-1 ltr:ml-1 my-1 flex"
+                                        class="my-1 flex ltr:ml-1 rtl:mr-1"
                                         small
-                                        color="transparent_yellow"
+                                        variant="transparent_yellow"
                                     >
                                         <span>
                                             {{ f.data }}
                                         </span>
                                         <span
-                                            class="rtl:mr-2 ltr:ml-2 text-xs my-1"
+                                            class="my-1 text-xs ltr:ml-2 rtl:mr-2"
                                             @click="filters[f.id] = ''"
                                         >
                                             x
@@ -431,12 +477,12 @@ const startLeaveAnimation = () => {
                                 </Button>
                             </span>
                             <Button
-                                class="w-40 mx-1 mt-2 hover:cursor-pointer"
+                                class="mx-1 mt-2 w-40 hover:cursor-pointer"
                                 small
-                                color="transparent_red"
+                                variant="transparent_red"
                             >
                                 <span @click="resetFilter">{{
-                                    $t("general.reset filter")
+                                    $t('general.reset filter')
                                 }}</span>
                             </Button>
                         </span>
@@ -445,13 +491,11 @@ const startLeaveAnimation = () => {
                 <template v-slot="{ item, index }">
                     <!-- //////////////////////////checked row item///////////////////////// -->
                     <Td light>
-                        <input
+                        <Checkbox
                             v-if="item.can.delete"
-                            class="rounded-sm mx-1 border-gray-300 text-yellow-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            type="checkbox"
-                            :id="item.id"
                             :value="item"
-                            v-model="checkedItems"
+                            class="ltr:ml-2 rtl:mr-1"
+                            v-model:checked="checkedItems"
                         />
                     </Td>
                     <!-- ///////////////////////////////////////////////////// -->
@@ -460,36 +504,36 @@ const startLeaveAnimation = () => {
                     </Td>
 
                     <Td light v-show="showColumnItems('name')">
-                        <Button color="gradient_white" small class="">
+                        <Button variant="linear_white"  size="sm">
                             {{ item.name }}
                         </Button>
                     </Td>
 
                     <Td bold v-show="showColumnItems('active')">
-                        <Button :color="activeColor(item)" small class="">
+                        <Button :variant="activeColor(item)"  size="sm">
                             {{
                                 item.active == 1
-                                    ? $t("general.yes")
-                                    : $t("general.no")
+                                    ? $t('general.yes')
+                                    : $t('general.no')
                             }}
                         </Button>
                     </Td>
 
                     <Td bold v-show="showColumnItems('phone')">
-                        <Button color="gradient_white" small>
-                            {{ item.profile?.phone ?? "--" }}
+                        <Button variant="linear_white"  size="sm">
+                            {{ item.profile?.phone ?? '--' }}
                         </Button>
                     </Td>
 
-                    <Td bold v-show="showColumnItems('created_at')">
-                        <Button color="gradient_yellow" small>
+                    <Td bold v-show="showColumnItems('created at')">
+                        <Button variant="linear_yellow"  size="sm">
                             {{ item.created_at_formatted }}
                         </Button>
 
                         <!-- {{  new Date(item.created_at).toLocaleString() }} -->
                     </Td>
                     <Td bold v-show="showColumnItems('updated_at')">
-                        <Button color="gradient_orange" small>
+                        <Button variant="linear_orange" small>
                             {{ item.updated_at_formatted }}
                         </Button>
 
@@ -501,14 +545,14 @@ const startLeaveAnimation = () => {
                             :show-edit="item.can.edit"
                             :show-delete="item.can.delete"
                             @editClicked="fireShowEditModal(item)"
-                            @deleteClicked="showDeleteModal(item)"
+                            @deleteClicked="showDeleteItemModal(item)"
                         >
-                            <template #icon v-if="props.can.view">
+                            <template #icon v-if="item.can.view">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 24 24"
                                     fill="currentColor"
-                                    class="w-4 h-4 text-blue-600 hover:cursor-pointer"
+                                    class="h-4 w-4 text-blue-600 hover:cursor-pointer"
                                     @click="show(item.id)"
                                 >
                                     <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
@@ -531,145 +575,179 @@ const startLeaveAnimation = () => {
             </Table>
             <!-- </Card> -->
         </Container>
-    </Layout>
+    </AppLayout>
 
-    <Modal :show="deleteModal" @close="close">
-        <template #title>
-            <span class="text-red-800">{{ $t("general.delete") }} : </span>
-            {{
-                deleteMultipleItems
-                    ? $t("general.all_selected")
-                    : itemToDelete[0].name
-            }}
-        </template>
-        <template #content>
-            {{ $t("general.delete confirmation") }}
-        </template>
-        <template #footer>
-            <Button
-                @click="handleDeleteItem"
-                :disabled="isDeleting"
-                color="red"
-            >
-                <span class="px-6" v-if="isDeleting">{{
-                    $t("general.deleting")
-                }}</span>
-                <span class="px-6" v-else>{{ $t("general.delete") }}</span>
-            </Button>
-        </template>
-    </Modal>
+    <AlertDialog :destroyRoute="destroy" />
 
-    <DialogModal :show="dialogModal" @close="closeDialogModal" maxWidth="5xl">
-        <template #title>
-            {{
-                editMode == true
-                    ? $t("general.edit system admin")
-                    : $t("general.add new system admin")
-            }}
-        </template>
+    <DialogModal :title="editMode ? 'update admin' : 'add new admin'">
+        <Form
+            v-bind="editMode ? update.form(currentItem.id) : store.form()"
+            :reset-on-success="['name.ar', 'name.en', 'active']"
+            disable-while-processing
+            :show-progress="false"
+            @success="isOpen = false"
+            :options="{
+                preserveScroll: true,
+                preserveState: true,
+                preserveUrl: true,
+                replace: true,
+            }"
+            v-slot="{  errors, processing }"
+        >
+            <!-- :action=" editMode ? update(currentItem.id) : store()"
+            :method="editMode == true ? 'put' : 'post'" -->
 
-        <template #content>
-            <form @submit.prevent="addNewOrEdit">
-                <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <InputGroup
-                        class="mt-1 px-0"
-                        label="name in arabic"
-                        translationFolder="general."
-                        v-model="form.name.ar"
-                        :error-message="props.errors['name.ar']"
-                    />
-                    <InputGroup
-                        class="mt-1 px-0"
-                        label="name in english"
-                        translationFolder="general."
-                        v-model="form.name.en"
-                        :error-message="props.errors['name.en']"
-                    />
-
-                    <InputGroup
-                        class="mt-1 px-0"
-                        label="email"
-                        type="email"
-                        translationFolder="general."
-                        v-model="form.email"
-                        :errorMessage="props.errors.email"
-                    />
-
-                    <InputGroup
-                        class="mt-1 px-0"
-                        label="phone"
-                        type="text"
-                        translationFolder="general."
-                        v-model="form.phone"
-                        :errorMessage="props.errors.phone"
-                    />
-
-                    <InputGroup
-                        class="mt-1 px-0"
-                        label="password"
-                        type="password"
-                        translationFolder="general."
-                        v-model="form.password"
-                        :errorMessage="props.errors.password"
-                    />
-                    <InputGroup
-                        class="mt-1 px-0"
-                        label="passwordConfirmation"
-                        type="password"
-                        translationFolder="general."
-                        v-model="form.passwordConfirmation"
-                        :errorMessage="props.errors.passwordConfirmation"
-                    />
-
-                    <SelectGroup
-                        class="mt-1"
-                        translationFolder="general."
-                        label="role"
-                        itemText="slug"
-                        v-model="form.roleId"
-                        :items="props.roles"
-                        :error-message="props.errors?.roleId"
-                    />
-                    <div>
-                        <span class="text-zinc-300 mx-5">{{
-                            $t("general.active")
-                        }}</span>
-                        <label
-                            class="xl:col-span-1 flex justify-start px-2 rtl:bg-gradient-to-r ltr:bg-gradient-to-l from-transparent rounded-full shadow-md border border-zinc-300/40"
-                            :class="
-                                form.active == true
-                                    ? 'to-sky-800'
-                                    : 'to-red-800'
-                            "
-                        >
-                            <div class="my-0.5">
-                                <CheckboxGroup
-                                    class=""
-                                    :label="active"
-                                    v-model:checked="form.active"
-                                    :errorMessage="props.errors.active"
-                                />
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="flex justify-center mt-4">
-                    <button
-                        :disabled="form.processing"
-                        type="submit"
-                        class="mb-2 px-12 py-1 rounded-full text-white bg-gradient-to-l from-orange-800 to-orange-500 hover:from-orange-900 hover:to-orange-500 border-orange-100 duration-300 capitalize tracking-wider ease-in-out hover:scale-110 shadow-black drop-shadow-2xl shadow-2xl border text-sm"
+            <div class="grid grid-cols-2 gap-2 align-middle">
+                <div>
+                    <Label for="name.ar" class="dialog-label"
+                        >name in arabic</Label
                     >
-                        {{
-                            form.processing
-                                ? $t("general.saving")
-                                : $t("general.save")
-                        }}
-                    </button>
+
+                    <Input
+                        class="dialog-input mt-2"
+                        id="name.ar"
+                        name="name.ar"
+                        v-model="currentItem.name.ar"
+                    />
+                    <!-- <Input
+                        class="dialog-input mt-2"
+                        id="name.ar"
+                        name="name.ar"
+                        :default-value="currentItem['name']"
+                    /> -->
+                    <InputError :message="errors['name.ar']" />
+                </div>
+                <div>
+                    <Label for="name.en" class="dialog-label"
+                        >name in english</Label
+                    >
+                    <Input
+                        class="dialog-input mt-2"
+                        id="name.en"
+                        name="name.en"
+                        v-model="currentItem.name.en"
+                    />
+                    <InputError :message="errors['name.en']" />
+                </div>
+                <div>
+                    <Label for="email" class="dialog-label">email</Label>
+                    <Input
+                        class="dialog-input mt-2"
+                        id="email"
+                        name="email"
+                        type="email"
+                        v-model="currentItem.email"
+                    />
+                    <InputError :message="errors.email" />
+                </div>
+                <div>
+                    <Label for="phone" class="dialog-label">phone</Label>
+                    <Input
+                        class="dialog-input mt-2"
+                        id="phone"
+                        name="phone"
+                        v-model="currentItem.phone"
+                    />
+                    <InputError :message="errors.phone" />
+                </div>
+                <div>
+                    <Label for="password" class="dialog-label">password</Label>
+                    <Input
+                        class="dialog-input mt-2"
+                        id="password"
+                        name="password"
+                        type="password"
+                        v-model="currentItem.password"
+                    />
+                    <InputError :message="errors.password" />
+                </div>
+                <div>
+                    <Label for="passwordConfirmation" class="dialog-label"
+                        >password Confirmation</Label
+                    >
+                    <Input
+                        class="dialog-input mt-2"
+                        id="passwordConfirmation"
+                        name="passwordConfirmation"
+                        type="password"
+                        v-model="currentItem.passwordConfirmation"
+                    />
+                    <InputError :message="errors.passwordConfirmation" />
                 </div>
 
-                <!-- /////////////////////////////////////////////////// -->
-            </form>
-        </template>
+                <div>
+                    <Label class="dialog-label">active</Label>
+                    <Label
+                        for="is_active"
+                        class="mt-2 rounded-md border border-gray-400/50 p-2 ltr:bg-linear-to-r rtl:bg-linear-to-l"
+                        :class="
+                            currentItem.active == true
+                                ? 'from-green-500/30 to-green-500/10'
+                                : 'from-red-500/30 to-red-500/10'
+                        "
+                    >
+                        <Checkbox
+                            class="dialog-input"
+                            id="is_active"
+                            name="active"
+                            v-model:checked="currentItem.active"
+                        />
+                        <span>active</span>
+                    </Label>
+                    <InputError :message="errors.active" />
+                </div>
+
+
+                 <Input
+                 hidden
+                        id="roleId"
+                        name="roleId"
+                        v-model="currentItem.roleId"
+                    />
+
+                <div>
+                    <label>
+                        role
+                    </label>
+                    <Select v-model="currentItem.roleId" >
+                        <SelectTrigger >
+                            <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectLabel>roles</SelectLabel>
+                                <SelectItem 
+                                    v-for="(role, i) in props.roles"
+                                    :key="i"
+                                    :value="role.id"
+                                >
+                                    {{ role.name }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                    <InputError :message="errors.roleId" />
+                </div>
+            </div>
+
+
+            <div class="mt-5 flex items-center justify-center">
+                <DialogFooter>
+                    <!-- <DialogClose as-child>
+                                    <Button variant="outline"> Cancel </Button>
+                                </DialogClose> -->
+                    <Button
+                        class="rounded-full hover:scale-110 hover:cursor-pointer"
+                        variant="linear_orange"
+                        size="md"
+                        type="submit"
+                        :disabled="processing"
+                    >
+                        <Spinner v-if="processing" />
+                        Save changes
+                    </Button>
+                </DialogFooter>
+            </div>
+        </Form>
     </DialogModal>
 </template>

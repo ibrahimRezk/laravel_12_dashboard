@@ -209,27 +209,27 @@ class AdminController extends Controller implements HasMiddleware
 
     public function store(AdminRequest $request)
     {
+        
         try {
-            DB::beginTransaction();
             $data = $request->safe()->only([
                 'email',
                 'active',
             ]);
-
             $data["name"]["ar"] = $request->name['ar'];
             $data["name"]["en"] = $request->name['en'];
+            $data['active'] = $request->boolean('active');
             $data["password"] = Hash::make($request->safe()->password);
             $user = User::create($data);
-
+            
             // admin code
-
+            
             $adminData = [
                 'added_by' => auth()->user()->id,
                 'phone' => $request->phone,
             ];
 
             $admin = Admin::create($adminData);
-
+            
             // to add profile to the user we have two options 
             $admin->user()->save($user); 
 
@@ -237,20 +237,21 @@ class AdminController extends Controller implements HasMiddleware
             // $user->profile_type = 'App\Models\Admin' ;
             // $user->save();
             
-
-
-            $user->assignRole($request->roleId);
-
+            
+            
+            
             // update used before field
             $role = Role::find($request->roleId);
             $role->used_before = true;
             $role->save();
-
+            // $user->assignRole($request->roleId);
+            $user->assignRole($role);
 
             DB::commit();
             // dd('$role');
             return redirect()->back()->with('success', 'item created successfully');
         } catch (\Throwable $th) {
+            dd('error');
             DB::rollBack();
             return redirect()->back()->with('error', $th->getMessage());
         }
@@ -258,13 +259,13 @@ class AdminController extends Controller implements HasMiddleware
 
 
 
-    public function update(AdminRequest $request, $id)
+    public function update(AdminRequest $request, User $user)
     {
 
         try {
             DB::beginTransaction();
 
-            $user = User::find($id);
+            // $user = User::find($id);
             $data = $request->safe()->only(['email', 'active']);
 
             $request->password !== null ? $data['password'] = bcrypt($request->safe()->password) : '';
@@ -283,13 +284,13 @@ class AdminController extends Controller implements HasMiddleware
                 ]);
             }
 
-            $user->syncRoles($request->roleId);
-
+            
             // update used before field
             $role = Role::find($request->roleId);
             $role->used_before = true;
             $role->save();
-
+            
+            $user->syncRoles($role);
             DB::commit();
             return back()->with('success', 'item updated successfully');
         } catch (\Throwable $th) {
@@ -310,15 +311,15 @@ class AdminController extends Controller implements HasMiddleware
                 $user = User::find($id);
                 $admin = Admin::find($user->profile_id);
 
-                if (empty($admin)) {
-                    continue;
-                }
-
+                
                 if (!auth()->user()->can('delete admin') || $user->used_before == true) {
                     abort(403, 'general.you can not delete an item that has previous activity on the system or you do not have permission');
                 }
-
-                $admin->delete();
+                
+                if (!empty($admin)) {
+                    // continue;
+                    $admin->delete();
+                }
                 $user->delete();
 
 
