@@ -234,6 +234,7 @@ const fillForm = (item: fillFormType) => {
     );
     currentItem.name.ar = item['name.ar'];
     currentItem.name.en = item['name.en'];
+    currentItem.active = item.profile?.active;
     currentItem.roleId = item?.roles?.[0]?.id;
 };
 
@@ -455,13 +456,13 @@ const startLeaveAnimation = () => {
                                 <Button
                                     v-if="f.data"
                                     class="mx-1 mt-2 flex items-center justify-between"
-                                    small
+                                    size="sm"
                                     variant="transparent_yellow"
                                 >
                                     {{ $t('general.' + i) }} :
                                     <Button
                                         class="my-1 flex ltr:ml-1 rtl:mr-1"
-                                        small
+                                        size="sm"
                                         variant="transparent_yellow"
                                     >
                                         <span>
@@ -478,7 +479,7 @@ const startLeaveAnimation = () => {
                             </span>
                             <Button
                                 class="mx-1 mt-2 w-40 hover:cursor-pointer"
-                                small
+                                size="sm"
                                 variant="transparent_red"
                             >
                                 <span @click="resetFilter">{{
@@ -533,7 +534,7 @@ const startLeaveAnimation = () => {
                         <!-- {{  new Date(item.created_at).toLocaleString() }} -->
                     </Td>
                     <Td bold v-show="showColumnItems('updated_at')">
-                        <Button variant="linear_orange" small>
+                        <Button variant="linear_orange" size="sm">
                             {{ item.updated_at_formatted }}
                         </Button>
 

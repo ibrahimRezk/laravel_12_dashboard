@@ -29,7 +29,8 @@ class UserResource extends JsonResource
             // 'name_ar' => $this->whenNotNull($this->translate('en')->name), // delete this if database has arabic content and activate above one this will keep showing name_ar and name_en both in english if not changed to ar but if database has no arabic data it will return error in index becase name ar is null
 
 
-
+            'active' => $this->whenNotNull($this->active),
+            'used_before' => $this->whenNotNull($this->used_before),
 
             'email' => $this->when($this->email, $this->email),
 

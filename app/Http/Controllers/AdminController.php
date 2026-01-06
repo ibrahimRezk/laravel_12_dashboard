@@ -50,7 +50,7 @@ class AdminController extends Controller implements HasMiddleware
     public function index(Request $request)
     {
         // ddd($this);
-        // dd($request);
+        // dd($request->active);
         $users = User::query()
             ->select([
                 'id',
@@ -209,7 +209,6 @@ class AdminController extends Controller implements HasMiddleware
 
     public function store(AdminRequest $request)
     {
-        
         try {
             $data = $request->safe()->only([
                 'email',
@@ -221,13 +220,14 @@ class AdminController extends Controller implements HasMiddleware
             $data["password"] = Hash::make($request->safe()->password);
             $user = User::create($data);
             
+            // dd($request);
             // admin code
             
             $adminData = [
                 'added_by' => auth()->user()->id,
                 'phone' => $request->phone,
             ];
-
+            
             $admin = Admin::create($adminData);
             
             // to add profile to the user we have two options 
@@ -251,7 +251,7 @@ class AdminController extends Controller implements HasMiddleware
             // dd('$role');
             return redirect()->back()->with('success', 'item created successfully');
         } catch (\Throwable $th) {
-            dd('error');
+            // dd($th->getMessage());
             DB::rollBack();
             return redirect()->back()->with('error', $th->getMessage());
         }

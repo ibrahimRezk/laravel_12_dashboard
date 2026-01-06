@@ -177,7 +177,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const breadcrumb: BreadcrumbItem[] = [
     {
-        title: 'admins',
+        title: 'system admins',
         href: AdminController.index(),
     },
     {

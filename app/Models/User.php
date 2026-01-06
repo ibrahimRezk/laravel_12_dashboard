@@ -34,6 +34,8 @@ class User extends Authenticatable implements HasMedia
         'email',
         'password',
         'avatar',
+        'active',
+        'used_before',
     ];
 
 
@@ -71,5 +73,15 @@ class User extends Authenticatable implements HasMedia
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
         ];
+    }
+
+        public function scopeActive($builder)
+    {
+        return $builder->where('active', true);
+    }
+
+    public function scopeInActive($builder)
+    {
+        return $builder->where('active', false);
     }
 }

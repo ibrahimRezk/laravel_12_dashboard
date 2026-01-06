@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            
+            $table->boolean('active')->default(true);
+            $table->boolean('used_before')->default(false);
 
             $table->string('profile_type')->nullable();
             $table->unsignedBigInteger('profile_id')->nullable();
