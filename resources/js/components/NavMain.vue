@@ -114,16 +114,16 @@ const end = (el: HTMLElement): undefined => {
                             <span class="flex gap-3">
                                  <AppLogoIcon
                                 class="size-5 fill-current text-black/70  "
-                                :class="item.isActive ? 'dark:text-black/70' : 'dark:text-white/70'"
+                                :class="item.isActive ? 'dark:text-black/70' : 'dark:text-white/60'"
                                 />
 
-                                <span> {{ item.title }} </span>
+                                <span :class="item.isActive ? 'dark:text-black/70' : 'dark:text-white/60'"> {{ item.title }} </span>
                             </span>
 
                             <svg
                                 v-if="current_lang == 'ar'"
                                 :class="{
-                                    '-rotate-90 transition duration-300 ease-in-out dark:text-white/70':
+                                    '-rotate-90 transition duration-300 ease-in-out dark:text-white/60':
                                         item.open,
                                     'rotate-0 transition duration-300 ease-in-out':
                                         !item.open,
@@ -142,7 +142,7 @@ const end = (el: HTMLElement): undefined => {
                             <svg
                                 v-else
                                 :class="{
-                                    'rotate-90 transition duration-300 ease-in-out dark:text-white/70':
+                                    'rotate-90 transition duration-300 ease-in-out dark:text-white/60':
                                         item.open,
                                     'rotate-0 transition duration-300 ease-in-out':
                                         !item.open,
@@ -189,6 +189,7 @@ const end = (el: HTMLElement): undefined => {
                         "
                                     >
                                         <Link :href="subItem.href"
+                                        
                                             >{{ subItem.title }}
                                         </Link>
                                     </SidebarMenuSubButton>
@@ -217,10 +218,10 @@ const end = (el: HTMLElement): undefined => {
                             <span class="flex gap-3">
                                 <AppLogoIcon
                                 class="size-5 fill-current text-black/70  "
-                                :class="item.isActive ? 'dark:text-black/70' : 'dark:text-white/70'"
+                                :class="item.isActive ? 'dark:text-black/70' : 'dark:text-white/60'"
                                 />
                                 
-                                <span> {{ item.title }} </span>
+                                <span :class="item.isActive ? 'dark:text-black/70' : 'dark:text-white/60'"> {{ item.title }} </span>
                             </span>
                         </span>
 
