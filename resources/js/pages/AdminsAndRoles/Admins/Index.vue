@@ -220,6 +220,7 @@ const currentItem: fillFormType = useForm({
         en: '',
     },
     active: true,
+    phone : '',
     email: '',
     password: '',
     passwordConfirmation: '',
@@ -234,7 +235,7 @@ const fillForm = (item: fillFormType) => {
     );
     currentItem.name.ar = item['name.ar'];
     currentItem.name.en = item['name.en'];
-    currentItem.active = item.profile?.active;
+    currentItem.phone = item.profile?.phone;
     currentItem.roleId = item?.roles?.[0]?.id;
 };
 
