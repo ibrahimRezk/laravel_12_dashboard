@@ -74,18 +74,18 @@ const direction = computed(() => {
                     </template>
 
                     <template #content>
-                        <div></div>
                         <DropdownLink
                             @click="animate = false"
                             :href="profileLink()"
                         >
-                            <div class="flex">
+                            <div class="flex items-start justify-start gap-2 w-full ">
                                  <div class="my-auto">
-                                    <Settings2 class="mr-2 h-4 w-4" />
-                                </div>
-                                <div class="flex flex-col justify-center">
+                                   <Settings2 class="mr-2 h-4 w-4" />
+                               </div>
+                                <div>
                                     settings
                                 </div>
+                               
                             </div>
                         </DropdownLink>
 
@@ -95,16 +95,14 @@ const direction = computed(() => {
                             @click="handleLogout"
                             data-test="logout-button"
                         >
-                            <div class="flex">
+                            <div class="flex items-start justify-start gap-2 w-full ">
                                 <div class="my-auto">
                                     <LogOut class="mr-2 h-4 w-4" />
                                 </div>
-                                <div class="flex flex-col justify-center">
-                                    <span
-                                        class="text-size-sm mb-1 leading-normal font-normal"
-                                        >Log out</span
-                                    >
+                                <div>
+                                   Log out
                                 </div>
+                                
                             </div>
                         </DropdownLink>
                     </template>
