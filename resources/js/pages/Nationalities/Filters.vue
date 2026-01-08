@@ -84,7 +84,7 @@ onMounted(() => {
 
 <template>
     <Card :is-loading="isLoading" :noPadding="noPadding">
-        <div class="relative gap-2">
+        <div class="relative grid gap-2">
             <div>
                 <Label for="name" class="dialog-label">
                     {{ $t('general.name') }}
@@ -96,6 +96,13 @@ onMounted(() => {
                     v-model="filters.name"
                 />
             </div>
+
+            
+            <div>
+
+                <Label for="name" class="dialog-label">
+                    {{ $t('general.status') }}
+                </Label>
 
             <Listbox v-model="filters.active">
                 <div class="relative">
@@ -143,6 +150,7 @@ onMounted(() => {
                     </ListboxOptions>
                 </div>
             </Listbox>
+        </div>
         </div>
     </Card>
 </template>
