@@ -86,12 +86,13 @@ onMounted(() => {
     <Card :is-loading="isLoading" :noPadding="noPadding">
         <div class="relative grid gap-2">
             <div>
-                <Label for="name" class="dialog-label">
+                <!-- <Label for="name" class="dialog-label">
                     {{ $t('general.name') }}
-                </Label>
+                </Label> -->
                 <Input
                     class="dialog-input mt-2"
                     id="name"
+                    placeholder="name"
                     name="name"
                     v-model="filters.name"
                 />
@@ -100,22 +101,22 @@ onMounted(() => {
             
             <div>
 
-                <Label for="name" class="dialog-label">
+                <!-- <Label for="name" class="dialog-label">
                     {{ $t('general.status') }}
-                </Label>
+                </Label> -->
 
             <Listbox v-model="filters.active">
                 <div class="relative">
-                    <ListboxButton
-                        class="relative flex justify-between w-full cursor-default rounded-lg bg-white/30 py-2 pr-10 pl-3 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm dark:bg-zinc-700 my-2"
-                    >
-                        <span>
+                      <ListboxButton
+                            class="relative flex justify-between w-full cursor-default rounded-lg bg-white/10 py-2 pr-10 pl-3 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm dark:bg-zinc-800 my-2 border border-gray-200/20"
+                        >
+                            <span class=" dark:text-zinc-400 text-zinc-800">
                             {{
                                 filters.active === 1
                                     ? $t('general.active')
                                     : filters.active === 0
                                     ? $t('general.inactive')
-                                    : $t('general.select')
+                                    : $t('general.select status')
                             }}
                         </span>
                         <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">

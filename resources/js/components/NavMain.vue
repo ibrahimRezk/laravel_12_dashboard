@@ -102,7 +102,7 @@ const end = (el: HTMLElement): undefined => {
                         as-child
                         :is-active="item.isActive"
                         @click="openCloseSubMenu(item)"
-                        class="border hover:cursor-pointer ltr:bg-linear-to-r rtl:bg-linear-to-l"
+                        class="border hover:cursor-pointer ltr:bg-linear-to-r rtl:bg-linear-to-l "
                         :class="
                             item.isActive
                                 ? 'to-black/30 dark:to-black/70 hover:to-black/50 dark:from-white/70 dark:via-white/40  dark:hover:from-white/80 dark:hover:via-white/60 dark:text-zinc-900 '
@@ -123,15 +123,15 @@ const end = (el: HTMLElement): undefined => {
                             <svg
                                 v-if="current_lang == 'ar'"
                                 :class="{
-                                    '-rotate-90 transition duration-300 ease-in-out dark:text-white/60':
+                                    '-rotate-90 ':
                                         item.open,
-                                    'rotate-0 transition duration-300 ease-in-out':
+                                    'rotate-0':
                                         !item.open,
                                 }"
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                                 fill="currentColor"
-                                class="h-4 w-4"
+                                class="h-4 w-4 transition duration-300 ease-in-out dark:text-white/60"
                             >
                                 <path
                                     fill-rule="evenodd"
@@ -142,15 +142,15 @@ const end = (el: HTMLElement): undefined => {
                             <svg
                                 v-else
                                 :class="{
-                                    'rotate-90 transition duration-300 ease-in-out dark:text-white/60':
+                                    'rotate-90':
                                         item.open,
-                                    'rotate-0 transition duration-300 ease-in-out':
+                                    'rotate-0':
                                         !item.open,
                                 }"
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                                 fill="currentColor"
-                                class="h-4 w-4"
+                                class="h-4 w-4 transition duration-300 ease-in-out dark:text-white/60"
                             >
                                 <path
                                     fill-rule="evenodd"
@@ -168,8 +168,8 @@ const end = (el: HTMLElement): undefined => {
                         @before-leave="start"
                         @after-leave="end"
                     >
-                        <div v-show="item.open" v-if="item?.subMenus?.length">
-                            <SidebarMenuSub>
+                        <div v-show="item.open" v-if="item?.subMenus?.length" >
+                            <SidebarMenuSub class="dark:bg-transparent">
                                 <SidebarMenuSubItem
                                     v-for="subItem in item.subMenus"
                                     :key="subItem.title"
@@ -181,7 +181,7 @@ const end = (el: HTMLElement): undefined => {
                                         :is-active="subItem.isActive"
 
                                         @click="startLeaveAnimation"
-                                        class="border hover:cursor-pointer ltr:bg-linear-to-r rtl:bg-linear-to-l"
+                                        class="border hover:cursor-pointer ltr:bg-linear-to-r rtl:bg-linear-to-l "
                                        :class="
                             subItem.isActive
                                 ? 'to-black/30 dark:to-black/70  hover:to-black/50 dark:from-white/70 dark:via-white/40  dark:hover:from-white/80 dark:hover:via-white/60 font-bold dark:text-zinc-900 '
