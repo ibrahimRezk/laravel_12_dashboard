@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Role;
 use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Support\Facades\DB;
@@ -80,9 +81,11 @@ class AppServiceProvider extends ServiceProvider
 
 
 
-
-        Gate::before(function ($user, $ability) {
-            return $user->hasRole('Super Admin') ? true : null;
+        $superAdmin = Role::first();
+        
+        Gate::before(function ($user, $ability)use($superAdmin) {
+            return $user->hasRole($superAdmin->name) ? true : null;
+            // return $user->hasRole('Super Admin') ? true : null;
         });
 
 

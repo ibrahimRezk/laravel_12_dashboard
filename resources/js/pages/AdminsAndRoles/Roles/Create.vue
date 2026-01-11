@@ -1,25 +1,23 @@
 <script setup lang="ts">
-import {  onMounted } from "vue";
-import { Head, useForm, Form } from "@inertiajs/vue3";
-import Container from "@/components/Container.vue";
-import InputError from "@/components/InputError.vue";
+import Container from '@/components/Container.vue';
+import InputError from '@/components/InputError.vue';
+import { Form, Head, useForm } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
 
-
-import AppLayout from '@/layouts/AppLayout.vue';
-import { type   BreadcrumbItem    ,fillFormType   } from '@/types';
+import RolesController from '@/actions/App/Http/Controllers/RolesController';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import RolesController from "@/actions/App/Http/Controllers/RolesController";
-import {  store , update  } from '@/routes/roles'
-import Label from "@/components/ui/label/Label.vue";
+import Label from '@/components/ui/label/Label.vue';
 import Spinner from '@/components/ui/spinner/Spinner.vue';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { store, update } from '@/routes/roles';
+import { type BreadcrumbItem, fillFormType } from '@/types';
 
-import Permissions from "./Permissions.vue";
-
+import Permissions from './Permissions.vue';
 
 interface rolePermission {
-    id: number,
-    name: string
+    id: number;
+    name: string;
 }
 
 interface role {
@@ -29,25 +27,21 @@ interface role {
         ar: string;
         en: string;
     };
-    permissions: rolePermission[]
-
+    permissions: rolePermission[];
 }
 
-
-
 interface permission {
-    id: number ,
-    name:string ,
-    permissions: string[]
-
+    id: number;
+    name: string;
+    permissions: string[];
 }
 
 interface Props {
     edit?: boolean;
     title?: string;
     // routeResourceName?: string;
-    item?: role; 
-    pagesPermissions?: permission[]; 
+    item?: role;
+    pagesPermissions?: permission[];
     // headers?: header[];
     // filters?: Record<string, any>;
     errors?: Record<string, any>;
@@ -55,29 +49,22 @@ interface Props {
     // can?: permissions;
 }
 
-
-
-
 // const props = defineProps<Props>()
 const props = withDefaults(defineProps<Props>(), {
     edit: false,
     title: '',
     item: () => ({
-       id: 0,
-       name: '',
+        id: 0,
+        name: '',
         slug: {
-        ar: '',
-        en: ''
-    },
-        permissions : []
-
+            ar: '',
+            en: '',
+        },
+        permissions: [],
     }),
-    pagesPermissions: () => ([]),
+    pagesPermissions: () => [],
     errors: () => ({}),
-
 });
-
-
 
 // const props = defineProps({
 //     edit: {
@@ -122,9 +109,6 @@ const breadcrumb: BreadcrumbItem[] = [
     },
 ];
 
-
-
-
 // const form = useForm({
 //     name: props.item.name ?? "",
 //     slug: {
@@ -148,113 +132,114 @@ const breadcrumb: BreadcrumbItem[] = [
 //         : form.post(route(`${props.routeResourceName}.store`));
 // };
 
-const currentItem:fillFormType = useForm({
-    id : 0 ,
-    name : 0 ,
+const currentItem: fillFormType = useForm({
+    id: 0,
+    name: 0,
     slug: {
         ar: '',
         en: '',
     },
 });
 
-const fillForm = (item:fillFormType) => {
+const fillForm = (item: fillFormType) => {
     Object.keys(currentItem).forEach((key) =>
-        item[key] !== undefined && key !== "slug" ? (currentItem[key] = item[key]) : ""
+        item[key] !== undefined && key !== 'slug'
+            ? (currentItem[key] = item[key])
+            : '',
     );
-    currentItem.slug.ar = item["slug.ar"];
-    currentItem.slug.en = item["slug.en"];
+    currentItem.slug.ar = item['slug.ar'];
+    currentItem.slug.en = item['slug.en'];
 };
 
-onMounted(()=> props.edit ? fillForm(props.item) : '')
-
-
+onMounted(() => (props.edit ? fillForm(props.item) : ''));
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumb" :header=" props.edit ? 'edit role' : 'add new role'">
-            <Head :title="props.title" />
-            <Container>
+    <AppLayout
+        :breadcrumbs="breadcrumb"
+        :header="props.edit ? 'edit role' : 'add new role'"
+    >
+        <Head :title="props.title" />
+        <Container>
             <div
-                class="p-2  border border-zinc-300 rounded-lg rtl:bg-linear-to-r ltr:bg-linear-to-l from-blue-300/20 shadow-md via-yellow-100/20 to-blue-300/20"
+                class="rounded-lg border border-zinc-300 from-blue-300/20 via-yellow-100/20 to-blue-300/20 p-2 shadow-md ltr:bg-linear-to-l rtl:bg-linear-to-r"
             >
- <Form
-            v-bind=" edit ? update.form(1) :  store.form()"
-            disable-while-processing
-            :show-progress="false"
-            v-slot="{ errors, processing }"
-            >
-            
-            <div class="grid md:grid-cols-7 gap-3  ">
-
-                 <Input
-                        hidden
-                        id="name"
-                        name="name"
-                        v-model="currentItem.slug.en"
-                    />
+                <Form
+                    v-bind="edit ? update.form(currentItem.id) : store.form()"
+                    disable-while-processing
+                    :show-progress="false"
+                    v-slot="{ errors, processing }"
+                >
+                    <div class="grid gap-3 md:grid-cols-7">
+                        <Input
+                            hidden
+                            id="name"
+                            name="name"
+                            v-model="currentItem.slug.en"
+                        />
                         <div
-                            class="md:col-span-3 grid  border border-gray-200/20 rounded p-2 bg-black/20"
+                            class="grid rounded border border-gray-200/20 bg-black/20 p-2 md:col-span-3"
                             type="button"
                             variant="transparent_red"
                         >
                             <Label>
                                 <div class="flex items-start">
-                                    {{ $t("general.name in arabic") }}
+                                    {{ $t('general.name in arabic') }}
                                 </div>
                             </Label>
 
                             <Input
-                        class="dialog-input mt-2"
-                        id="slug.ar"
-                        name="slug.ar"
-                        v-model="currentItem.slug.ar"
-                    />
+                                class="dialog-input mt-2"
+                                id="slug.ar"
+                                name="slug.ar"
+                                v-model="currentItem.slug.ar"
+                            />
                             <InputError
-                                    class="mt-1"
-                                    :message="errors['slug.ar']"
-                                />
+                                class="mt-1"
+                                :message="errors['slug.ar']"
+                            />
                         </div>
 
-                    <div
-                            class="md:col-span-3 grid  border border-gray-200/20 rounded p-2 bg-black/20"
+                        <div
+                            class="grid rounded border border-gray-200/20 bg-black/20 p-2 md:col-span-3"
                             type="button"
                             variant="transparent_red"
                         >
                             <Label>
                                 <div class="flex items-start">
-                                    {{ $t("general.name in english") }}
+                                    {{ $t('general.name in english') }}
                                 </div>
                             </Label>
 
                             <Input
-                        class="dialog-input mt-2"
-                        id="slug.en"
-                        name="slug.en"
-                        v-model="currentItem.slug.en"
-                    />
+                                class="dialog-input mt-2"
+                                id="slug.en"
+                                name="slug.en"
+                                v-model="currentItem.slug.en"
+                            />
                             <InputError
-                                    class="mt-1"
-                                    :message="errors['slug.en']"
-                                />
+                                class="mt-1"
+                                :message="errors['slug.en']"
+                            />
                         </div>
-                        <div class=" w-full  flex justify-center items-center ">
+                        <div class="flex w-full items-center justify-center">
                             <Button
-                                class="px-10 my-4 py-1 rounded-full text-white bg-linear-to-l from-orange-800 to-orange-500 hover:from-orange-900 hover:to-orange-500 border-orange-100 duration-300 capitalize tracking-wider ease-in-out hover:scale-110 shadow-black drop-shadow-2xl shadow-2xl border text-sm hover:cursor-pointer"
-                        variant="linear_orange"
-                        size="md"
-                        type="submit"
-                        :disabled="processing"
-                    >
-                        <Spinner v-if="processing" />
-                        Save
-                    </Button>
-
+                                class="my-4 rounded-full border border-orange-100 bg-linear-to-l from-orange-800 to-orange-500 px-10 py-1 text-sm tracking-wider text-white capitalize shadow-2xl shadow-black drop-shadow-2xl duration-300 ease-in-out hover:scale-110 hover:cursor-pointer hover:from-orange-900 hover:to-orange-500"
+                                variant="linear_orange"
+                                size="md"
+                                type="submit"
+                                :disabled="processing"
+                            >
+                                <Spinner v-if="processing" />
+                                Save
+                            </Button>
                         </div>
                     </div>
                 </Form>
             </div>
+            <!-- v-if="edit && props.item.name != 'Super Admin'" -->
             <Permissions
-                v-if="edit && props.item.name != 'Super Admin'"
+                v-if="edit && props.item.id != 1"
                 :item="item"
                 :pagesPermissions="props.pagesPermissions"
             />

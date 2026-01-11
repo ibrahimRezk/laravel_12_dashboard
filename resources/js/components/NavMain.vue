@@ -201,6 +201,7 @@ const end = (el: HTMLElement): undefined => {
 
                 <div v-else>
                     <SidebarMenuButton
+                    v-if="item.isVisible"
                         as-child
                         :is-active="item.isActive"
                         class="border hover:cursor-pointer ltr:bg-linear-to-r rtl:bg-linear-to-l transition-colors"

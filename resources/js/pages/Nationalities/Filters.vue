@@ -10,7 +10,7 @@ import {
 
 import Card from '@/components/Card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
-import Label from '@/components/ui/label/Label.vue';
+// import Label from '@/components/ui/label/Label.vue';
 
 // 1. Define specific interfaces
 interface Filters {
