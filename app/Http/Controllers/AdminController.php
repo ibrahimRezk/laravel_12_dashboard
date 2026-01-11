@@ -87,6 +87,7 @@ class AdminController extends Controller implements HasMiddleware
             ->paginate(pagination())->onEachSide(1)->appends(request()->query());
 
 
+            
 
 
         // $breadcrumbs = Breadcrumbs::render('admins');

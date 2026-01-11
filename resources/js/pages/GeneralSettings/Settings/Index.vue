@@ -432,7 +432,7 @@ const theadClass = computed(() => {
                                     <div
                                         v-for="(day, index) in form.weekendDays"
                                         :key="index"
-                                        class="mx-1  text-xs text-yellow-200 flex "
+                                        class="mx-1 bg-black/30 text-xs text-yellow-200 flex border border-gray-100/20 px-2  rounded-full"
                                     >
                                         <!-- {{ day }} -->
                                         {{ $t('general.' + day.name) }}
@@ -475,7 +475,10 @@ const theadClass = computed(() => {
                                     </span>
                                 </td>
                             </tr>
-                       
+
+                        
+
+
                             <tr :class="trClasses">
                                 <th
                                     @click="editTab(0)"

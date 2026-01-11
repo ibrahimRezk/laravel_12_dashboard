@@ -52,7 +52,6 @@ class RolesSeeder extends Seeder
 
 
 
-
         // $employeeRole = Role::where('name', '=', 'Employee')->first();
 
         // $employeeRole !== null ? $employeeRole->delete() : '';
