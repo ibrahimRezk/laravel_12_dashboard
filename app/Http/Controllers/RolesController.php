@@ -163,7 +163,8 @@ class RolesController extends Controller implements HasMiddleware
         try {
 
 
-            if ($role->name == 'Super Admin') {
+            // if ($role->name == 'Super Admin') {
+            if ($role->id == 1) {
                 abort(403, 'general.can not delete super admin role');
             }
 

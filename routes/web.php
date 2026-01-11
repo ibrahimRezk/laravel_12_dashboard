@@ -70,12 +70,29 @@ require __DIR__.'/settings.php';
 
 // breadcrumb multiple stage , darkmode delete modal
 
+///////////////////////////////////////////////////////////////////////////////////////
 // check pos and hrms userresource this line :
 //                 'show' => $request->user()?->can('show user'),
 // has to be
 //                 'view' => $request->user()?->can('view user'),
+// in pos and hrms fix this :
+// in appserviceprovider
+// $superAdmin = Role::first();
+        
+//         Gate::before(function ($user, $ability)use($superAdmin) {
+//             return $user->hasRole($superAdmin->name) ? true : null;
+//             // return $user->hasRole('Super Admin') ? true : null;
+//         });
 
+// in role create.vue:
+// <!-- v-if="edit && props.item.name != 'Super Admin'" -->
+//             <Permissions
+//                 v-if="edit && props.item.id != 1"
+//                 :item="item"
+//                 :pagesPermissions="props.pagesPermissions"
+//             />
 
+///////////////////////////////////////////////////////////////////////////////////////
 
 
 // importan   on github inside selectgroup.vue    fix  this => import Select from "@/Components/Select.vue";    to "vue"

@@ -95,7 +95,8 @@ class AdminController extends Controller implements HasMiddleware
         return Inertia::render('AdminsAndRoles/Admins/Index', [
             'title' => 'system admins',
             'items' => UserResource::collection($users),
-            'roles' => RoleResource::collection(Role::where('name', '!=', 'Super Admin')->get()),
+            'roles' => RoleResource::collection(Role::where('id', '!=', 1)->get()),
+            // 'roles' => RoleResource::collection(Role::where('name', '!=', 'Super Admin')->get()),
 
             'headers' => [
                 [
