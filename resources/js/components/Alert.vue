@@ -1,144 +1,61 @@
 <script setup lang="ts">
 import { usePage } from '@inertiajs/vue3';
 import { trans } from 'laravel-vue-i18n';
-import { ref, watch } from 'vue';
-
-import type { FlashMessages } from '@/types';
-import { toast } from 'vue3-toastify';
+import { ref, watch, computed } from 'vue';
+import { toast, type ToastOptions } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 
+// Type definition based on your imports
+interface FlashMessages {
+    success?: string;
+    error?: string;
+}
+
+const page = usePage();
+
+// Safely get direction from HTML tag
 const direction = ref(
-    document.getElementsByTagName('html')[0].getAttribute('dir'),
+    document.getElementsByTagName('html')[0]?.getAttribute('dir') || 'ltr'
 );
 
-const props = withDefaults(
-    defineProps<{
-        success: FlashMessages['success'];
-        error: FlashMessages['error'];
-    }>(),
-    {
-        success: () => '',
-        error: () => '',
-    },
-);
+// Helper to trigger toast to keep code DRY
+const showToast = (message: string, type: 'success' | 'error') => {
+    if (!message) return;
 
+    const options: ToastOptions = {
+        type: type === 'success' ? toast.TYPE.SUCCESS : toast.TYPE.ERROR,
+        autoClose: 2500,
+        theme: 'colored',
+        position: direction.value === 'ltr' 
+            ? toast.POSITION.TOP_RIGHT 
+            : toast.POSITION.TOP_LEFT,
+        rtl: direction.value !== 'ltr',
+        transition: 'bounce',
+        hideProgressBar: false,
+        pauseOnHover: true,
+    };
 
+    toast(trans(`general.${message}`), options);
+};
 
+// Computed property to watch for changes in Inertia flash messages
+const flash = computed(() => page.props.messages as FlashMessages);
+
+// Watch the flash object for changes
 watch(
-    () => (usePage().props.messages as FlashMessages)?.success,
-    (successMessage) => {
-        if (successMessage !== null && successMessage !== '') {
-            toast(trans(`general.${successMessage}`), {
-                ////////////////////
-                type: toast.TYPE.SUCCESS, /////////////////////
-                autoClose: 2500,
-                theme: 'colored',
-                position:
-                    direction.value == 'ltr'
-                        ? toast.POSITION.TOP_RIGHT
-                        : toast.POSITION.TOP_LEFT,
-                rtl: direction.value == 'ltr' ? false : true,
-                transition: 'bounce', // flip , slide , zoom , bounce
-                hideProgressBar: false,
-                pauseOnHover: true,
-            });
+    () => flash.value,
+    (newFlash) => {
+        if (newFlash?.success) {
+            showToast(newFlash.success, 'success');
         }
-
-        // setTimeout(() => {
-        //     props.messages.success = '';
-        // }, 100);
-    },
-    {
-        immediate: true,
-    },
-);
-watch(
-    () => props.success,
-    (successMessage) => {
-        if (successMessage !== null && successMessage !== '') {
-            toast(trans(`general.${successMessage}`), {
-                ////////////////////
-                type: toast.TYPE.SUCCESS, /////////////////////
-                autoClose: 2500,
-                theme: 'colored',
-                position:
-                    direction.value == 'ltr'
-                        ? toast.POSITION.TOP_RIGHT
-                        : toast.POSITION.TOP_LEFT,
-                rtl: direction.value == 'ltr' ? false : true,
-                transition: 'bounce', // flip , slide , zoom , bounce
-                hideProgressBar: false,
-                pauseOnHover: true,
-            });
+        if (newFlash?.error) {
+            showToast(newFlash.error, 'error');
         }
-
-        // setTimeout(() => {
-        //     usePage().props.messages.success = '';
-        // }, 100);
     },
-    {
-        immediate: true,
-    },
-);
-
-watch(
-    () => (usePage().props.messages as FlashMessages)?.error,
-    (errorMessage) => {
-        if (errorMessage !== null && errorMessage !== '') {
-            toast(trans(`general.${errorMessage}`), {
-                ////////////////////
-                type: toast.TYPE.ERROR, /////////////////////
-                autoClose: 2500,
-                theme: 'colored',
-                position:
-                    direction.value == 'ltr'
-                        ? toast.POSITION.TOP_RIGHT
-                        : toast.POSITION.TOP_LEFT,
-                rtl: direction.value == 'ltr' ? false : true,
-                transition: 'bounce', // flip , slide , zoom , bounce
-                hideProgressBar: false,
-                pauseOnHover: true,
-            });
-        }
-
-        // setTimeout(() => {
-        //     usePage().props.messages.error = '';
-        // }, 100);
-    },
-    {
-        immediate: true,
-    },
-);
-
-watch(
-    () => props.error,
-    (errorMessage) => {
-        if (errorMessage !== null && errorMessage !== '') {
-            toast(trans(`general.${errorMessage}`), {
-                ////////////////////
-                type: toast.TYPE.ERROR, /////////////////////
-                autoClose: 2500,
-                theme: 'colored',
-                position:
-                    direction.value == 'ltr'
-                        ? toast.POSITION.TOP_RIGHT
-                        : toast.POSITION.TOP_LEFT,
-                rtl: direction.value == 'ltr' ? false : true,
-                transition: 'bounce', // flip , slide , zoom , bounce
-                hideProgressBar: false,
-                pauseOnHover: true,
-            });
-        }
-
-        // setTimeout(() => {
-        //     usePage().props.messages.error = '';
-        // }, 100);
-    },
-    {
-        immediate: true,
-    },
+    { immediate: true, deep: true }
 );
 </script>
+
 <template>
-    <div/>
+    <div v-if="false" />
 </template>

@@ -24,7 +24,7 @@ class NationalityRequest extends FormRequest
     public function rules(): array
     {
         $model = $this->route('nationality');
-        dd($model);
+        // dd($model);
         return [
             'name.*' => ['bail', 'required', 'string', 'max:255', UniqueTranslationRule::for('nationalities', 'name')->ignore($model?->id)],
 
