@@ -2,7 +2,7 @@
 import Container from '@/components/Container.vue';
 import InputError from '@/components/InputError.vue';
 import { Form, Head, useForm } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
+import { onMounted, watch } from 'vue';
 
 import RolesController from '@/actions/App/Http/Controllers/RolesController';
 import { Button } from '@/components/ui/button';
@@ -152,6 +152,8 @@ const fillForm = (item: fillFormType) => {
 };
 
 onMounted(() => (props.edit ? fillForm(props.item) : ''));
+
+watch(()=>  props.edit , ()=> (props.edit ? fillForm(props.item) : ''))
 </script>
 
 <template>

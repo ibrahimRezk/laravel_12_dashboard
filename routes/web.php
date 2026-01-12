@@ -92,6 +92,14 @@ require __DIR__.'/settings.php';
 //                 :pagesPermissions="props.pagesPermissions"
 //             />
 
+
+
+// add this line to create role afterAll(function () {
+    //...watch(()=>  props.edit , ()=> (props.edit ? fillForm(props.item) : ''))
+
+// });
+
+
 ///////////////////////////////////////////////////////////////////////////////////////
 
 
