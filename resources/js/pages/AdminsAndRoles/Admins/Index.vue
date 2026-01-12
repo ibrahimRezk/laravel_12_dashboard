@@ -711,14 +711,15 @@ const startLeaveAnimation = () => {
                     <label>
                         role
                     </label>
-                    <Select v-model="currentItem.roleId" >
-                        <SelectTrigger >
-                            <SelectValue placeholder="Select a role" />
+                    <Select v-model="currentItem.roleId">
+                        <SelectTrigger class="  rtl:flex-row-reverse h-8 -mt-0.5 bg-white/10 border-white/30  " >
+                            <SelectValue class=" font-semi-bold "   placeholder="Select a role" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent class=" w-83" >
                             <SelectGroup>
-                                <SelectLabel>roles</SelectLabel>
-                                <SelectItem 
+                                <SelectLabel class=" italic border-b  w-full flex rtl:flex-row-reverse">roles</SelectLabel>
+                               
+                                <SelectItem  class=" flex rtl:flex-row-reverse "
                                     v-for="(role, i) in props.roles"
                                     :key="i"
                                     :value="role.id"
