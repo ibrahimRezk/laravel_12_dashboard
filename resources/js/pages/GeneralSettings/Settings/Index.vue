@@ -428,15 +428,18 @@ const theadClass = computed(() => {
                                 <th @click="editTab(0)" :class="thClasses">
                                     {{ $t('general.weekend') }}
                                 </th>
-                                <td :class="tdClasses" class=" flex justify-between">
-                                    <div
-                                        v-for="(day, index) in form.weekendDays"
-                                        :key="index"
-                                        class="mx-1 bg-black/30 text-xs text-yellow-200 flex border border-gray-100/20 px-2  rounded-full"
-                                    >
-                                        <!-- {{ day }} -->
-                                        {{ $t('general.' + day.name) }}
+                                <td :class="tdClasses" class=" grid grid-cols-2">
+                                    <div>
+                                        <div
+                                            v-for="(day, index) in form.weekendDays"
+                                            :key="index"
+                                            class=" bg-black/30 text-xs text-yellow-200 flex border border-gray-100/20 px-2 w-full   rounded-full"
+                                        >
+                                            <!-- {{ day }} -->
+                                            {{ $t('general.' + day.name) }}
+                                        </div>
                                     </div>
+
                                     <Button
                                         size="md"
                                         variant="linear_blue"
