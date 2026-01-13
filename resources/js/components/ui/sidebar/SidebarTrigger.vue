@@ -9,7 +9,12 @@ const props = defineProps<{
   class?: HTMLAttributes['class']
 }>()
 
-const { toggleSidebar } = useSidebar()
+const { toggleSidebar , triggerClickedToOpen } = useSidebar()
+const toggleSidebarMethod = ()=>{ // new  changed
+  triggerClickedToOpen.value = !triggerClickedToOpen.value;
+  toggleSidebar()
+}
+
 </script>
 
 <template>
@@ -19,7 +24,7 @@ const { toggleSidebar } = useSidebar()
     variant="ghost"
     size="icon"
     :class="cn('h-7 w-7', props.class)"
-    @click="toggleSidebar"
+    @click="toggleSidebarMethod"
   >
     <PanelLeft />
     <span class="sr-only">Toggle Sidebar</span>

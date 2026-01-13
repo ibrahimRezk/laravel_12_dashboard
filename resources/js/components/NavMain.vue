@@ -109,8 +109,9 @@ const end = (el: HTMLElement): undefined => {
                                 : 'from-black/20 to-black/20 font-normal'
                         "
                     >
+                    <div>
                         <component :is="item.icon" />
-                        <span class="flex justify-between">
+                        <span class="flex justify-between w-full">
                             <span class="flex gap-3">
                                  <AppLogoIcon
                                 class="size-5 fill-current text-black/70  "
@@ -159,6 +160,8 @@ const end = (el: HTMLElement): undefined => {
                                 />
                             </svg>
                         </span>
+
+                    </div>
                     </SidebarMenuButton>
 
                     <transition

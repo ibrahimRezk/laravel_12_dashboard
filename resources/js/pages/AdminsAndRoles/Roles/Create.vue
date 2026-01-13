@@ -180,12 +180,12 @@ watch(()=>  props.edit , ()=> (props.edit ? fillForm(props.item) : ''))
                             v-model="currentItem.slug.en"
                         />
                         <div
-                            class="grid rounded border border-gray-200/20 bg-black/20 p-2 md:col-span-3"
+                            class="grid rounded border border-gray-200/20 bg-black/40 p-2 md:col-span-3"
                             type="button"
                             variant="transparent_red"
                         >
                             <Label>
-                                <div class="flex items-start">
+                                <div class="flex items-start font-bold text-[16px]">
                                     {{ $t('general.name in arabic') }}
                                 </div>
                             </Label>
@@ -203,12 +203,12 @@ watch(()=>  props.edit , ()=> (props.edit ? fillForm(props.item) : ''))
                         </div>
 
                         <div
-                            class="grid rounded border border-gray-200/20 bg-black/20 p-2 md:col-span-3"
+                            class="grid rounded border border-gray-200/20 bg-black/40 p-2 md:col-span-3"
                             type="button"
                             variant="transparent_red"
                         >
                             <Label>
-                                <div class="flex items-start">
+                                <div class="flex items-start font-bold text-[16px]">
                                     {{ $t('general.name in english') }}
                                 </div>
                             </Label>

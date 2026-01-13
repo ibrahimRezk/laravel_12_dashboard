@@ -36,4 +36,6 @@ return [
         'Next &raquo;' => 'التالي',
 
     'nationalities' => 'الجنسيات' ,
+    'name in arabic' => 'الاسم بالعربية' ,
+    'name in english' => 'الاسم بالانجليزية' ,
 ];

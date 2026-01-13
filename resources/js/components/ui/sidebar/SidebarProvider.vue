@@ -48,11 +48,11 @@ useEventListener('keydown', (event: KeyboardEvent) => {
     toggleSidebar()
   }
 })
+const triggerClickedToOpen = ref(true) // new
 
 // We add a state so that we can do data-state="expanded" or "collapsed".
 // This makes it easier to style the sidebar with Tailwind classes.
 const state = computed(() => open.value ? 'expanded' : 'collapsed')
-
 provideSidebarContext({
   state,
   open,
@@ -61,6 +61,7 @@ provideSidebarContext({
   openMobile,
   setOpenMobile,
   toggleSidebar,
+  triggerClickedToOpen, // new 
 })
 </script>
 
