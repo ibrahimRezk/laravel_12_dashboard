@@ -104,10 +104,27 @@ const props = withDefaults(defineProps<Props>(), {
 
 const breadcrumb: BreadcrumbItem[] = [
     {
-        title: props.title,
+        title: 'roles & permissions',
         href: RolesController.index(),
     },
+        {
+        title: props?.item?.slug,
+        href: '#',
+        // href: AdminController.show(props.item.id),
+    },
 ];
+
+
+// const breadcrumb: BreadcrumbItem[] = [
+//     {
+//         title: 'system admins',
+//         href: AdminController.index(),
+//     },
+//     {
+//         title: props.title,
+//         href: AdminController.show(props.item.id),
+//     },
+// ];
 
 // const form = useForm({
 //     name: props.item.name ?? "",

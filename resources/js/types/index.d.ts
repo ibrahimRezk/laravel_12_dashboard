@@ -6,7 +6,7 @@ export interface Auth {
 }
 
 export interface BreadcrumbItem {
-    title: string;
+    title: string | object;
     href: RouteDefinition<'get'> | string;
 }
 

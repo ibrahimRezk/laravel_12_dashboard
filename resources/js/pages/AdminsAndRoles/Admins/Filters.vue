@@ -43,6 +43,7 @@ const emits = defineEmits<{
     (e: 'filtersValuesData', value: Record<string, FilterValueItem>): void;
 }>();
 
+
 // 4. State
 const filters = ref<Filters>({ active: null, ...props.modelValue });
 const filtersValuesData = ref<Record<string, FilterValueItem>>({});

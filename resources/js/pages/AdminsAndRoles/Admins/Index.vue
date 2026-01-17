@@ -712,7 +712,7 @@ const startLeaveAnimation = () => {
                         role
                     </label>
                     <Select v-model="currentItem.roleId">
-                        <SelectTrigger class="  rtl:flex-row-reverse h-8 -mt-0.5 bg-white/10 border-white/30  " >
+                        <SelectTrigger class="  rtl:flex-row-reverse h-8 -mt-0.5 bg-white/10 border-white/30 focus:ring-yellow-300/0 dark:focus:ring-yellow-200/20  focus:ring-1   ring-offset-yellow-100/20 " >
                             <SelectValue class=" font-semi-bold "   placeholder="Select a role" />
                         </SelectTrigger>
                         <SelectContent class=" w-83" >
