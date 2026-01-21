@@ -32,10 +32,13 @@ return [
     'status' => 'الحالة',
     'reset filter' => 'إعادة ضبط',
     
-        '&laquo; Previous' => 'السابق',
-        'Next &raquo;' => 'التالي',
-
-    'nationalities' => 'الجنسيات' ,
+    '&laquo; Previous' => 'السابق',
+    'Next &raquo;' => 'التالي',
+    
     'name in arabic' => 'الاسم بالعربية' ,
     'name in english' => 'الاسم بالانجليزية' ,
+
+
+    'nationalities' => 'الجنسيات' ,
+    'add new nationality' => 'أضف جنسية جديدة'
 ];

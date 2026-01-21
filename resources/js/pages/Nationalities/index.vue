@@ -262,6 +262,18 @@ const startLeaveAnimation = () => {
 </script>
 
 
+<!-- ////   animate button /// -->
+<style scooped>
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-rotate {
+  animation: rotate 4s linear infinite;
+}
+</style>
+
 
 <template>
 
@@ -275,7 +287,7 @@ const startLeaveAnimation = () => {
                 :checkedItems="checkedItems.length"
                 :showDeleteAll="can.delete"
             >
-                <Button
+                <!-- <Button
                     variant="linear_blue"
                     size="md"
                     class="hover:cursor-pointer"
@@ -283,7 +295,19 @@ const startLeaveAnimation = () => {
                     @click="fireshowDialogModal"
                 >
                     {{ $t('general.add new nationality') }}
-                </Button>
+                </Button> -->
+
+
+
+  <button class="relative  overflow-hidden rounded-md p-0.5  bg-black/50 dark:bg-white/10 focus:outline-none"
+   v-if="can.create"
+    @click="fireshowDialogModal">
+  <!-- <span class="absolute inset-[-1000%] animate-rotate bg-[conic-gradient(from_90deg_at_50%_50%,#ff0000_0%,#ffff00_50%,#ff0000_100%)]"/> -->
+  <span class="absolute inset-[-1000%] animate-rotate bg-[conic-gradient(from_90deg_at_50%_50%,transparent_80%,#facc15_90%,#ff0000_100%)]"/>
+  <!-- <span class="absolute inset-[-1000%] animate-rotate bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,transparent_70%,#facc15_100%)]"/> -->
+  <span class="inline-flex h-full w-full  cursor-pointer items-center justify-center rounded-md bg-slate-950 px-5 py-1 text-sm font-medium text-white backdrop-blur-3xl ">
+ {{ $t('general.add new nationality') }}  </span>
+</button>
 
                 <!-- <template #filters></template> -->
 

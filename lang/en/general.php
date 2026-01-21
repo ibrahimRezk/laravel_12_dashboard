@@ -37,4 +37,6 @@ return [
     'nationalities' => 'nationalities' ,
     'name in arabic' => 'name in arabic' ,
     'name in english' => 'name in english' ,
+
+    'add new nationality' => 'add new nationality' ,
 ];
