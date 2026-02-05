@@ -38,4 +38,5 @@ defineExpose({ focus: () => input.value?.focus() });
         :disabled="disabled"
         class="rounded p-1 text-yellow-600 border-gray-300 shadow-sm focus:ring-indigo-500 dark:text-slate-400/10 dark:border-gray-300/50 dark:bg-black/40 border checked:border-gray-100/50 checked:hover:border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
     >
+     <!-- you can use accent-red-500 here for checkbox background -->
 </template>

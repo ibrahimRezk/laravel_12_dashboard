@@ -57,7 +57,7 @@ const menus = ref<NavItem[]>(page.props.menus);
 const slideActionName = ref<string>('');
 
 const openCloseSubMenu = (activeMenu: NavItem) => {
-    activeMenu.isActive = true;
+    // activeMenu.isActive = true;
     if (activeMenu.hasSubmenu) {
         activeMenu.open = !activeMenu.open;
         menus.value.forEach((menu: NavItem) => {
