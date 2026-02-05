@@ -621,7 +621,6 @@ const startLeaveAnimation = () => {
                     <Label for="name.ar" class="dialog-label"
                         >name in arabic</Label
                     >
-                    
                     <Input
                         class="dialog-input mt-2"
                         id="name.ar"

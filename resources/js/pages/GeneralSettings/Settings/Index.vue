@@ -433,7 +433,7 @@ const theadClass = computed(() => {
                                         <div
                                             v-for="(day, index) in form.weekendDays"
                                             :key="index"
-                                            class=" bg-black/30 text-xs text-yellow-200 flex border border-gray-100/20 px-2 w-full   rounded-full"
+                                            class="  bg-black/30 text-xs text-yellow-200 flex justify-center border border-gray-100/20 px-2 w-full   rounded-full"
                                         >
                                             <!-- {{ day }} -->
                                             {{ $t('general.' + day.name) }}
@@ -546,7 +546,7 @@ const theadClass = computed(() => {
         </Container>
     </AppLayout>
 
-    <DialogModal title="edit weekend days" width="w-xs">
+    <DialogModal :title="`${$t('general.edit weekend days')}`" width="w-xs">
         <div class="flex items-center justify-center">
             <ul class=" ">
                 <li

@@ -38,6 +38,29 @@ return [
     'name in arabic' => 'الاسم بالعربية' ,
     'name in english' => 'الاسم بالانجليزية' ,
 
+        'Saturday' => 'السبت',
+        'Sunday' => 'الأحد',
+        'Monday' => 'الاثنين',
+        'Tuesday' => 'الثلاثاء',
+        'Wednesday' => 'الأربعاء',
+        'Thursday' => 'الخميس',
+        'Friday' => 'الجمعة',
+        'weekend' => 'الإجازة الأسبوعية',
+
+          "company name in arabic" => "اسم الشركة بالعربية",
+        "company address in arabic" => "العنوان بالعربية",
+        "company name in english" => "اسم الشركة بالانجليزية",
+        "company address in english" => "العنوان بالانجليزية",
+        "email" => "البريد الالكتروني",
+        "logo" => "الشعار",
+        "phone" => "الهاتف",
+        "edit" => "تعديل",
+        "by" => "بواسطة",
+        "last update date" => "تاريخ آخر تعديل",
+        "save changes" => "حفظ التغييرات",
+        'edit weekend days' => 'تعديل أيام الإجازة الأسبوعية',
+        "close" => "إغلاق",
+
 
     'nationalities' => 'الجنسيات' ,
     'add new nationality' => 'أضف جنسية جديدة'
